@@ -124,7 +124,8 @@
     display: none !important;
   }
   .sound-toggle-btn,
-  .theme-toggle-btn {
+  .theme-toggle-btn,
+  .install-pwa-btn {
     width: 28px !important;
     height: 28px !important;
     min-width: 28px !important;
@@ -353,9 +354,10 @@
   50% { transform: scale(1.3); opacity: 0.6; }
 }
 
-/* Interruptor Dual de Tema (Sol / Luna) y Sonido Gamer - Icon-Only Compacto */
+/* Interruptor Dual de Tema (Sol / Luna), Sonido Gamer y Botón PWA - Icon-Only Compacto */
 .theme-toggle-btn,
-.sound-toggle-btn {
+.sound-toggle-btn,
+.install-pwa-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -375,7 +377,8 @@
 }
 
 .theme-toggle-btn:hover,
-.sound-toggle-btn:hover {
+.sound-toggle-btn:hover,
+.install-pwa-btn:hover {
   border-color: var(--color-primary);
   color: var(--color-primary);
   transform: translateY(-1px) scale(1.06);
@@ -3525,6 +3528,260 @@
   background: #2563eb;
   box-shadow: 0 0 6px rgba(37, 99, 235, 0.6);
 }
+
+/* ========================================================
+   SISTEMA DE INSTALACIÓN PWA (NO INVASIVO)
+   ======================================================== */
+
+/* Contenedor del Banner Flotante Suave */
+.pwa-banner-container {
+  position: fixed;
+  bottom: 2.2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 150;
+  width: calc(100% - 2rem);
+  max-width: 460px;
+  pointer-events: none;
+}
+
+.pwa-gentle-banner {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem;
+  padding: 0.55rem 0.95rem;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 9999px;
+  box-shadow: 0 8px 30px -4px rgba(15, 23, 42, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04);
+  animation: pwaSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+[data-theme='dark'] .pwa-gentle-banner {
+  background: rgba(18, 22, 34, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 10px 36px -4px rgba(0, 0, 0, 0.6);
+}
+
+.pwa-gentle-banner.is-dismissing {
+  opacity: 0;
+  transform: translateY(12px) scale(0.96);
+  pointer-events: none;
+}
+
+@keyframes pwaSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.pwa-banner-main {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+}
+
+.pwa-banner-icon-badge {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--color-primary-subtle);
+  border: 1px solid var(--color-primary-border);
+  font-size: 0.95rem;
+}
+
+.pwa-banner-copy {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+  min-width: 0;
+}
+
+.pwa-banner-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pwa-banner-desc {
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pwa-banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.pwa-btn-primary {
+  background: var(--color-primary);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 9999px;
+  padding: 5px 12px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+}
+
+.pwa-btn-primary:hover {
+  background: #1D4ED8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+}
+
+.pwa-btn-dismiss {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 4px 6px;
+  cursor: pointer;
+  border-radius: 9999px;
+  transition: color 0.15s ease;
+}
+
+.pwa-btn-dismiss:hover {
+  color: var(--text-primary);
+}
+
+/* Enlace Discreto en el Pie de Página */
+.footer-install-btn {
+  background: transparent;
+  border: none;
+  color: var(--color-primary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.footer-install-btn:hover {
+  background: var(--color-primary-subtle);
+  text-decoration: underline;
+}
+
+/* Modal Explicativo para iOS Safari */
+.pwa-ios-modal-card {
+  max-width: 440px;
+  text-align: center;
+}
+
+.pwa-ios-header {
+  margin-bottom: 1.25rem;
+}
+
+.pwa-ios-icon-glow {
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.pwa-ios-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  text-align: left;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-card);
+  border-radius: 16px;
+  padding: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.pwa-ios-step-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.pwa-step-number {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.pwa-step-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  font-size: 0.75rem;
+  line-height: 1.25;
+  color: var(--text-secondary);
+}
+
+.pwa-step-content strong {
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.pwa-step-badge {
+  font-size: 1.2rem;
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.pwa-ios-step-divider {
+  height: 1px;
+  background: var(--border-subtle);
+}
+
+.pwa-ios-features {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1.25rem;
+}
+
+.pwa-feature-pill {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  background: rgba(16, 185, 129, 0.08);
+  padding: 4px 10px;
+  border-radius: 9999px;
+}
+
 
 
 

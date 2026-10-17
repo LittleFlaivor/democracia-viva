@@ -5,12 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Democracia Viva | Decisiones Cívicas Verificables</title>
   <meta name="description" content="Plataforma interactiva de democracia líquida y voto criptográfico verificable. Toma las riendas del Real Decreto-ley de Vivienda con fricción cero y consenso cívico.">
-  <meta name="theme-color" content="#F8F9FA">
+  <meta name="theme-color" content="#2563EB">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Democracia Viva">
+  <meta name="application-name" content="Democracia Viva">
+
+  <!-- Manifest PWA Oficial -->
+  <link rel="manifest" href="/manifest.webmanifest">
 
   <!-- Favicon Oficial extraído del Isotipo de Marca -->
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="alternate icon" href="/favicon.svg">
-  <link rel="apple-touch-icon" href="/favicon.svg">
+  <link rel="apple-touch-icon" href="/pwa-192.png">
 
   <link rel="canonical" href="https://democraciaviva.es/">
 
@@ -59,6 +66,9 @@
 
   <!-- 3. Pie de Página Institucional y Versión de la Aplicación -->
   <footer id="civic-footer-container" class="civic-footer"></footer>
+
+  <!-- Contenedor del Banner Flotante PWA (No Invasivo) -->
+  <div id="pwa-banner-root" class="pwa-banner-container"></div>
 
   <!-- Contenedor de Modales (Novela Gráfica, BOE, Acta y Recibo ZK) -->
   <div id="modal-root-container"></div>

@@ -5,7 +5,12 @@
  * contexto legislativo (RDL 2/2026 de Vivienda), código abierto en GitHub y garantías ciudadanas.
  */
 
-export function renderCivicFooter(container: HTMLElement): void {
+import { pwaService } from '../../services/pwa-service.ts';
+import { soundFx } from './sound-fx.ts';
+
+export function renderCivicFooter(container: HTMLElement, onOpenIosGuide?: () => void): void {
+  const isInstalled = pwaService.isInstalled();
+
   container.innerHTML = `
     <div class="civic-footer-bar" role="contentinfo" aria-label="Pie de Página Integrado">
       <!-- Izquierda: Marca, Isotipo y Versión Alpha -->
@@ -35,8 +40,14 @@ export function renderCivicFooter(container: HTMLElement): void {
         <span class="footer-meta-item">Sin Cookies de Rastreo</span>
       </div>
 
-      <!-- Derecha: Código Abierto en GitHub y Copyright -->
+      <!-- Derecha: Código Abierto en GitHub, Instalar App y Copyright -->
       <div class="footer-bar-right">
+        ${!isInstalled ? `
+        <button type="button" class="footer-install-btn" id="btn-footer-install" title="Instalar aplicación en tu móvil u ordenador">
+          <span>📲 Instalar</span>
+        </button>
+        <span class="footer-meta-sep" aria-hidden="true">·</span>
+        ` : ''}
         <a 
           href="https://github.com/LittleFlaivor/democracia-viva" 
           target="_blank" 
@@ -52,5 +63,14 @@ export function renderCivicFooter(container: HTMLElement): void {
       </div>
     </div>
   `;
+
+  container.querySelector('#btn-footer-install')?.addEventListener('click', async () => {
+    soundFx.playTap();
+    const result = await pwaService.triggerInstall();
+    if (result === 'ios') {
+      onOpenIosGuide?.();
+    }
+  });
 }
+
 

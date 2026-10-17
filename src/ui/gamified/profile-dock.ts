@@ -9,6 +9,7 @@ import { GameStore } from '../../state/game-store.ts';
 import { renderBrandLogo } from './brand-logo.ts';
 import { soundFx } from './sound-fx.ts';
 import { getLocalCitizenCredential, isTestBypassEnabled, setTestBypassEnabled } from '../../services/auth.ts';
+import { pwaService } from '../../services/pwa-service.ts';
 
 export function getInitialTheme(): 'light' | 'dark' {
   const saved = localStorage.getItem('DEMOCRACIA_VIVA_THEME');
@@ -21,14 +22,19 @@ export function applyTheme(theme: 'light' | 'dark') {
   localStorage.setItem('DEMOCRACIA_VIVA_THEME', theme);
   const metaTheme = document.querySelector('meta[name="theme-color"]');
   if (metaTheme) {
-    metaTheme.setAttribute('content', theme === 'dark' ? '#090A0F' : '#F8F9FA');
+    metaTheme.setAttribute('content', theme === 'dark' ? '#090A0F' : '#2563EB');
   }
 }
 
-export function renderProfileDock(container: HTMLElement, onOpenIdentityModal?: () => void) {
+export function renderProfileDock(
+  container: HTMLElement, 
+  onOpenIdentityModal?: () => void,
+  onOpenIosGuide?: () => void
+) {
   const localCred = getLocalCitizenCredential();
   const currentTheme = (document.documentElement.getAttribute('data-theme') as 'light' | 'dark') || getInitialTheme();
   const bypassActive = isTestBypassEnabled();
+  const isInstalled = pwaService.isInstalled();
 
   container.innerHTML = `
     <nav class="profile-dock-bar hud-floating-menu" aria-label="Menú Principal Integrado">
@@ -63,8 +69,20 @@ export function renderProfileDock(container: HTMLElement, onOpenIdentityModal?: 
         </button>
       </div>
 
-      <!-- Derecha: Interruptor de Sonido e Interruptor Dual Claro / Oscuro -->
+      <!-- Derecha: Botón Instalar App PWA, Interruptor de Sonido e Interruptor Dual Claro / Oscuro -->
       <div class="dock-right-group">
+        ${!isInstalled ? `
+        <!-- Botón de Instalación PWA Discreto -->
+        <button 
+          class="install-pwa-btn hud-pill-capsule" 
+          id="btn-dock-install" 
+          title="Instalar Democracia Viva en tu dispositivo"
+          aria-label="Instalar app"
+        >
+          <span class="install-icon">📲</span>
+        </button>
+        ` : ''}
+
         <!-- Interruptor de Sonido -->
         <button 
           class="sound-toggle-btn hud-pill-capsule" 
@@ -89,6 +107,15 @@ export function renderProfileDock(container: HTMLElement, onOpenIdentityModal?: 
     </nav>
   `;
 
+  // Listener para botón de instalación PWA
+  container.querySelector('#btn-dock-install')?.addEventListener('click', async () => {
+    soundFx.playTap();
+    const result = await pwaService.triggerInstall();
+    if (result === 'ios') {
+      onOpenIosGuide?.();
+    }
+  });
+
   // Listener para abrir modal de identidad cívica / Passkey
   container.querySelector('#btn-dock-identity')?.addEventListener('click', () => {
     soundFx.playTap();
@@ -99,13 +126,13 @@ export function renderProfileDock(container: HTMLElement, onOpenIdentityModal?: 
   container.querySelector('#btn-dock-bypass')?.addEventListener('click', () => {
     soundFx.playTap();
     setTestBypassEnabled(!isTestBypassEnabled());
-    renderProfileDock(container, onOpenIdentityModal);
+    renderProfileDock(container, onOpenIdentityModal, onOpenIosGuide);
   });
 
   // Listener para cambio de sonido
   container.querySelector('#btn-sound-toggle')?.addEventListener('click', () => {
     soundFx.toggleMute();
-    renderProfileDock(container, onOpenIdentityModal);
+    renderProfileDock(container, onOpenIdentityModal, onOpenIosGuide);
   });
 
   // Listener para cambio de tema
@@ -114,7 +141,7 @@ export function renderProfileDock(container: HTMLElement, onOpenIdentityModal?: 
     const active = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
     const next = active === 'dark' ? 'light' : 'dark';
     applyTheme(next);
-    renderProfileDock(container, onOpenIdentityModal);
+    renderProfileDock(container, onOpenIdentityModal, onOpenIosGuide);
   });
 }
 

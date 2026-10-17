@@ -17,12 +17,19 @@ import { renderVerificationModal } from './ui/components/verification-modal.ts';
 import { renderParliamentaryReportModal } from './ui/components/parliamentary-report-modal.ts';
 import { renderCivicFooter } from './ui/gamified/civic-footer.ts';
 import { renderIdentityModal } from './ui/components/identity-modal.ts';
+import { pwaService } from './services/pwa-service.ts';
+import { renderGentlePwaBanner, renderIosInstallModal } from './ui/pwa/pwa-prompt.ts';
 
 let activeReceiptNullifier: string | null = null;
 let isParliamentaryReportOpen = false;
 let isIdentityModalOpen = false;
+let isIosGuideOpen = false;
+let pwaBannerShown = false;
 
 function initApp() {
+  // Inicializar servicio PWA respetuoso
+  pwaService.init();
+
   // Aplicar tema inicial (Light Editorial por defecto)
   applyTheme(getInitialTheme());
 
@@ -34,6 +41,7 @@ function initApp() {
   const stageContainer = document.getElementById('game-stage-container');
   const modalContainer = document.getElementById('modal-root-container');
   const footerContainer = document.getElementById('civic-footer-container');
+  const pwaBannerContainer = document.getElementById('pwa-banner-root');
 
   if (!dockContainer || !hudContainer || !stageContainer || !modalContainer) {
     console.error('Contenedores no encontrados en el DOM');
@@ -70,6 +78,24 @@ function initApp() {
     renderModals();
   }
 
+  function openIosGuide() {
+    isIosGuideOpen = true;
+    renderModals();
+  }
+
+  function closeIosGuide() {
+    isIosGuideOpen = false;
+    renderModals();
+  }
+
+  function showGentlePwaBanner() {
+    if (pwaBannerShown || pwaService.isInstalled() || pwaService.isPromptDismissed()) return;
+    pwaBannerShown = true;
+    if (pwaBannerContainer) {
+      renderGentlePwaBanner(pwaBannerContainer, openIosGuide);
+    }
+  }
+
   function renderModals() {
     modalContainer!.innerHTML = '';
 
@@ -101,13 +127,17 @@ function initApp() {
       const wrapper = document.createElement('div');
       modalContainer!.appendChild(wrapper);
       renderIdentityModal(wrapper, closeIdentityModal, () => {
-        renderProfileDock(dockContainer!, openIdentityModal);
+        renderProfileDock(dockContainer!, openIdentityModal, openIosGuide);
       });
+    } else if (isIosGuideOpen) {
+      const wrapper = document.createElement('div');
+      modalContainer!.appendChild(wrapper);
+      renderIosInstallModal(wrapper, closeIosGuide);
     }
   }
 
   function renderAll() {
-    renderProfileDock(dockContainer!, openIdentityModal);
+    renderProfileDock(dockContainer!, openIdentityModal, openIosGuide);
     renderHudBarometers(hudContainer!);
 
     if (gameStore.isFinished()) {
@@ -117,11 +147,32 @@ function initApp() {
     }
 
     if (footerContainer) {
-      renderCivicFooter(footerContainer);
+      renderCivicFooter(footerContainer, openIosGuide);
     }
 
     renderModals();
   }
+
+  // Desencadenar invitación de instalación PWA suave tras primera interacción o 10s de navegación
+  const gentleTimer = setTimeout(() => {
+    showGentlePwaBanner();
+  }, 10000);
+
+  // Al emitir el primer voto, mostrar banner si aún no se ha mostrado
+  gameStore.subscribe((state) => {
+    if (state.history.length > 0) {
+      clearTimeout(gentleTimer);
+      showGentlePwaBanner();
+    }
+  });
+
+  // Re-renderizar si cambia el estado PWA (instalación completada o descartada)
+  window.addEventListener('dv-pwa-state-change', () => {
+    renderProfileDock(dockContainer!, openIdentityModal, openIosGuide);
+    if (footerContainer) {
+      renderCivicFooter(footerContainer, openIosGuide);
+    }
+  });
 
   function initAmbientMotion() {
     const mesh = document.getElementById('ambient-mesh');
