@@ -1630,37 +1630,10 @@
   box-shadow: 0 1px 0 rgba(5, 150, 105, 0.4), 0 3px 8px rgba(16, 185, 129, 0.15);
 }
 
-/* Barra Inferior de Atajos Gamer */
-.arcade-hints-bar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  margin-top: 1rem;
-  font-size: 0.74rem;
-  color: var(--text-muted);
-  user-select: none;
-}
-
-.arcade-hint-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.arcade-hint-item kbd {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.65rem;
-  font-weight: 700;
-  padding: 1px 5px;
-  border-radius: 4px;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-secondary);
-}
-
-.arcade-hint-dot {
-  opacity: 0.4;
+/* Atajos de Teclado (Desactivados por ahora a petición del usuario) */
+.arcade-hints-bar,
+.arcade-key-badge {
+  display: none !important;
 }
 
 /* ========================================================
@@ -3819,8 +3792,13 @@
 }
 
 .footer-svg-icon {
-  width: 100%;
-  height: 100%;
+  width: 14px !important;
+  height: 14px !important;
+  max-width: 14px !important;
+  max-height: 14px !important;
+  display: inline-block !important;
+  vertical-align: middle !important;
+  flex-shrink: 0 !important;
 }
 
 .footer-micro-name {

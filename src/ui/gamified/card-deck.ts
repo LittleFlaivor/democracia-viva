@@ -118,10 +118,9 @@ export function renderCardDeck(container: HTMLElement) {
         <button 
           class="arcade-push-btn btn-arcade-yes" 
           id="btn-swipe-yes" 
-          title="Votar A Favor [Tecla A o ←]"
+          title="Votar A Favor"
           aria-label="Votar A Favor"
         >
-          <div class="arcade-key-badge"><kbd>A</kbd></div>
           <span class="arcade-btn-icon">✓</span>
           <span class="arcade-btn-name">A Favor</span>
           <span class="arcade-btn-sub">Aprobar</span>
@@ -131,10 +130,9 @@ export function renderCardDeck(container: HTMLElement) {
         <button 
           class="arcade-push-btn btn-arcade-delegate" 
           id="btn-swipe-delegate" 
-          title="Delegar en expertos o abstenerse [Tecla W o ↑]"
+          title="Delegar en expertos o abstenerse"
           aria-label="No sabe / No contesta o delegar"
         >
-          <div class="arcade-key-badge"><kbd>W</kbd></div>
           <span class="arcade-btn-icon">?</span>
           <span class="arcade-btn-name">NS / NC</span>
           <span class="arcade-btn-sub">Duda / Delegar</span>
@@ -144,27 +142,13 @@ export function renderCardDeck(container: HTMLElement) {
         <button 
           class="arcade-push-btn btn-arcade-no" 
           id="btn-swipe-no" 
-          title="Votar En Contra [Tecla D o →]"
+          title="Votar En Contra"
           aria-label="Votar En Contra"
         >
-          <div class="arcade-key-badge"><kbd>D</kbd></div>
           <span class="arcade-btn-icon">✕</span>
           <span class="arcade-btn-name">En Contra</span>
           <span class="arcade-btn-sub">Rechazar</span>
         </button>
-      </div>
-
-      <!-- Barra Inferior de Atajos Accesibles -->
-      <div class="arcade-hints-bar">
-        <span class="arcade-hint-item">Atajos: <kbd>A</kbd> A Favor</span>
-        <span class="arcade-hint-dot">·</span>
-        <span class="arcade-hint-item"><kbd>W</kbd> NS/NC</span>
-        <span class="arcade-hint-dot">·</span>
-        <span class="arcade-hint-item"><kbd>D</kbd> En Contra</span>
-        ${gameStore.getCardIndex() > 0 ? `
-          <span class="arcade-hint-dot">·</span>
-          <span class="arcade-hint-item"><kbd>Z</kbd> Deshacer</span>
-        ` : ''}
       </div>
     </div>
   `;
@@ -319,38 +303,9 @@ export function renderCardDeck(container: HTMLElement) {
     cardEl.addEventListener('pointercancel', onPointerUp);
   }
 
-  // Atajos de teclado para votación accesible (A = A Favor / Izquierda, W = NS/NC, D = En Contra / Derecha)
-  const handleKeydown = (e: KeyboardEvent) => {
-    if (
-      gameStore.getActiveMonographCard() ||
-      gameStore.getActiveDilemmaCard() ||
-      gameStore.getActiveBoeCard() ||
-      gameStore.isFinished()
-    ) {
-      return;
-    }
-    const key = e.key.toLowerCase();
-
-    if (key === 'z' || key === 'backspace') {
-      if (gameStore.getCardIndex() > 0) {
-        const undone = gameStore.undoDecision();
-        if (undone) soundFx.playUndo();
-      }
-      return;
-    }
-
-    if (key === 'arrowleft' || key === 'a') {
-      initiateVoteFlow('YES');
-    } else if (key === 'arrowup' || key === 'w') {
-      initiateVoteFlow('DELEGATE');
-    } else if (key === 'arrowright' || key === 'd') {
-      initiateVoteFlow('NO');
-    }
-  };
-
+  // Limpieza de cualquier listener previo de atajos de teclado
   window.removeEventListener('keydown', (window as any)._cardKeyHandler);
-  (window as any)._cardKeyHandler = handleKeydown;
-  window.addEventListener('keydown', handleKeydown);
+  (window as any)._cardKeyHandler = null;
 
   /**
    * FLUJO JUST-IN-TIME WEBAUTHN PASSKEYS
