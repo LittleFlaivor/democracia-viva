@@ -8,7 +8,7 @@ import { CivicAppStore } from '../../state/store.ts';
 import { GameStore } from '../../state/game-store.ts';
 import { renderBrandLogo } from './brand-logo.ts';
 import { soundFx } from './sound-fx.ts';
-import { getLocalCitizenCredential } from '../../services/auth.ts';
+import { getLocalCitizenCredential, isTestBypassEnabled, setTestBypassEnabled } from '../../services/auth.ts';
 
 export function getInitialTheme(): 'light' | 'dark' {
   const saved = localStorage.getItem('DEMOCRACIA_VIVA_THEME');
@@ -28,15 +28,16 @@ export function applyTheme(theme: 'light' | 'dark') {
 export function renderProfileDock(container: HTMLElement, onOpenIdentityModal?: () => void) {
   const localCred = getLocalCitizenCredential();
   const currentTheme = (document.documentElement.getAttribute('data-theme') as 'light' | 'dark') || getInitialTheme();
+  const bypassActive = isTestBypassEnabled();
 
   container.innerHTML = `
     <nav class="profile-dock-bar hud-floating-menu" aria-label="Menú Principal Integrado">
-      <!-- Izquierda: Logotipo Oficial Vectorial Integrado -->
+      <!-- Izquierda: Logotipo Compacto Oficial, Versión Alpha y Modo Pruebas -->
       <div class="dock-left-group">
         <div class="dock-brand-mark">
-          ${renderBrandLogo({ compact: false, showBadge: true })}
+          ${renderBrandLogo({ compact: true, showBadge: false })}
         </div>
-        <span class="dock-alpha-tag" title="Entorno de Pruebas v0.5 Alpha">Alpha en Pruebas</span>
+        <span class="dock-alpha-tag" title="Entorno piloto de pruebas v0.5 Alpha">v0.5 Alpha</span>
 
         <!-- Ficha de Identidad Ciudadana Soberana (Interactiva) -->
         <button 
@@ -46,14 +47,25 @@ export function renderProfileDock(container: HTMLElement, onOpenIdentityModal?: 
           title="Ver estado de identidad cívica y autenticación Passkey"
         >
           <span class="dock-user-avatar">${localCred ? '🛡️' : '🔑'}</span>
-          <span class="dock-user-name">${localCred ? 'Ciudadano Soberano' : 'Acceso con Passkey'}</span>
-          <span class="dock-user-badge ${localCred ? 'is-verified' : ''}">${localCred ? 'Passkey Vinculada ✓' : 'Fricción Cero'}</span>
+          <span class="dock-user-name">${localCred ? 'Ciudadano' : 'Acceso'}</span>
+          <span class="dock-user-badge ${localCred ? 'is-verified' : ''}">${localCred ? 'Passkey ✓' : 'Fricción 0'}</span>
+        </button>
+
+        <!-- Conmutador Discreto de Pruebas Ágiles -->
+        <button 
+          type="button" 
+          class="dock-bypass-pill hud-pill-capsule ${bypassActive ? 'is-bypass-active' : ''}" 
+          id="btn-dock-bypass" 
+          title="${bypassActive ? 'Modo Pruebas ACTIVO: se omite la biometría. Clic para desactivar.' : 'Modo Pruebas INACTIVO: clic para omitir biometría en pruebas rápidas.'}"
+        >
+          <span class="bypass-lightning">⚡</span>
+          <span class="bypass-label">${bypassActive ? 'Sin Biometría' : 'Modo Pruebas'}</span>
         </button>
       </div>
 
       <!-- Derecha: Interruptor de Sonido e Interruptor Dual Claro / Oscuro -->
       <div class="dock-right-group">
-        <!-- Interruptor de Sonido Gamer -->
+        <!-- Interruptor de Sonido -->
         <button 
           class="sound-toggle-btn hud-pill-capsule" 
           id="btn-sound-toggle" 
@@ -67,7 +79,7 @@ export function renderProfileDock(container: HTMLElement, onOpenIdentityModal?: 
         <button 
           class="theme-toggle-btn hud-pill-capsule" 
           id="btn-theme-toggle" 
-          title="Alternar entre Modo Claro Editorial y Modo Oscuro"
+          title="Alternar entre Modo Claro y Modo Oscuro"
           aria-label="Cambiar tema de color"
         >
           <span class="theme-icon">${currentTheme === 'dark' ? '☀️' : '🌙'}</span>
@@ -77,12 +89,17 @@ export function renderProfileDock(container: HTMLElement, onOpenIdentityModal?: 
     </nav>
   `;
 
-
-
   // Listener para abrir modal de identidad cívica / Passkey
   container.querySelector('#btn-dock-identity')?.addEventListener('click', () => {
     soundFx.playTap();
     onOpenIdentityModal?.();
+  });
+
+  // Listener para alternar modo pruebas rápidas sin biometría
+  container.querySelector('#btn-dock-bypass')?.addEventListener('click', () => {
+    soundFx.playTap();
+    setTestBypassEnabled(!isTestBypassEnabled());
+    renderProfileDock(container, onOpenIdentityModal);
   });
 
   // Listener para cambio de sonido
@@ -100,3 +117,4 @@ export function renderProfileDock(container: HTMLElement, onOpenIdentityModal?: 
     renderProfileDock(container, onOpenIdentityModal);
   });
 }
+

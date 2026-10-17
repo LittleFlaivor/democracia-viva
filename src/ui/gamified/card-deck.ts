@@ -75,45 +75,26 @@ export function renderCardDeck(container: HTMLElement) {
             <p class="card-subtitle">${currentCard.subtitle}</p>
 
             ${isSealed ? `
-              <!-- ESTADO DE INTERFAZ POST-VOTO: VOTO SELLADO E INMUTABLE -->
-              <div class="sealed-banner">
-                <span class="sealed-icon">🛡️</span>
-                <div class="sealed-text-box">
-                  <span class="sealed-title">Voto Sellado e Inmutable</span>
-                  <span class="sealed-subtitle">Acción definitiva e irreversible registrada en Firestore</span>
-                </div>
-              </div>
-
-              <!-- Recibo Criptográfico Desacoplado -->
-              <div class="sealed-receipt-box">
-                <div class="receipt-row">
-                  <span class="receipt-label">Nullifier Hash:</span>
-                  <span class="receipt-val">${sealedRecord ? sealedRecord.nullifierHash.slice(0, 16) + '...' : '0x7f4a...'}</span>
-                </div>
-                <div class="receipt-row">
-                  <span class="receipt-label">Urna Cívica:</span>
-                  <span class="receipt-val">Cloud Firestore (Append-Only)</span>
-                </div>
-                <div class="receipt-row">
-                  <span class="receipt-label">Sentido de Voto:</span>
-                  <span class="receipt-val" style="color: #059669; font-weight: 700;">
-                    ${sealedRecord?.choice === 'YES' ? '✓ A FAVOR' : sealedRecord?.choice === 'NO' ? '✕ EN CONTRA' : '? NS / NC'}
+              <!-- ESTADO DE INTERFAZ POST-VOTO COMPACTO -->
+              <div class="sealed-compact-card">
+                <div class="sealed-status-line">
+                  <span class="sealed-badge-choice ${sealedRecord?.choice === 'YES' ? 'is-yes' : sealedRecord?.choice === 'NO' ? 'is-no' : 'is-delegate'}">
+                    ${sealedRecord?.choice === 'YES' ? '✓ Voto: A FAVOR' : sealedRecord?.choice === 'NO' ? '✕ Voto: EN CONTRA' : '? Voto: NS / NC'}
+                  </span>
+                  <span class="sealed-hash-tag" title="Nullifier Hash: ${sealedRecord?.nullifierHash || ''}">
+                    🔒 ${sealedRecord ? sealedRecord.nullifierHash.slice(0, 14) + '...' : 'En Urna'}
                   </span>
                 </div>
-                <div class="receipt-row">
-                  <span class="receipt-label">Fecha y Hora UTC:</span>
-                  <span class="receipt-val">${sealedRecord ? new Date(sealedRecord.timestamp).toLocaleTimeString() : 'En urna'}</span>
+
+                <div class="sealed-actions-row">
+                  <button class="btn-sealed-download" id="btn-download-receipt" title="Descargar acta criptográfica verificable en JSON">
+                    <span>📥 Recibo (.json)</span>
+                  </button>
+                  <button class="btn-sealed-advance" id="btn-advance-card" title="Avanzar al siguiente artículo del decreto">
+                    <span>Continuar al siguiente artículo →</span>
+                  </button>
                 </div>
               </div>
-
-              <!-- Botones de Acción Post-Voto -->
-              <button class="btn-download-receipt" id="btn-download-receipt" title="Descargar acta criptográfica verificable en JSON">
-                <span>📥 Descargar Recibo Criptográfico (.json)</span>
-              </button>
-
-              <button class="btn-action-pill" id="btn-advance-card" style="margin-top: 10px; width: 100%; justify-content: center; background: rgba(37, 99, 235, 0.08); border-color: rgba(37, 99, 235, 0.25); color: #2563eb; font-weight: 700;">
-                <span>Continuar al siguiente artículo →</span>
-              </button>
             ` : ''}
           </div>
 
@@ -194,32 +175,9 @@ export function renderCardDeck(container: HTMLElement) {
         `}
       </div>
 
-      <!-- Atajo Cívico al Pie de Página y Versión Alpha -->
-      <div class="deck-footer-anchor-wrapper">
-        <button 
-          type="button" 
-          id="btn-deck-scroll-footer" 
-          class="deck-footer-scroll-link"
-          title="Ver pie de página, garantías constitucionales, versión y auditoría de código abierto"
-        >
-          <span class="anchor-badge">v0.5 Alpha</span>
-          <span class="anchor-label">Democracia Viva · Información Institucional y Auditoría</span>
-          <span class="anchor-arrow" aria-hidden="true">↓</span>
-        </button>
       </div>
     </div>
   `;
-
-  // Listener para scroll suave hacia el pie de página
-  container.querySelector('#btn-deck-scroll-footer')?.addEventListener('click', (e) => {
-    e.preventDefault();
-    const footer = document.getElementById('civic-footer-container');
-    if (footer) {
-      footer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      footer.setAttribute('tabindex', '-1');
-      footer.focus({ preventScroll: true });
-    }
-  });
 
   // Asignar listeners del estado sellado
   if (isSealed) {

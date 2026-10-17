@@ -16,7 +16,6 @@ import { renderMonographModal } from './ui/gamified/monograph-modal.ts';
 import { renderVerificationModal } from './ui/components/verification-modal.ts';
 import { renderParliamentaryReportModal } from './ui/components/parliamentary-report-modal.ts';
 import { renderCivicFooter } from './ui/gamified/civic-footer.ts';
-import { renderTestBanner } from './ui/gamified/test-banner.ts';
 import { renderIdentityModal } from './ui/components/identity-modal.ts';
 
 let activeReceiptNullifier: string | null = null;
@@ -30,7 +29,6 @@ function initApp() {
   const civicStore = CivicAppStore.getInstance();
   const gameStore = GameStore.getInstance();
 
-  const testBannerContainer = document.getElementById('test-banner-container');
   const dockContainer = document.getElementById('profile-dock-container');
   const hudContainer = document.getElementById('hud-barometers-container');
   const stageContainer = document.getElementById('game-stage-container');
@@ -109,9 +107,6 @@ function initApp() {
   }
 
   function renderAll() {
-    if (testBannerContainer) {
-      renderTestBanner(testBannerContainer);
-    }
     renderProfileDock(dockContainer!, openIdentityModal);
     renderHudBarometers(hudContainer!);
 
