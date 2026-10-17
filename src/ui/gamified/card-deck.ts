@@ -22,9 +22,6 @@ export function renderCardDeck(container: HTMLElement) {
     return;
   }
 
-  const isSealed = gameStore.isCardSealed(currentCard.id);
-  const sealedRecord = isSealed ? gameStore.getSealedVoteForCard(currentCard.id) : null;
-
   container.innerHTML = `
     <div class="deck-stage-wrapper">
       <!-- Escenario 3D del Mazo con Bandeja Arcade -->
@@ -57,7 +54,7 @@ export function renderCardDeck(container: HTMLElement) {
           .join('')}
 
         <!-- CARTA ACTIVA INTERACTIVA (DELIBERATIVA Y ACCESIBLE) -->
-        <div class="game-card active-card arcade-glow-card ${isSealed ? 'card-sealed' : ''}" id="active-card" style="z-index: 20;">
+        <div class="game-card active-card arcade-glow-card" id="active-card" style="z-index: 20;">
 
           <!-- Contenido Superior de la Carta -->
           <div class="card-header">
@@ -73,29 +70,6 @@ export function renderCardDeck(container: HTMLElement) {
           <div class="card-body">
             <h2 class="card-question font-display">${currentCard.headlineQuestion}</h2>
             <p class="card-subtitle">${currentCard.subtitle}</p>
-
-            ${isSealed ? `
-              <!-- ESTADO DE INTERFAZ POST-VOTO COMPACTO -->
-              <div class="sealed-compact-card">
-                <div class="sealed-status-line">
-                  <span class="sealed-badge-choice ${sealedRecord?.choice === 'YES' ? 'is-yes' : sealedRecord?.choice === 'NO' ? 'is-no' : 'is-delegate'}">
-                    ${sealedRecord?.choice === 'YES' ? '✓ Voto: A FAVOR' : sealedRecord?.choice === 'NO' ? '✕ Voto: EN CONTRA' : '? Voto: NS / NC'}
-                  </span>
-                  <span class="sealed-hash-tag" title="Nullifier Hash: ${sealedRecord?.nullifierHash || ''}">
-                    🔒 ${sealedRecord ? sealedRecord.nullifierHash.slice(0, 14) + '...' : 'En Urna'}
-                  </span>
-                </div>
-
-                <div class="sealed-actions-row">
-                  <button class="btn-sealed-download" id="btn-download-receipt" title="Descargar acta criptográfica verificable en JSON">
-                    <span>📥 Recibo (.json)</span>
-                  </button>
-                  <button class="btn-sealed-advance" id="btn-advance-card" title="Avanzar al siguiente artículo del decreto">
-                    <span>Continuar al siguiente artículo →</span>
-                  </button>
-                </div>
-              </div>
-            ` : ''}
           </div>
 
           <!-- Capas de Profundidad Progresiva -->
@@ -112,98 +86,75 @@ export function renderCardDeck(container: HTMLElement) {
           </div>
 
           <!-- Orientación de Voto Deliberativo Consciente (sin arrastre) -->
-          ${!isSealed ? `
-            <div class="card-deliberation-footer">
-              <span class="deliberation-hint-text">Emite tu postura pulsando un botón inferior</span>
-            </div>
-          ` : ''}
+          <div class="card-deliberation-footer">
+            <span class="deliberation-hint-text">Emite tu postura pulsando un botón inferior</span>
+          </div>
         </div>
       </div>
 
-      <!-- BOTONES DE VOTACIÓN CONSCIENTES Y ACCESIBLES -->
+      <!-- BOTONES DE VOTACIÓN CONSCIENTES Y ACCESIBLES (SIEMPRE ABIERTOS EN PRUEBAS) -->
       <div class="deck-controls-magnetic arcade-controls-grid">
         <!-- 1. Botón A Favor (IZQUIERDA - Tecla A o ←) -->
         <button 
-          class="arcade-push-btn btn-arcade-yes ${isSealed ? 'is-locked' : ''}" 
+          class="arcade-push-btn btn-arcade-yes" 
           id="btn-swipe-yes" 
-          ${isSealed ? 'disabled title="🔒 Voto ya sellado e inmutable para este artículo"' : 'title="Votar A Favor [Tecla A o ←]"'}
+          title="Votar A Favor [Tecla A o ←]"
         >
           <div class="arcade-key-badge"><kbd>A</kbd></div>
-          <span class="arcade-btn-icon">${isSealed ? '🔒' : '✓'}</span>
+          <span class="arcade-btn-icon">✓</span>
           <span class="arcade-btn-name">A Favor</span>
         </button>
 
         <!-- 2. Botón NS / NC (CENTRO - Tecla W o ↑) -->
         <button 
-          class="arcade-push-btn btn-arcade-delegate ${isSealed ? 'is-locked' : ''}" 
+          class="arcade-push-btn btn-arcade-delegate" 
           id="btn-swipe-delegate" 
-          ${isSealed ? 'disabled title="🔒 Voto ya sellado e inmutable para este artículo"' : 'title="No sabe / No contesta [Tecla W o ↑]"'}
+          title="No sabe / No contesta [Tecla W o ↑]"
         >
           <div class="arcade-key-badge"><kbd>W</kbd></div>
-          <span class="arcade-btn-icon">${isSealed ? '🔒' : '?'}</span>
+          <span class="arcade-btn-icon">?</span>
           <span class="arcade-btn-name">NS / NC</span>
         </button>
 
         <!-- 3. Botón En Contra (DERECHA - Tecla D o →) -->
         <button 
-          class="arcade-push-btn btn-arcade-no ${isSealed ? 'is-locked' : ''}" 
+          class="arcade-push-btn btn-arcade-no" 
           id="btn-swipe-no" 
-          ${isSealed ? 'disabled title="🔒 Voto ya sellado e inmutable para este artículo"' : 'title="Votar En Contra [Tecla D o →]"'}
+          title="Votar En Contra [Tecla D o →]"
         >
           <div class="arcade-key-badge"><kbd>D</kbd></div>
-          <span class="arcade-btn-icon">${isSealed ? '🔒' : '✕'}</span>
+          <span class="arcade-btn-icon">✕</span>
           <span class="arcade-btn-name">En Contra</span>
         </button>
       </div>
 
       <!-- Barra Inferior de Atajos Accesibles -->
       <div class="arcade-hints-bar">
-        ${isSealed ? `
-          <span class="arcade-hint-item" style="color: #10b981; font-weight: 700;">
-            🔒 Voto Sellado e Inmutable (1 Ciudadano = 1 Voto)
-          </span>
-        ` : `
-          <span class="arcade-hint-item">Atajos: <kbd>A</kbd> A Favor</span>
+        <span class="arcade-hint-item">Atajos: <kbd>A</kbd> A Favor</span>
+        <span class="arcade-hint-dot">·</span>
+        <span class="arcade-hint-item"><kbd>W</kbd> NS/NC</span>
+        <span class="arcade-hint-dot">·</span>
+        <span class="arcade-hint-item"><kbd>D</kbd> En Contra</span>
+        ${gameStore.getCardIndex() > 0 ? `
           <span class="arcade-hint-dot">·</span>
-          <span class="arcade-hint-item"><kbd>W</kbd> NS/NC</span>
-          <span class="arcade-hint-dot">·</span>
-          <span class="arcade-hint-item"><kbd>D</kbd> En Contra</span>
-          ${gameStore.getCardIndex() > 0 && !gameStore.getSealedVoteForCard(currentCard.id) ? `
-            <span class="arcade-hint-dot">·</span>
-            <span class="arcade-hint-item"><kbd>Z</kbd> Deshacer</span>
-          ` : ''}
-        `}
+          <span class="arcade-hint-item"><kbd>Z</kbd> Deshacer</span>
+        ` : ''}
       </div>
 
       </div>
     </div>
   `;
 
-  // Asignar listeners del estado sellado
-  if (isSealed) {
-    container.querySelector('#btn-download-receipt')?.addEventListener('click', () => {
-      soundFx.playTap();
-      if (sealedRecord) {
-        triggerReceiptDownload(sealedRecord);
-      }
-    });
-
-    container.querySelector('#btn-advance-card')?.addEventListener('click', () => {
-      soundFx.playTap();
-      gameStore.advanceCard();
-    });
-  } else {
-    // Botones de votación con flujo Just-in-Time Passkey
-    container.querySelector('#btn-swipe-yes')?.addEventListener('click', () => {
-      initiateVoteFlow('YES');
-    });
-    container.querySelector('#btn-swipe-delegate')?.addEventListener('click', () => {
-      initiateVoteFlow('DELEGATE');
-    });
-    container.querySelector('#btn-swipe-no')?.addEventListener('click', () => {
-      initiateVoteFlow('NO');
-    });
-  }
+  // Botones de votación interactivos siempre activos
+  container.querySelector('#btn-swipe-yes')?.addEventListener('click', () => {
+    initiateVoteFlow('YES');
+  });
+  container.querySelector('#btn-swipe-delegate')?.addEventListener('click', () => {
+    initiateVoteFlow('DELEGATE');
+  });
+  container.querySelector('#btn-swipe-no')?.addEventListener('click', () => {
+    initiateVoteFlow('NO');
+  });
 
   // Modales de divulgación progresiva con sonido de apertura
   container.querySelector('#btn-open-monograph')?.addEventListener('click', () => {
@@ -230,14 +181,6 @@ export function renderCardDeck(container: HTMLElement) {
       return;
     }
     const key = e.key.toLowerCase();
-
-    // Si la carta está sellada, no permitir votar ni deshacer
-    if (isSealed) {
-      if (key === 'enter' || key === 'arrowright' || key === 'd') {
-        gameStore.advanceCard();
-      }
-      return;
-    }
 
     if (key === 'z' || key === 'backspace') {
       if (gameStore.getCardIndex() > 0) {
