@@ -129,7 +129,7 @@ export function promptJustInTimePasskey(
             style="width: 100%; justify-content: center; background: rgba(245, 158, 11, 0.12); border-color: rgba(245, 158, 11, 0.35); color: #b45309; font-weight: 700; font-size: 0.82rem; padding: 9px 14px; cursor: pointer;"
             title="Omitir el paso biométrico y sellar el voto con credencial simulada de prueba"
           >
-            <span>⚡ Saltar Verificación (Modo Prueba Alpha)</span>
+            <span>Saltar Verificación (Modo Prueba Alpha)</span>
           </button>
           <label style="display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 0.74rem; color: var(--text-tertiary); cursor: pointer; user-select: none;">
             <input type="checkbox" id="chk-remember-skip" />

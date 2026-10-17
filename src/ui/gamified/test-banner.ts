@@ -33,7 +33,7 @@ export function renderTestBanner(container: HTMLElement): void {
             title="Alternar entre solicitar biometría o saltar verificación para pruebas rápidas"
             style="${bypassActive ? 'background: #059669; color: white; border-color: #047857;' : ''}"
           >
-            <span>${bypassActive ? '⚡ Verificación Omitida (Activo)' : '⚡ Omitir Biometría (Pruebas)'}</span>
+            <span>${bypassActive ? 'Verificación Omitida (Activo)' : 'Omitir Biometría (Pruebas)'}</span>
           </button>
 
           <button 

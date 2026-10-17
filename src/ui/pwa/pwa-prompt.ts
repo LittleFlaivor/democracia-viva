@@ -17,7 +17,12 @@ export function renderGentlePwaBanner(container: HTMLElement, onOpenIosGuide: ()
   container.innerHTML = `
     <aside class="pwa-gentle-banner hud-pill-capsule" role="dialog" aria-label="Instalar Democracia Viva">
       <div class="pwa-banner-main">
-        <div class="pwa-banner-icon-badge" aria-hidden="true">📲</div>
+        <div class="pwa-banner-icon-badge" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="5" y="2" width="10" height="16" rx="2" />
+            <path d="M10 15h.01M8 8l2 2 2-2M10 5v5" />
+          </svg>
+        </div>
         <div class="pwa-banner-copy">
           <strong class="pwa-banner-title">Instala la App en tu dispositivo</strong>
           <span class="pwa-banner-desc">Acceso rápido a pantalla completa y firma biométrica directa.</span>
@@ -68,7 +73,12 @@ export function renderIosInstallModal(container: HTMLElement, onClose: () => voi
         <button class="modal-close-btn" id="btn-close-ios-modal" aria-label="Cerrar guía">×</button>
 
         <div class="pwa-ios-header">
-          <div class="pwa-ios-icon-glow">📲</div>
+          <div class="pwa-ios-icon-glow">
+            <svg width="24" height="24" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="5" y="2" width="10" height="16" rx="2" />
+              <path d="M10 15h.01M8 8l2 2 2-2M10 5v5" />
+            </svg>
+          </div>
           <h3 class="modal-title">Cómo instalar Democracia Viva en iPhone / iPad</h3>
           <p class="modal-subtitle">Safari no permite la instalación directa automática, pero puedes añadirla en 2 sencillos pasos:</p>
         </div>
@@ -96,8 +106,8 @@ export function renderIosInstallModal(container: HTMLElement, onClose: () => voi
         </div>
 
         <div class="pwa-ios-features">
-          <div class="pwa-feature-pill">⚡ Experiencia nativa a pantalla completa</div>
-          <div class="pwa-feature-pill">🛡️ Acceso biométrico con TouchID / FaceID</div>
+          <div class="pwa-feature-pill">Experiencia nativa a pantalla completa</div>
+          <div class="pwa-feature-pill">Acceso biométrico con TouchID / FaceID</div>
         </div>
 
         <div class="modal-actions-dual">

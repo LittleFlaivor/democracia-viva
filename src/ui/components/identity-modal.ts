@@ -26,8 +26,18 @@ export function renderIdentityModal(container: HTMLElement, onClose: () => void,
         <button class="modal-close-btn" id="btn-close-identity" aria-label="Cerrar modal">&times;</button>
 
         <div style="text-align: center; margin-bottom: 1.5rem;">
-          <div style="width: 58px; height: 58px; border-radius: 50%; background: rgba(37, 99, 235, 0.1); color: #2563eb; display: inline-flex; align-items: center; justify-content: center; font-size: 1.75rem; margin-bottom: 0.75rem;">
-            ${currentCred ? '🛡️' : '🔑'}
+          <div style="width: 58px; height: 58px; border-radius: 50%; background: rgba(37, 99, 235, 0.1); color: #2563eb; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 0.75rem;">
+            ${currentCred ? `
+              <svg width="28" height="28" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10 2l6 3v5c0 4.5-2.5 7.5-6 8-3.5-.5-6-3.5-6-8V5l6-3z" />
+                <path d="M7.5 10l2 2 3.5-3.5" />
+              </svg>
+            ` : `
+              <svg width="28" height="28" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="7.5" cy="12.5" r="3.5" />
+                <path d="M10 10l6.5-6.5M14 6l1.5 1.5M16 4l1 1" />
+              </svg>
+            `}
           </div>
           <h2 class="font-display" style="font-size: 1.45rem; font-weight: 800; color: var(--text-primary); margin-bottom: 0.35rem;">
             ${currentCred ? 'Tu Identidad Cívica Soberana' : 'Acceso Ciudadano con Passkey'}
@@ -40,7 +50,12 @@ export function renderIdentityModal(container: HTMLElement, onClose: () => void,
         <!-- Ajustes de Fase Alpha: Modo Prueba Rápido -->
         <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.28); border-radius: 14px; padding: 12px 16px; margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
           <div>
-            <strong style="font-size: 0.82rem; color: #b45309; display: block;">⚡ Modo Prueba Rápido (Omitir Biometría)</strong>
+            <strong style="font-size: 0.82rem; color: #b45309; display: flex; align-items: center; gap: 5px;">
+              <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 2L4 11h5l-1 7 7-9h-5l1-7z" />
+              </svg>
+              Modo Prueba Rápido (Omitir Biometría)
+            </strong>
             <span style="font-size: 0.74rem; color: var(--text-secondary);">Permite emitir votos de prueba directamente sin pedir huella ni PIN en cada acción.</span>
           </div>
           <input type="checkbox" id="chk-bypass-auth-modal" ${bypassActive ? 'checked' : ''} style="width: 20px; height: 20px; cursor: pointer; accent-color: #f59e0b;" />
@@ -172,7 +187,7 @@ export function renderIdentityModal(container: HTMLElement, onClose: () => void,
     onUpdated?.();
     if (feedbackEl) {
       feedbackEl.innerHTML = checked
-        ? '<span style="color: #b45309; font-weight: 700;">⚡ Modo Prueba Rápido activado: se omitirá la biometría al votar.</span>'
+        ? '<span style="color: #b45309; font-weight: 700;">Modo Prueba Rápido activado: se omitirá la biometría al votar.</span>'
         : '<span style="color: #2563eb; font-weight: 600;">Modo biométrico estándar activado.</span>';
     }
   });
