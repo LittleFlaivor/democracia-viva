@@ -106,37 +106,20 @@ function initApp() {
     const layer1 = document.getElementById('layer-1');
     const layer2 = document.getElementById('layer-2');
     const layer3 = document.getElementById('layer-3');
-    const layer4 = document.getElementById('layer-4');
-    const layer5 = document.getElementById('layer-5');
-    const layerCursor = document.getElementById('layer-cursor');
 
     let targetNormX = 0;
     let targetNormY = 0;
     let currentNormX = 0;
     let currentNormY = 0;
 
-    let targetCursorX = window.innerWidth / 2;
-    let targetCursorY = window.innerHeight / 2;
-    let currentCursorX = window.innerWidth / 2;
-    let currentCursorY = window.innerHeight / 2;
-    let cursorActive = false;
-
     window.addEventListener('pointermove', (e) => {
       targetNormX = (e.clientX / window.innerWidth - 0.5) * 2; // Rango [-1, 1]
       targetNormY = (e.clientY / window.innerHeight - 0.5) * 2;
-      targetCursorX = e.clientX;
-      targetCursorY = e.clientY;
-      if (!cursorActive && layerCursor) {
-        cursorActive = true;
-        layerCursor.style.opacity = '1';
-      }
     }, { passive: true });
 
     window.addEventListener('pointerleave', () => {
       targetNormX = 0;
       targetNormY = 0;
-      if (layerCursor) layerCursor.style.opacity = '0';
-      cursorActive = false;
     });
 
     // Delegación para intención cívica en hover (A Favor, En Contra, NS/NC)
@@ -161,21 +144,13 @@ function initApp() {
     });
 
     function tick() {
-      // Suave interpolación lerp con amortiguación física (60fps GPU)
-      currentNormX += (targetNormX - currentNormX) * 0.055;
-      currentNormY += (targetNormY - currentNormY) * 0.055;
+      // Suave interpolación física amortiguada y sutil (60fps GPU)
+      currentNormX += (targetNormX - currentNormX) * 0.04;
+      currentNormY += (targetNormY - currentNormY) * 0.04;
 
-      currentCursorX += (targetCursorX - currentCursorX) * 0.14;
-      currentCursorY += (targetCursorY - currentCursorY) * 0.14;
-
-      if (layer1) layer1.style.transform = `translate3d(${(currentNormX * 55).toFixed(2)}px, ${(currentNormY * 55).toFixed(2)}px, 0)`;
-      if (layer2) layer2.style.transform = `translate3d(${(currentNormX * -50).toFixed(2)}px, ${(currentNormY * -50).toFixed(2)}px, 0)`;
-      if (layer3) layer3.style.transform = `translate3d(${(currentNormX * 42).toFixed(2)}px, ${(currentNormY * -42).toFixed(2)}px, 0)`;
-      if (layer4) layer4.style.transform = `translate3d(${(currentNormX * -58).toFixed(2)}px, ${(currentNormY * 46).toFixed(2)}px, 0)`;
-      if (layer5) layer5.style.transform = `translate3d(${(currentNormX * 72).toFixed(2)}px, ${(currentNormY * 72).toFixed(2)}px, 0)`;
-      if (layerCursor && cursorActive) {
-        layerCursor.style.transform = `translate3d(${currentCursorX.toFixed(1)}px, ${currentCursorY.toFixed(1)}px, 0)`;
-      }
+      if (layer1) layer1.style.transform = `translate3d(${(currentNormX * 24).toFixed(2)}px, ${(currentNormY * 24).toFixed(2)}px, 0)`;
+      if (layer2) layer2.style.transform = `translate3d(${(currentNormX * -20).toFixed(2)}px, ${(currentNormY * -20).toFixed(2)}px, 0)`;
+      if (layer3) layer3.style.transform = `translate3d(${(currentNormX * 18).toFixed(2)}px, ${(currentNormY * -18).toFixed(2)}px, 0)`;
 
       requestAnimationFrame(tick);
     }
