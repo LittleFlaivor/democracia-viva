@@ -46,13 +46,8 @@ export function renderProfileDock(container: HTMLElement) {
         </div>
       </div>
 
-      <!-- Derecha: Passkey Segura + Interruptor Dual Claro / Oscuro en Cápsulas Flotantes -->
+      <!-- Derecha: Interruptor de Sonido e Interruptor Dual Claro / Oscuro -->
       <div class="dock-right-group">
-        <div class="dock-privacy-pill hud-pill-capsule" title="Identidad soberana ERC-4337 sobre L2 de Arbitrum">
-          <span class="dock-pulse-green"></span>
-          <span>Passkey Gasless · L2</span>
-        </div>
-
         <!-- Interruptor de Sonido Gamer -->
         <button 
           class="sound-toggle-btn hud-pill-capsule" 
