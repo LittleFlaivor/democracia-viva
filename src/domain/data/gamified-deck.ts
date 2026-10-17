@@ -13,6 +13,7 @@ export interface GamifiedCard {
   headlineQuestion: string;
   subtitle: string;
   fullDescription?: string;
+  metrics?: Array<{ label: string; value: string }>;
   keyPoints?: {
     pro: string;
     con: string;
@@ -49,6 +50,11 @@ export const GAMIFIED_DECK: GamifiedCard[] = [
     badge: 'Art. 1 BOE · Contención de Rentas',
     headlineQuestion: '¿Topar por ley las subidas del alquiler al 2.5% anual en ciudades tensionadas?',
     subtitle: 'Tope legal obligatorio del 2,5% anual a revisiones de contratos en zonas tensionadas (esfuerzo >30% del sueldo o precio >3 puntos sobre IPC) para proteger a 3,5 millones de familias frente a subidas abusivas.',
+    metrics: [
+      { label: 'Tope Máximo', value: '2.5% anual' },
+      { label: 'Protegidos', value: '3.5M hogares' },
+      { label: 'Condición', value: '>30% ingresos' }
+    ],
     fullDescription: `Esta disposición introduce un tope legal obligatorio del 2,5% anual a las revisiones y renovaciones de contratos de arrendamiento de vivienda habitual en aquellos municipios declarados oficialmente como zonas de mercado residencial tensionado. Esta declaración se activa cuando las familias destinan de media más del 30% de sus ingresos al pago del alquiler o cuando los precios hayan superado en más de 3 puntos el IPC autonómico en el último lustro.
 
 En el plano social, la medida busca frenar la escalada inflacionaria que actualmente expulsa a familias trabajadoras y jóvenes de sus barrios habituales ante subidas repentinas del 20% al 35%, protegiendo el derecho constitucional a una vivienda digna y aportando estabilidad a más de 3,5 millones de hogares inquilinos en toda España.
@@ -167,6 +173,11 @@ No obstante, colectivos de propietarios y economistas alertan de que una contenc
     badge: 'Art. 2 BOE · Bonificación IRPF',
     headlineQuestion: '¿Bonificar el 70% del IRPF a propietarios que rebajen voluntariamente el alquiler un 10%?',
     subtitle: 'Bonificación fiscal del 70% en el IRPF a propietarios que rebajen voluntariamente el alquiler un 10% en zonas tensionadas, sumada a un fondo público que avala y cubre impagos.',
+    metrics: [
+      { label: 'Ahorro Fiscal', value: '-70% IRPF' },
+      { label: 'Rebaja Renta', value: '-10% precio' },
+      { label: 'Seguridad', value: 'Aval impago' }
+    ],
     fullDescription: `El artículo diseña un sistema de incentivos fiscales positivos orientado a pequeños y medianos arrendadores. Aquellos propietarios que reduzcan voluntariamente al menos un 10% el precio del alquiler respecto al contrato anterior en áreas tensionadas obtendrán una bonificación fiscal extraordinaria del 70% en el rendimiento neto del capital inmobiliario en su declaración del IRPF.
 
 Como garantía adicional para activar el parque residencial privado, la ley contempla la creación de un Fondo Público de Cobertura que avala y anticipa las rentas mensuales impagadas en caso de demora o insolvencia sobrevenida del inquilino, amortiguando el principal temor de los arrendadores y evitando litigios judiciales prolongados.
@@ -267,6 +278,11 @@ Sus defensores destacan que premiar la moderación de rentas en lugar de aplicar
     badge: 'Art. 3 BOE · Recargo IBI Fondos',
     headlineQuestion: '¿Cobrar un 150% más de IBI a grandes fondos y bancos con pisos vacíos más de 2 años?',
     subtitle: 'Recargo tributario de hasta el 150% en el IBI a entidades financieras, sociedades y grandes fondos con viviendas desocupadas más de 2 años sin causa, blindando segundas residencias familiares y herencias.',
+    metrics: [
+      { label: 'Recargo IBI', value: '+150% máx' },
+      { label: 'Tiempo Vacío', value: '>2 años' },
+      { label: 'Destinatario', value: 'Bancos / Fondos' }
+    ],
     fullDescription: `Esta norma faculta a los ayuntamientos a imponer un recargo tributario de hasta el 150% en la cuota líquida del Impuesto sobre Bienes Inmuebles (IBI) sobre aquellas viviendas de uso residencial que permanezcan desocupadas con carácter permanente y sin justificación durante más de dos años ininterrumpidos. La medida se dirige de forma expresa a entidades financieras, sociedades inmobiliarias y fondos de inversión titulares de cuatro o más inmuebles urbanos.
 
 El propósito fundamental es desalentar el acaparamiento especulativo de activos habitacionales cerrados a cal y canto, forzando a las corporaciones tenedoras a comercializarlos o volcarlos al mercado del alquiler residencial. El precepto blinda de forma rigurosa y exime expresamente de cualquier recargo a segundas residencias vacacionales, traslados laborales temporales o viviendas en litigio judicial o reforma de habitabilidad.

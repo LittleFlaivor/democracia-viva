@@ -70,35 +70,41 @@ export function renderCardDeck(container: HTMLElement) {
             ${currentCard.svgIllustration || ''}
           </div>
 
-          <!-- Cuerpo: Titular y Resumen Ejecutivo Limpio (15px, máx 240 caracteres) -->
+          <!-- Cuerpo: Titular, Resumen Ejecutivo y Métricas Clave -->
           <div class="card-body">
-            <h2 class="card-question font-display">${currentCard.headlineQuestion}</h2>
-            <p class="card-subtitle-executive">${currentCard.subtitle}</p>
-          </div>
+            <div class="card-text-group">
+              <h2 class="card-question font-display">${currentCard.headlineQuestion}</h2>
+              <p class="card-subtitle-executive">${currentCard.subtitle}</p>
+            </div>
 
-          <!-- Píldoras de Consulta Rápida con Iconografía Vectorial Monocromática (0 Emojis) -->
-          <div class="card-actions-quick">
-            <button class="btn-action-pill btn-monograph-pill" id="btn-open-monograph" title="Datos oficiales, gráficos y contexto (2 min)">
-              <svg class="pill-svg-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M4 16v-4M8 16V8M12 16v-6M16 16V4" />
-              </svg>
-              <span>Datos Clave</span>
-            </button>
-            <button class="btn-action-pill btn-dilemma-pill" id="btn-open-dilemma" title="Voces reales ciudadanas enfrentadas">
-              <svg class="pill-svg-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M13 17v-1.5a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3V17" />
-                <circle cx="8" cy="6.5" r="2.5" />
-                <path d="M17 17v-1.5a3 3 0 0 0-2-2.83M12.5 4a2.5 2.5 0 0 1 0 5" />
-              </svg>
-              <span>2 Visiones</span>
-            </button>
-            <button class="btn-action-pill btn-boe-pill" id="btn-open-boe" title="Texto literal aprobado en el BOE">
-              <svg class="pill-svg-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M14 2H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z" />
-                <path d="M8 6h4M8 10h4M8 14h2" />
-              </svg>
-              <span>Ley BOE</span>
-            </button>
+            ${currentCard.metrics && currentCard.metrics.length > 0 ? `
+              <!-- Micro-Banda de Métricas Clave de la Ley (Fácil Comprensión y Cero Vacío) -->
+              <div class="card-metrics-strip" role="group" aria-label="Métricas del Decreto">
+                ${currentCard.metrics.map(m => `
+                  <div class="metric-chip">
+                    <span class="metric-chip-label">${m.label}</span>
+                    <span class="metric-chip-val">${m.value}</span>
+                  </div>
+                `).join('')}
+              </div>
+            ` : ''}
+
+            <!-- Píldoras de Consulta Rápida con Iconografía Vectorial Monocromática (0 Emojis) -->
+            <div class="card-actions-quick">
+              <button class="btn-action-pill btn-monograph-pill" id="btn-open-monograph" title="Datos oficiales, gráficos y contexto (2 min)">
+                <svg class="pill-svg-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M4 16v-4M8 16V8M12 16v-6M16 16V4" />
+                </svg>
+                <span>Datos Clave</span>
+              </button>
+              <button class="btn-action-pill btn-boe-pill" id="btn-open-boe" title="Texto literal aprobado en el BOE">
+                <svg class="pill-svg-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z" />
+                  <path d="M8 6h4M8 10h4M8 14h2" />
+                </svg>
+                <span>Ley BOE</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
