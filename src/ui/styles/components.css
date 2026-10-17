@@ -1142,9 +1142,73 @@
 }
 
 .active-card {
-  cursor: default;
+  cursor: grab;
+  touch-action: none !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
   animation: cardEnter 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+  will-change: transform;
+}
+
+.active-card.is-dragging {
+  cursor: grabbing !important;
+  transition: none !important;
+  will-change: transform;
+}
+
+.active-card.intent-glow-yes {
+  box-shadow: 0 16px 36px -4px rgba(16, 185, 129, 0.35), 0 0 0 2px #10b981 !important;
+  border-color: #10b981 !important;
+}
+
+.active-card.intent-glow-no {
+  box-shadow: 0 16px 36px -4px rgba(239, 68, 68, 0.35), 0 0 0 2px #ef4444 !important;
+  border-color: #ef4444 !important;
+}
+
+.active-card.intent-glow-delegate {
+  box-shadow: 0 16px 36px -4px rgba(245, 158, 11, 0.35), 0 0 0 2px #f59e0b !important;
+  border-color: #f59e0b !important;
+}
+
+.card-swipe-badge-overlay {
+  position: absolute;
+  top: 1.15rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 40;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+
+.swipe-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  border-radius: 9999px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  text-transform: uppercase;
+}
+
+.swipe-pill-yes {
+  background: #10b981;
+  color: #ffffff;
+}
+
+.swipe-pill-no {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+.swipe-pill-delegate {
+  background: #f59e0b;
+  color: #ffffff;
 }
 
 @keyframes cardEnter {
@@ -1159,7 +1223,6 @@
 }
 
 .decision-committing {
-  filter: blur(1px);
   pointer-events: none;
 }
 
@@ -1171,7 +1234,7 @@
 
 .card-depth {
   pointer-events: none;
-  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.32s ease;
 }
 
 .card-question-depth {

@@ -66,19 +66,20 @@ body.gamified-body {
 .ambient-orb {
   position: absolute;
   border-radius: 50%;
-  filter: blur(68px);
-  -webkit-filter: blur(68px);
-  will-change: transform, border-radius, opacity;
+  filter: blur(60px);
+  -webkit-filter: blur(60px);
+  will-change: transform;
   pointer-events: none;
   mix-blend-mode: normal;
   opacity: 0.85;
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition: opacity 0.5s ease;
+  transform: translateZ(0);
 }
 
 [data-theme="dark"] .ambient-orb {
   mix-blend-mode: screen;
-  filter: blur(72px);
-  -webkit-filter: blur(72px);
+  filter: blur(64px);
+  -webkit-filter: blur(64px);
   opacity: 0.70;
 }
 
@@ -89,7 +90,7 @@ body.gamified-body {
   top: -90px;
   left: -50px;
   background: radial-gradient(circle at 45% 45%, rgba(37, 99, 235, 0.24) 0%, rgba(56, 189, 248, 0.12) 45%, transparent 75%);
-  animation: floatOrb1 11s ease-in-out infinite alternate;
+  animation: floatOrb1 14s ease-in-out infinite alternate;
 }
 
 .orb-2 {
@@ -98,7 +99,7 @@ body.gamified-body {
   bottom: -70px;
   right: -50px;
   background: radial-gradient(circle at 55% 55%, rgba(16, 185, 129, 0.22) 0%, rgba(52, 211, 153, 0.10) 45%, transparent 75%);
-  animation: floatOrb2 13s ease-in-out infinite alternate;
+  animation: floatOrb2 16s ease-in-out infinite alternate;
 }
 
 .orb-3 {
@@ -107,7 +108,7 @@ body.gamified-body {
   top: 25%;
   right: 12%;
   background: radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.18) 0%, rgba(147, 197, 253, 0.08) 50%, transparent 75%);
-  animation: floatOrb3 10s ease-in-out infinite alternate;
+  animation: floatOrb3 12s ease-in-out infinite alternate;
 }
 
 /* Modo Oscuro: Brillo descansado de 3 tonos cósmicos */
@@ -123,61 +124,52 @@ body.gamified-body {
 
 /* Reacción sutil a la intención cívica */
 #ambient-mesh.intent-yes .orb-2 {
-  transform: scale(1.15);
+  transform: scale(1.15) translateZ(0);
   opacity: 1;
 }
 #ambient-mesh.intent-no .orb-1 {
-  transform: scale(1.15);
+  transform: scale(1.15) translateZ(0);
   opacity: 1;
 }
 #ambient-mesh.intent-delegate .orb-3 {
-  transform: scale(1.15);
+  transform: scale(1.15) translateZ(0);
   opacity: 1;
 }
 
-/* Animaciones Cinemáticas de Ondulación Suave */
+/* Animaciones Cinemáticas Aceleradas por GPU (Transform Puro) */
 @keyframes floatOrb1 {
   0% {
     transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
-    border-radius: 50% 50% 50% 50%;
   }
   50% {
-    transform: translate3d(80px, 110px, 0) rotate(45deg) scale(1.08);
-    border-radius: 46% 54% 58% 42% / 48% 45% 55% 52%;
+    transform: translate3d(70px, 90px, 0) rotate(40deg) scale(1.06);
   }
   100% {
-    transform: translate3d(130px, 60px, 0) rotate(90deg) scale(0.96);
-    border-radius: 52% 48% 45% 55% / 50% 52% 48% 50%;
+    transform: translate3d(110px, 50px, 0) rotate(80deg) scale(0.96);
   }
 }
 
 @keyframes floatOrb2 {
   0% {
     transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
-    border-radius: 50% 50% 50% 50%;
   }
   50% {
-    transform: translate3d(-100px, -70px, 0) rotate(-40deg) scale(1.10);
-    border-radius: 55% 45% 44% 56% / 50% 58% 42% 50%;
+    transform: translate3d(-80px, -60px, 0) rotate(-35deg) scale(1.08);
   }
   100% {
-    transform: translate3d(-140px, -110px, 0) rotate(-80deg) scale(0.95);
-    border-radius: 48% 52% 54% 46% / 52% 48% 52% 48%;
+    transform: translate3d(-120px, -90px, 0) rotate(-70deg) scale(0.95);
   }
 }
 
 @keyframes floatOrb3 {
   0% {
     transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
-    border-radius: 50% 50% 50% 50%;
   }
   50% {
-    transform: translate3d(-80px, 90px, 0) scale(1.12) rotate(40deg);
-    border-radius: 44% 56% 52% 48% / 48% 44% 56% 52%;
+    transform: translate3d(-70px, 80px, 0) scale(1.08) rotate(35deg);
   }
   100% {
-    transform: translate3d(-120px, 40px, 0) scale(0.94) rotate(75deg);
-    border-radius: 50% 50% 50% 50%;
+    transform: translate3d(-100px, 35px, 0) scale(0.94) rotate(65deg);
   }
 }
 
@@ -215,6 +207,16 @@ body.gamified-body {
 }
 
 @media (max-width: 767px) {
+  /* Optimización GPU móvil: reducción de radio de desenfoque para 60/120fps sostenidos */
+  .ambient-orb {
+    filter: blur(36px) !important;
+    -webkit-filter: blur(36px) !important;
+    opacity: 0.6 !important;
+  }
+  .orb-1 { width: 340px !important; height: 340px !important; }
+  .orb-2 { width: 320px !important; height: 320px !important; }
+  .orb-3 { width: 300px !important; height: 300px !important; }
+
   /* Por defecto o durante la votación del mazo: 100dvh Zero-Scroll exacto */
   body.gamified-body {
     height: 100dvh;

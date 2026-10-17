@@ -184,15 +184,45 @@ function initApp() {
     let targetNormY = 0;
     let currentNormX = 0;
     let currentNormY = 0;
+    let isTicking = false;
+
+    function requestTick() {
+      if (!isTicking) {
+        isTicking = true;
+        requestAnimationFrame(tick);
+      }
+    }
+
+    function tick() {
+      currentNormX += (targetNormX - currentNormX) * 0.05;
+      currentNormY += (targetNormY - currentNormY) * 0.05;
+
+      if (layer1) layer1.style.transform = `translate3d(${(currentNormX * 24).toFixed(1)}px, ${(currentNormY * 24).toFixed(1)}px, 0)`;
+      if (layer2) layer2.style.transform = `translate3d(${(currentNormX * -20).toFixed(1)}px, ${(currentNormY * -20).toFixed(1)}px, 0)`;
+      if (layer3) layer3.style.transform = `translate3d(${(currentNormX * 18).toFixed(1)}px, ${(currentNormY * -18).toFixed(1)}px, 0)`;
+
+      const diffX = Math.abs(targetNormX - currentNormX);
+      const diffY = Math.abs(targetNormY - currentNormY);
+
+      if (diffX > 0.001 || diffY > 0.001) {
+        requestAnimationFrame(tick);
+      } else {
+        isTicking = false;
+      }
+    }
 
     window.addEventListener('pointermove', (e) => {
-      targetNormX = (e.clientX / window.innerWidth - 0.5) * 2; // Rango [-1, 1]
+      // Ignorar en pantallas táctiles puras para máxima fluidez y ahorro de batería
+      if (e.pointerType === 'touch') return;
+      targetNormX = (e.clientX / window.innerWidth - 0.5) * 2;
       targetNormY = (e.clientY / window.innerHeight - 0.5) * 2;
+      requestTick();
     }, { passive: true });
 
     window.addEventListener('pointerleave', () => {
       targetNormX = 0;
       targetNormY = 0;
+      requestTick();
     });
 
     // Delegación para intención cívica en hover (A Favor, En Contra, NS/NC)
@@ -215,19 +245,6 @@ function initApp() {
         mesh.classList.remove('intent-yes', 'intent-no', 'intent-delegate');
       }
     });
-
-    function tick() {
-      // Suave interpolación física amortiguada y sutil (60fps GPU)
-      currentNormX += (targetNormX - currentNormX) * 0.04;
-      currentNormY += (targetNormY - currentNormY) * 0.04;
-
-      if (layer1) layer1.style.transform = `translate3d(${(currentNormX * 24).toFixed(2)}px, ${(currentNormY * 24).toFixed(2)}px, 0)`;
-      if (layer2) layer2.style.transform = `translate3d(${(currentNormX * -20).toFixed(2)}px, ${(currentNormY * -20).toFixed(2)}px, 0)`;
-      if (layer3) layer3.style.transform = `translate3d(${(currentNormX * 18).toFixed(2)}px, ${(currentNormY * -18).toFixed(2)}px, 0)`;
-
-      requestAnimationFrame(tick);
-    }
-    requestAnimationFrame(tick);
   }
 
   // Inicializar movimiento ambiental orgánico

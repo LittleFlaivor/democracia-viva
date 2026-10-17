@@ -132,8 +132,8 @@ export function promptJustInTimePasskey(
             <span>Saltar Verificación (Modo Prueba Alpha)</span>
           </button>
           <label style="display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 0.74rem; color: var(--text-tertiary); cursor: pointer; user-select: none;">
-            <input type="checkbox" id="chk-remember-skip" />
-            <span>Recordar: no volver a pedir biometría en esta sesión de prueba</span>
+            <input type="checkbox" id="chk-remember-skip" checked />
+            <span>Recordar: omitir biometría durante toda esta sesión de prueba</span>
           </label>
         </div>
       </div>
@@ -158,7 +158,8 @@ export function promptJustInTimePasskey(
     // Saltar verificación biométrica en modo prueba
     modalOverlay.querySelector('#btn-skip-passkey')?.addEventListener('click', () => {
       soundFx.playTap();
-      const remember = (modalOverlay.querySelector('#chk-remember-skip') as HTMLInputElement)?.checked;
+      const rememberCheckbox = modalOverlay.querySelector('#chk-remember-skip') as HTMLInputElement | null;
+      const remember = rememberCheckbox ? rememberCheckbox.checked : true;
       if (remember) {
         setTestBypassEnabled(true);
       }

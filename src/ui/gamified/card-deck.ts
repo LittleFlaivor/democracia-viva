@@ -56,6 +56,9 @@ export function renderCardDeck(container: HTMLElement) {
         <!-- CARTA ACTIVA INTERACTIVA (DELIBERATIVA Y ACCESIBLE) -->
         <div class="game-card active-card arcade-glow-card" id="active-card" style="z-index: 20;">
 
+          <!-- Badge Overlay de Intención Táctil Flotante -->
+          <div class="card-swipe-badge-overlay" id="swipe-badge-overlay" aria-hidden="true"></div>
+
           <!-- Contenido Superior de la Carta: Área Temática y Artículo Oficial -->
           <div class="card-header">
             <div class="card-topic-tag">
@@ -191,6 +194,131 @@ export function renderCardDeck(container: HTMLElement) {
     gameStore.openBoeModal(currentCard);
   });
 
+  // GESTIÓN TÁCTIL Y DE ARRASTRE DIRECTO (SWIPE FLUIDO DE LA CARTA)
+  const cardEl = container.querySelector('#active-card') as HTMLElement;
+  const overlayBadge = container.querySelector('#swipe-badge-overlay') as HTMLElement;
+
+  if (cardEl) {
+    let startX = 0;
+    let startY = 0;
+    let deltaX = 0;
+    let deltaY = 0;
+    let isDragging = false;
+    let isCommitting = false;
+
+    const onPointerDown = (e: PointerEvent) => {
+      if (isCommitting) return;
+      const target = e.target as HTMLElement;
+      // No iniciar arrastre si se interactúa con botones de acción rápida
+      if (target.closest('button, a, input, select, textarea, .btn-action-pill')) {
+        return;
+      }
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      deltaX = 0;
+      deltaY = 0;
+
+      try {
+        cardEl.setPointerCapture(e.pointerId);
+      } catch (_) {}
+
+      cardEl.classList.add('is-dragging');
+    };
+
+    const onPointerMove = (e: PointerEvent) => {
+      if (!isDragging || isCommitting) return;
+
+      deltaX = e.clientX - startX;
+      deltaY = e.clientY - startY;
+
+      // Amortiguación vertical para priorizar intención deliberada horizontal
+      const dampedY = deltaY * 0.45;
+      const rotation = deltaX * 0.05;
+
+      cardEl.style.transform = `translate3d(${deltaX}px, ${dampedY}px, 0) rotate(${rotation}deg)`;
+
+      // Feedback visual reactivo de alta fidelidad
+      const thresholdX = 35;
+      const thresholdY = -35;
+
+      if (deltaX < -thresholdX) {
+        // Hacia la izquierda -> A Favor (Verde)
+        cardEl.classList.add('intent-glow-yes');
+        cardEl.classList.remove('intent-glow-no', 'intent-glow-delegate');
+        if (overlayBadge) {
+          overlayBadge.innerHTML = `<span class="swipe-pill swipe-pill-yes">✓ A Favor</span>`;
+          overlayBadge.style.opacity = `${Math.min(1, Math.max(0, (Math.abs(deltaX) - 20) / 60))}`;
+        }
+      } else if (deltaX > thresholdX) {
+        // Hacia la derecha -> En Contra (Rojo)
+        cardEl.classList.add('intent-glow-no');
+        cardEl.classList.remove('intent-glow-yes', 'intent-glow-delegate');
+        if (overlayBadge) {
+          overlayBadge.innerHTML = `<span class="swipe-pill swipe-pill-no">✕ En Contra</span>`;
+          overlayBadge.style.opacity = `${Math.min(1, Math.max(0, (Math.abs(deltaX) - 20) / 60))}`;
+        }
+      } else if (deltaY < thresholdY && Math.abs(deltaX) < 35) {
+        // Hacia arriba -> NS / NC (Ámbar)
+        cardEl.classList.add('intent-glow-delegate');
+        cardEl.classList.remove('intent-glow-yes', 'intent-glow-no');
+        if (overlayBadge) {
+          overlayBadge.innerHTML = `<span class="swipe-pill swipe-pill-delegate">? NS / NC</span>`;
+          overlayBadge.style.opacity = `${Math.min(1, Math.max(0, (Math.abs(deltaY) - 20) / 60))}`;
+        }
+      } else {
+        cardEl.classList.remove('intent-glow-yes', 'intent-glow-no', 'intent-glow-delegate');
+        if (overlayBadge) {
+          overlayBadge.style.opacity = '0';
+        }
+      }
+    };
+
+    const onPointerUp = (e: PointerEvent) => {
+      if (!isDragging) return;
+      isDragging = false;
+      cardEl.classList.remove('is-dragging');
+
+      try {
+        cardEl.releasePointerCapture(e.pointerId);
+      } catch (_) {}
+
+      const commitThresholdX = 65;
+      const commitThresholdY = -60;
+
+      if (deltaX < -commitThresholdX) {
+        isCommitting = true;
+        initiateVoteFlow('YES');
+      } else if (deltaX > commitThresholdX) {
+        isCommitting = true;
+        initiateVoteFlow('NO');
+      } else if (deltaY < commitThresholdY && Math.abs(deltaX) < 55) {
+        isCommitting = true;
+        initiateVoteFlow('DELEGATE');
+      } else {
+        // Snap-back elástico con física de muelle
+        cardEl.style.transition = 'transform 0.38s cubic-bezier(0.175, 0.885, 0.32, 1.25), box-shadow 0.28s ease, border-color 0.28s ease';
+        cardEl.style.transform = 'translate3d(0, 0, 0) rotate(0deg)';
+        cardEl.classList.remove('intent-glow-yes', 'intent-glow-no', 'intent-glow-delegate');
+        if (overlayBadge) {
+          overlayBadge.style.opacity = '0';
+        }
+        setTimeout(() => {
+          if (!isDragging && !isCommitting && cardEl) {
+            cardEl.style.transition = '';
+          }
+        }, 390);
+      }
+    };
+
+    cardEl.addEventListener('pointerdown', onPointerDown);
+    cardEl.addEventListener('pointermove', onPointerMove);
+    cardEl.addEventListener('pointerup', onPointerUp);
+    cardEl.addEventListener('pointercancel', onPointerUp);
+  }
+
   // Atajos de teclado para votación accesible (A = A Favor / Izquierda, W = NS/NC, D = En Contra / Derecha)
   const handleKeydown = (e: KeyboardEvent) => {
     if (
@@ -251,29 +379,59 @@ export function renderCardDeck(container: HTMLElement) {
       }
     } catch (err: any) {
       // Si el usuario cancela la biometría, devolver carta al centro suavemente
-      const cardEl = container.querySelector('#active-card') as HTMLElement;
-      if (cardEl) {
-        cardEl.style.transition = 'transform 0.38s cubic-bezier(0.16, 1, 0.3, 1)';
-        cardEl.style.transform = 'translate3d(0, 0, 0) rotate(0deg)';
+      const card = container.querySelector('#active-card') as HTMLElement;
+      const overlay = container.querySelector('#swipe-badge-overlay') as HTMLElement;
+      if (card) {
+        card.classList.remove('decision-committing', 'intent-glow-yes', 'intent-glow-no', 'intent-glow-delegate');
+        card.style.transition = 'transform 0.38s cubic-bezier(0.175, 0.885, 0.32, 1.25)';
+        card.style.transform = 'translate3d(0, 0, 0) rotate(0deg)';
+        card.style.opacity = '1';
+        if (overlay) overlay.style.opacity = '0';
       }
     }
   }
 
   function triggerFlyOff(decision: GameDecision, credential?: CitizenPasskeyCredential) {
-    const cardEl = container.querySelector('#active-card') as HTMLElement;
-    if (!cardEl) {
+    const card = container.querySelector('#active-card') as HTMLElement;
+    const depthCard = container.querySelector('.game-card.card-depth') as HTMLElement;
+
+    if (!card) {
       gameStore.playDecision(decision, credential);
       return;
     }
 
-    // Animación sobria de confirmación cívica (sin deslizamiento de casino/dating)
-    cardEl.classList.add('decision-committing');
-    cardEl.style.transition = 'all 0.28s cubic-bezier(0.16, 1, 0.3, 1)';
-    cardEl.style.opacity = '0.75';
-    cardEl.style.transform = 'scale(0.98)';
+    if (decision === 'YES') {
+      soundFx.playVoteYes();
+    } else if (decision === 'NO') {
+      soundFx.playVoteNo();
+    } else {
+      soundFx.playTap();
+    }
+
+    // Salida direccional acelerada por GPU
+    card.classList.add('decision-committing');
+    card.style.transition = 'transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.28s ease-out';
+
+    if (decision === 'YES') {
+      card.style.transform = 'translate3d(-125vw, 20px, 0) rotate(-16deg)';
+      card.style.opacity = '0';
+    } else if (decision === 'NO') {
+      card.style.transform = 'translate3d(125vw, 20px, 0) rotate(16deg)';
+      card.style.opacity = '0';
+    } else {
+      card.style.transform = 'translate3d(0, -90vh, 0) scale(0.92)';
+      card.style.opacity = '0';
+    }
+
+    // Promoción suave de la carta en segundo plano (profundidad 3D)
+    if (depthCard) {
+      depthCard.style.transition = 'transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.28s ease';
+      depthCard.style.transform = 'scale(1) translateY(0)';
+      depthCard.style.opacity = '1';
+    }
 
     setTimeout(async () => {
       await gameStore.playDecision(decision, credential);
-    }, 220);
+    }, 240);
   }
 }
