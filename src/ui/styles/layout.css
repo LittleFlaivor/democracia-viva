@@ -215,6 +215,7 @@ body.gamified-body {
 }
 
 @media (max-width: 767px) {
+  /* Por defecto o durante la votación del mazo: 100dvh Zero-Scroll exacto */
   body.gamified-body {
     height: 100dvh;
     max-height: 100dvh;
@@ -251,6 +252,53 @@ body.gamified-body {
     justify-content: space-between;
     min-height: 0;
     overflow: hidden;
+  }
+
+  /* ========================================================
+     PANTALLAS CON CONTENIDO EXTENSO (RESULTADOS / CONSENSO)
+     Permite scroll vertical nativo suave sin cortar información
+     ======================================================== */
+  body.gamified-body.view-results-active,
+  body.gamified-body:has(.eureka-stage-wrapper) {
+    height: auto !important;
+    max-height: none !important;
+    min-height: 100dvh !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+  }
+
+  body.gamified-body.view-results-active .game-viewport,
+  body.gamified-body:has(.eureka-stage-wrapper) .game-viewport {
+    height: auto !important;
+    max-height: none !important;
+    min-height: auto !important;
+    overflow: visible !important;
+    padding: 0.35rem 0.65rem 1.5rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    flex: none !important;
+    gap: 0.75rem !important;
+  }
+
+  body.gamified-body.view-results-active #game-stage-container,
+  body.gamified-body:has(.eureka-stage-wrapper) #game-stage-container {
+    height: auto !important;
+    max-height: none !important;
+    min-height: auto !important;
+    overflow: visible !important;
+    flex: none !important;
+    display: block !important;
+  }
+
+  body.gamified-body.view-results-active #civic-footer-container,
+  body.gamified-body:has(.eureka-stage-wrapper) #civic-footer-container {
+    margin-top: auto !important;
+    padding: 1rem 0 calc(1.5rem + env(safe-area-inset-bottom, 0px)) !important;
+    position: relative !important;
   }
 }
 
@@ -308,6 +356,9 @@ body.gamified-body {
     margin: 0 !important;
     padding: 1.25rem 1.25rem calc(1.5rem + env(safe-area-inset-bottom, 0px)) !important;
     box-sizing: border-box !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-y: contain !important;
     animation: slideUpSheet 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
   }
 }

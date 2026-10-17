@@ -2244,7 +2244,7 @@
     width: 100% !important;
     max-width: 100% !important;
     box-sizing: border-box !important;
-    overflow: hidden !important;
+    overflow: visible !important;
   }
 
   .eureka-achievement-pill {

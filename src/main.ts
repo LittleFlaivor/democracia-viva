@@ -140,7 +140,11 @@ function initApp() {
     renderProfileDock(dockContainer!, openIdentityModal, openIosGuide);
     renderHudBarometers(hudContainer!);
 
-    if (gameStore.isFinished()) {
+    const isFinished = gameStore.isFinished();
+    document.body.classList.toggle('view-results-active', isFinished);
+    document.body.classList.toggle('view-deck-active', !isFinished);
+
+    if (isFinished) {
       renderConsensusEureka(stageContainer!, openParliamentaryReport, openReceiptModal);
     } else {
       renderCardDeck(stageContainer!);
