@@ -70,9 +70,9 @@ export function renderHudBarometers(container: HTMLElement) {
     </div>
   `;
 
-  // Listener para retroceder de ronda
+  // Listener para retroceder o inspeccionar ronda anterior
   container.querySelector('#btn-hud-undo')?.addEventListener('click', () => {
-    soundFx.playUndo();
-    gameStore.undoDecision();
+    soundFx.playTap();
+    gameStore.viewPreviousCard();
   });
 }

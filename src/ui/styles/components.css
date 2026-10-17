@@ -3024,6 +3024,39 @@
 /* ========================================================
    MODAL DE AUTENTICACIÓN WEBAUTHN / PASSKEYS JUST-IN-TIME
    ======================================================== */
+.passkey-modal-backdrop {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(15, 23, 42, 0.65) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 99999 !important;
+  padding: 1.5rem !important;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.passkey-modal-backdrop.active {
+  opacity: 1;
+}
+
+.passkey-modal-card {
+  background: var(--bg-surface, #ffffff) !important;
+  border: 1px solid var(--border-subtle, #e2e8f0) !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(37, 99, 235, 0.15) !important;
+}
+
+[data-theme="dark"] .passkey-modal-card {
+  background: #111827 !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(96, 165, 250, 0.2) !important;
+}
+
 .passkey-icon-halo {
   position: relative;
   width: 76px;

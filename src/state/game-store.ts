@@ -339,6 +339,16 @@ export class GameStore {
     return true;
   }
 
+  /**
+   * Permite navegar a la carta anterior para inspeccionar el voto sellado (solo lectura).
+   */
+  public viewPreviousCard(): boolean {
+    if (this.currentCardIndex <= 0) return false;
+    this.currentCardIndex -= 1;
+    this.notify();
+    return true;
+  }
+
   public resetGame() {
     this.currentCardIndex = 0;
     this.decisions = {};
