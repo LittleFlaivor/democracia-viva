@@ -42,29 +42,107 @@
   box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.45);
 }
 
-@media (max-width: 680px) {
+@media (max-width: 767px) {
   .profile-dock-bar {
-    padding: 0.75rem 1rem 0.25rem 1rem;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.75rem;
+    padding: 0.35rem 0.75rem 0.25rem 0.75rem !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    height: 52px !important;
+    max-height: 52px !important;
+    gap: 0.4rem !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    box-sizing: border-box !important;
   }
   .dock-left-group {
-    justify-content: space-between;
-    gap: 0.75rem;
-    width: 100%;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.4rem !important;
+    flex-shrink: 0 !important;
   }
-  .dock-right-group {
-    justify-content: space-between;
-    width: 100%;
+  .dock-brand-mark {
+    flex-shrink: 0 !important;
+  }
+  .brand-logo-container {
+    gap: 0.35rem !important;
+  }
+  .brand-logo-symbol {
+    width: 30px !important;
+    height: 30px !important;
   }
   .brand-word-democracia,
   .brand-word-viva {
-    font-size: 1.1rem;
+    font-size: 1.05rem !important;
   }
-  .dock-profile-pill {
-    padding: 4px 9px;
-    font-size: 0.72rem;
+  .brand-tagline {
+    display: none !important;
+  }
+  .dock-alpha-tag {
+    display: none !important; /* Visible en el footer inferior */
+  }
+  .dock-right-group {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.35rem !important;
+    flex-shrink: 0 !important;
+  }
+  .dock-user-profile {
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 50% !important;
+    cursor: pointer !important;
+  }
+  .dock-user-avatar {
+    width: 24px !important;
+    height: 24px !important;
+    font-size: 0.82rem !important;
+    border: none !important;
+    background: transparent !important;
+  }
+  .dock-user-name,
+  .dock-user-badge {
+    display: none !important;
+  }
+  .dock-bypass-pill {
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 50% !important;
+    cursor: pointer !important;
+  }
+  .dock-bypass-pill .bypass-label {
+    display: none !important;
+  }
+  .sound-toggle-btn,
+  .theme-toggle-btn {
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 50% !important;
+  }
+  .sound-text,
+  .theme-text {
+    display: none !important;
+  }
+}
+
+@media (max-width: 350px) {
+  .dock-alpha-tag {
+    display: none !important;
   }
 }
 
@@ -492,16 +570,35 @@
   transition: width 0.5s var(--ease-spring);
 }
 
-@media (max-width: 540px) {
+@media (max-width: 767px) {
   .game-hud-capsule {
-    padding: 0.65rem 0.95rem;
-    gap: 0.75rem;
+    margin: 0.15rem auto 0.35rem !important;
+    padding: 0.45rem 0.75rem !important;
+    gap: 0.5rem !important;
+    border-radius: 16px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .hud-mission-group {
+    gap: 0.45rem !important;
+  }
+  .hud-btn-undo {
+    padding: 4px 8px !important;
+    font-size: 0.68rem !important;
+  }
+  .hud-decree-pill {
+    padding: 3px 8px !important;
+    font-size: 0.7rem !important;
+  }
+  .hud-pip {
+    width: 10px !important;
+    height: 4px !important;
   }
   .hud-mission-title {
-    font-size: 0.68rem;
+    font-size: 0.68rem !important;
   }
   .hud-consensus-label {
-    font-size: 0.72rem;
+    font-size: 0.7rem !important;
   }
 }
 
@@ -592,56 +689,100 @@
   z-index: 20;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 767px) {
   .deck-stage {
-    min-height: 440px !important;
-    margin-bottom: 1.25rem !important;
-  }
-  .game-card {
-    padding: 1.25rem 1rem !important;
-    min-height: 400px !important;
-    border-radius: 20px !important;
+    min-height: auto !important;
+    margin-bottom: 0.45rem !important;
+    width: 100% !important;
     max-width: 100% !important;
   }
+  .game-card {
+    padding: 0.85rem 0.95rem 0.75rem !important;
+    min-height: auto !important;
+    border-radius: 20px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .card-header {
+    margin-bottom: 0.35rem !important;
+  }
+  .card-category {
+    font-size: 0.68rem !important;
+  }
+  .badge-mono {
+    font-size: 0.66rem !important;
+    padding: 2px 6px !important;
+  }
   .card-illustration-box {
-    height: 95px !important;
-    margin-bottom: 0.75rem !important;
+    height: 54px !important;
+    margin-bottom: 0.35rem !important;
+    border-radius: 10px !important;
+  }
+  .card-illustration-box svg {
+    max-height: 48px !important;
+    width: auto !important;
+  }
+  .card-body {
+    margin-bottom: 0.25rem !important;
   }
   .card-question {
-    font-size: 1.2rem !important;
-    line-height: 1.25 !important;
-    margin-bottom: 0.5rem !important;
+    font-size: clamp(1.05rem, 4.4vw, 1.25rem) !important;
+    line-height: 1.22 !important;
+    margin-bottom: 0.25rem !important;
   }
   .card-subtitle {
-    font-size: 0.8rem !important;
-    line-height: 1.4 !important;
+    font-size: clamp(0.75rem, 3.2vw, 0.82rem) !important;
+    line-height: 1.35 !important;
   }
   .card-actions-quick {
-    margin: 0.75rem 0 !important;
-    gap: 0.4rem !important;
+    display: flex !important;
+    gap: 0.35rem !important;
+    margin: 0.35rem 0 0.2rem !important;
+    flex-wrap: nowrap !important;
+    justify-content: space-between !important;
   }
-  .btn-dilemma-pill, .btn-boe-pill {
-    font-size: 0.72rem !important;
-    padding: 5px 10px !important;
+  .btn-action-pill {
+    flex: 1 !important;
+    justify-content: center !important;
+    font-size: 0.7rem !important;
+    padding: 4px 4px !important;
+    white-space: nowrap !important;
+  }
+  .card-deliberation-footer {
+    margin-top: 0.25rem !important;
+    padding: 0 !important;
+  }
+  .deliberation-hint-text {
+    font-size: 0.7rem !important;
   }
   .deck-controls-magnetic {
-    gap: 0.5rem !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1.15fr 1fr !important;
+    gap: 0.45rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    box-sizing: border-box !important;
   }
-  .magnetic-btn {
-    height: 64px !important;
+  .arcade-push-btn {
+    min-height: 52px !important;
+    height: 54px !important;
+    padding: 0.35rem 0.25rem !important;
     border-radius: 14px !important;
+    touch-action: manipulation !important;
   }
-  .btn-action-no, .btn-action-yes {
-    width: 96px !important;
+  .arcade-btn-icon {
+    font-size: 1.25rem !important;
+    margin-bottom: 0.1rem !important;
   }
-  .btn-action-delegate {
-    width: 112px !important;
+  .arcade-btn-name {
+    font-size: 0.75rem !important;
+    font-weight: 700 !important;
   }
-  .btn-symbol {
-    font-size: 1.15rem !important;
-  }
-  .btn-text {
-    font-size: 0.72rem !important;
+  .arcade-key-badge,
+  .arcade-hints-bar {
+    display: none !important;
   }
 }
 
@@ -1456,6 +1597,20 @@
   transition: all 0.25s var(--ease-spring);
 }
 
+@media (max-width: 640px) {
+  .party-affinity-card {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.75rem !important;
+    padding: 0.95rem 1rem !important;
+  }
+  .party-card-right {
+    align-items: stretch !important;
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+}
+
 .party-affinity-card:hover {
   border-color: var(--border-medium);
   transform: translateY(-2px);
@@ -1798,6 +1953,20 @@
   position: relative;
   background: var(--bg-surface) !important;
   box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.25) !important;
+}
+
+@media (max-width: 767px) {
+  .monograph-sheet {
+    max-width: 100vw !important;
+    width: 100% !important;
+    max-height: 88dvh !important;
+    border-radius: 24px 24px 0 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+  }
+  .monograph-sticky-nav {
+    padding: 0.65rem 1rem !important;
+  }
 }
 
 /* 1. Barra Sticky Superior */
@@ -2790,22 +2959,30 @@
   transform: translateY(-1px);
 }
 
-@media (max-width: 640px) {
+@media (max-width: 767px) {
   .monograph-bottom-bar {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.75rem;
-    padding: 1rem 1.25rem;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.5rem !important;
+    padding: 0.65rem 0.85rem calc(0.65rem + env(safe-area-inset-bottom, 0px)) !important;
+  }
+  .bottom-prompt {
+    font-size: 0.78rem !important;
+    text-align: center !important;
   }
   .bottom-actions-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1fr !important;
+    gap: 0.4rem !important;
+    width: 100% !important;
   }
   .bottom-actions-row .btn-vote,
   .bottom-actions-row .btn-delegate {
-    justify-content: center;
-    padding: 0.55rem 0.4rem;
-    font-size: 0.75rem;
+    justify-content: center !important;
+    padding: 0.5rem 0.25rem !important;
+    font-size: 0.74rem !important;
+    min-height: 48px !important;
+    border-radius: 12px !important;
   }
 }
 
@@ -2956,18 +3133,44 @@
   }
 }
 
-@media (max-width: 520px) {
+@media (max-width: 767px) {
   .civic-footer {
-    padding: 0.5rem 0.75rem;
+    padding: 0.35rem 0.75rem calc(0.35rem + env(safe-area-inset-bottom, 0px)) !important;
+    border-top: 1px solid var(--border-subtle) !important;
   }
   .civic-footer-bar {
-    flex-direction: column;
-    gap: 0.4rem;
-    text-align: center;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: 0.35rem !important;
+    font-size: 0.68rem !important;
   }
   .footer-bar-left,
   .footer-bar-right {
-    justify-content: center;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.35rem !important;
+  }
+  .footer-bar-center {
+    display: none !important;
+  }
+  .footer-text-secondary {
+    display: none !important;
+  }
+  .footer-brand-title {
+    font-size: 0.72rem !important;
+  }
+  .footer-version-tag {
+    font-size: 0.62rem !important;
+    padding: 2px 6px !important;
+    white-space: nowrap !important;
+    line-height: 1 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+  }
+  .footer-github-link {
+    font-size: 0.68rem !important;
+    padding: 2px 6px !important;
   }
 }
 
@@ -3005,6 +3208,23 @@
   background: #111827 !important;
   border-color: rgba(255, 255, 255, 0.12) !important;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(96, 165, 250, 0.2) !important;
+}
+
+@media (max-width: 767px) {
+  .passkey-modal-backdrop {
+    align-items: flex-end !important;
+    padding: 0 !important;
+    height: 100dvh !important;
+  }
+  .passkey-modal-card {
+    width: 100% !important;
+    max-width: 100vw !important;
+    border-radius: 24px 24px 0 0 !important;
+    margin: 0 !important;
+    padding: 1.5rem 1.25rem calc(1.5rem + env(safe-area-inset-bottom, 0px)) !important;
+    box-sizing: border-box !important;
+    animation: sheetSlideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
 }
 
 .passkey-icon-halo {

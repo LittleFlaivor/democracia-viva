@@ -16,10 +16,12 @@ html {
 
 body.gamified-body {
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   overflow-x: hidden;
+  max-width: 100vw;
   background-color: var(--bg-app);
   color: var(--text-primary);
   font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -38,9 +40,11 @@ body.gamified-body {
   inset: 0;
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
   pointer-events: none;
   z-index: 0;
   overflow: hidden;
+  max-width: 100vw;
   opacity: 1;
   background: radial-gradient(ellipse 90% 70% at 50% 10%, rgba(239, 246, 255, 0.55) 0%, rgba(240, 253, 250, 0.35) 50%, transparent 100%);
   transition: opacity 0.5s ease;
@@ -210,19 +214,22 @@ body.gamified-body {
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 767px) {
   .game-viewport {
-    padding: 0.5rem 0.75rem 1rem;
+    padding: 0.25rem 0.65rem 0.4rem;
+    max-width: 100vw;
+    box-sizing: border-box;
   }
 }
 
-/* Modales Flotantes de Máxima Fidelidad */
+/* Modales Flotantes de Máxima Fidelidad (Desktop Modal / Mobile Bottom Sheet) */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
   background: rgba(15, 23, 42, 0.45);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -232,6 +239,8 @@ body.gamified-body {
   justify-content: center;
   padding: 1.5rem;
   animation: fadeIn 180ms ease-out;
+  max-width: 100vw;
+  box-sizing: border-box;
 }
 
 [data-theme="dark"] .modal-overlay {
@@ -252,6 +261,28 @@ body.gamified-body {
   color: var(--text-primary);
   transition: background-color 0.25s ease, border-color 0.25s ease;
   z-index: 510;
+}
+
+@media (max-width: 767px) {
+  .modal-overlay {
+    align-items: flex-end !important;
+    padding: 0 !important;
+  }
+  .modal-sheet {
+    width: 100% !important;
+    max-width: 100vw !important;
+    border-radius: 24px 24px 0 0 !important;
+    max-height: 88dvh !important;
+    margin: 0 !important;
+    padding: 1.25rem 1.25rem calc(1.5rem + env(safe-area-inset-bottom, 0px)) !important;
+    box-sizing: border-box !important;
+    animation: slideUpSheet 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+}
+
+@keyframes slideUpSheet {
+  from { transform: translateY(100%); opacity: 0.8; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 .modal-close-btn {

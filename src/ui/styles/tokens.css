@@ -73,7 +73,7 @@
   --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
 
   /* Anchura Unificada para Todo el Contenido Central del Juego */
-  --game-col-width: clamp(340px, 92vw, 490px);
+  --game-col-width: min(100%, 490px);
 }
 
 /* ========================================================
