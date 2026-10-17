@@ -153,15 +153,9 @@ function initApp() {
     renderModals();
   }
 
-  // Desencadenar invitación de instalación PWA suave tras primera interacción o 10s de navegación
-  const gentleTimer = setTimeout(() => {
-    showGentlePwaBanner();
-  }, 10000);
-
-  // Al emitir el primer voto, mostrar banner si aún no se ha mostrado
+  // Desencadenar invitación de instalación PWA suave al completar la ronda cívica (sin interrumpir la deliberación)
   gameStore.subscribe(() => {
-    if (Object.keys(gameStore.getDecisions()).length > 0) {
-      clearTimeout(gentleTimer);
+    if (gameStore.isFinished()) {
       showGentlePwaBanner();
     }
   });

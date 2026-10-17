@@ -209,8 +209,8 @@ body.gamified-body {
 /* En escritorios y laptops estándar, sensación de pantalla completa integrada con mínimas distracciones */
 @media (min-height: 720px) and (min-width: 900px) {
   body.gamified-body {
-    height: 100vh;
-    overflow-y: hidden;
+    min-height: 100vh;
+    overflow-y: auto;
   }
 }
 
