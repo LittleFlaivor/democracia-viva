@@ -222,6 +222,57 @@ export function clearLocalCitizenCredential(): void {
   } catch {}
 }
 
+const BYPASS_AUTH_KEY = 'DEMOCRACIA_VIVA_BYPASS_AUTH_V1';
+let memoryBypassAuth = false;
+
+/**
+ * Comprueba si el modo prueba de omisión de biometría está activo en la sesión.
+ */
+export function isTestBypassEnabled(): boolean {
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      return window.localStorage.getItem(BYPASS_AUTH_KEY) === 'true';
+    }
+  } catch {}
+  return memoryBypassAuth;
+}
+
+/**
+ * Activa o desactiva la omisión de biometría para pruebas ágiles.
+ */
+export function setTestBypassEnabled(enabled: boolean): void {
+  memoryBypassAuth = enabled;
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      window.localStorage.setItem(BYPASS_AUTH_KEY, enabled ? 'true' : 'false');
+    }
+  } catch {}
+}
+
+/**
+ * Crea u obtiene una credencial cívica simulada para el Modo Prueba Alpha,
+ * permitiendo validar toda la tubería criptográfica (Firestore, nullifiers, actas)
+ * sin requerir hardware biométrico real.
+ */
+export function createOrGetSimulatedTestCredential(): CitizenPasskeyCredential {
+  const existing = getLocalCitizenCredential();
+  if (existing) return existing;
+
+  const testSuffix = Math.random().toString(36).substring(2, 8);
+  const testCred: CitizenPasskeyCredential = {
+    credentialId: `testnet_alpha_${testSuffix}`,
+    publicKey: `pk_simulated_testnet_${testSuffix}`,
+    algorithm: -7,
+    createdAt: Date.now(),
+    deviceType: 'Modo Prueba Alpha (Simulación Cívica)',
+    dnieVerified: false,
+    friendlyName: 'Ciudadano en Pruebas'
+  };
+
+  saveLocalCitizenCredential(testCred);
+  return testCred;
+}
+
 /**
  * REGISTRO WEBAUTHN PASSKEY NATIVO (Just-in-Time)
  * Ejecuta `navigator.credentials.create` utilizando la biometría del dispositivo.

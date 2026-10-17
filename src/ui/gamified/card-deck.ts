@@ -10,7 +10,7 @@ import { GameStore, GameDecision } from '../../state/game-store.ts';
 import { soundFx } from './sound-fx.ts';
 import { promptJustInTimePasskey } from './auth-modal.ts';
 import { triggerReceiptDownload } from '../../services/firestore-voting.ts';
-import { CitizenPasskeyCredential } from '../../services/auth.ts';
+import { CitizenPasskeyCredential, isTestBypassEnabled, createOrGetSimulatedTestCredential } from '../../services/auth.ts';
 
 export function renderCardDeck(container: HTMLElement) {
   const gameStore = GameStore.getInstance();
@@ -307,6 +307,13 @@ export function renderCardDeck(container: HTMLElement) {
    */
   async function initiateVoteFlow(decision: GameDecision) {
     if (!currentCard) return;
+
+    // Si el usuario ha activado el Modo Prueba Rápido (sin biometría), sellar voto directamente
+    if (isTestBypassEnabled()) {
+      const testCred = createOrGetSimulatedTestCredential();
+      triggerFlyOff(decision, testCred);
+      return;
+    }
 
     try {
       // 1. Solicitar autenticación biométrica Just-in-Time

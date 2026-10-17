@@ -8,7 +8,9 @@ import {
   getLocalCitizenCredential,
   registerPasskey,
   requestBiometricAssertion,
-  CitizenPasskeyCredential
+  CitizenPasskeyCredential,
+  createOrGetSimulatedTestCredential,
+  setTestBypassEnabled
 } from '../../services/auth.ts';
 import { soundFx } from './sound-fx.ts';
 
@@ -109,13 +111,30 @@ export function promptJustInTimePasskey(
         </div>
 
         <!-- Botones de Acción -->
-        <div style="display: flex; gap: 12px;">
+        <div style="display: flex; gap: 12px; margin-bottom: 14px;">
           <button class="btn btn-secondary" id="btn-cancel-passkey" style="flex: 1; border-radius: 12px; padding: 12px 16px; font-weight: 600;">
             Cancelar
-          </div>
+          </button>
           <button class="btn btn-primary" id="btn-confirm-passkey" style="flex: 2; border-radius: 12px; padding: 12px 18px; font-weight: 600; background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; border: none; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
             <span>${isNew ? '👆 Registrar Huella / FaceID' : '👆 Firmar con Biometría'}</span>
           </button>
+        </div>
+
+        <!-- Opción Especial de Fase Alpha: Saltar Verificación de Identidad -->
+        <div style="border-top: 1px dashed rgba(148, 163, 184, 0.35); padding-top: 14px; text-align: center;">
+          <button 
+            type="button" 
+            id="btn-skip-passkey" 
+            class="btn-action-pill" 
+            style="width: 100%; justify-content: center; background: rgba(245, 158, 11, 0.12); border-color: rgba(245, 158, 11, 0.35); color: #b45309; font-weight: 700; font-size: 0.82rem; padding: 9px 14px; cursor: pointer;"
+            title="Omitir el paso biométrico y sellar el voto con credencial simulada de prueba"
+          >
+            <span>⚡ Saltar Verificación (Modo Prueba Alpha)</span>
+          </button>
+          <label style="display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 0.74rem; color: var(--text-tertiary); cursor: pointer; user-select: none;">
+            <input type="checkbox" id="chk-remember-skip" />
+            <span>Recordar: no volver a pedir biometría en esta sesión de prueba</span>
+          </label>
         </div>
       </div>
     `;
@@ -135,6 +154,18 @@ export function promptJustInTimePasskey(
         }
       }, 250);
     };
+
+    // Saltar verificación biométrica en modo prueba
+    modalOverlay.querySelector('#btn-skip-passkey')?.addEventListener('click', () => {
+      soundFx.playTap();
+      const remember = (modalOverlay.querySelector('#chk-remember-skip') as HTMLInputElement)?.checked;
+      if (remember) {
+        setTestBypassEnabled(true);
+      }
+      const testCred = createOrGetSimulatedTestCredential();
+      cleanup();
+      resolve({ success: true, credential: testCred, isNew: false });
+    });
 
     modalOverlay.querySelector('#btn-close-passkey')?.addEventListener('click', () => {
       soundFx.playTap();

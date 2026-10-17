@@ -1,10 +1,16 @@
 /**
  * COMPONENTE: BANNER INSTITUCIONAL DE ADVERTENCIA DE VERSIÓN EN PRUEBAS
  * Muestra de forma destacada y elegante el aviso de Versión 0.5 Alpha (Entorno de Pruebas),
- * con enlace directo para desplazarse suavemente al pie de página y ver la auditoría técnica.
+ * permite alternar el modo rápido de omisión de biometría para pruebas ágiles,
+ * y ofrece enlace directo para desplazarse suavemente al pie de página.
  */
 
+import { isTestBypassEnabled, setTestBypassEnabled } from '../../services/auth.ts';
+import { soundFx } from './sound-fx.ts';
+
 export function renderTestBanner(container: HTMLElement): void {
+  const bypassActive = isTestBypassEnabled();
+
   container.innerHTML = `
     <div class="civic-test-banner" role="region" aria-label="Aviso de Versión en Pruebas">
       <div class="test-banner-inner">
@@ -15,17 +21,28 @@ export function renderTestBanner(container: HTMLElement): void {
             <span class="test-pill-version">v0.5 Alpha</span>
           </span>
           <p class="test-banner-message">
-            Entorno experimental de validación cívica y biometría Passkeys (WebAuthn). Las votaciones y decretos actuales son simulaciones ciudadanas de prueba.
+            Entorno experimental de validación cívica y biometría Passkeys (WebAuthn). Las votaciones y decretos actuales son simulaciones de prueba.
           </p>
         </div>
-        <div class="test-banner-right">
+        <div class="test-banner-right" style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+          <!-- Botón de Alternancia Rápida para Pruebas Ágiles -->
+          <button 
+            type="button" 
+            class="test-banner-btn-scroll ${bypassActive ? 'is-active-bypass' : ''}" 
+            id="btn-toggle-bypass-banner"
+            title="Alternar entre solicitar biometría o saltar verificación para pruebas rápidas"
+            style="${bypassActive ? 'background: #059669; color: white; border-color: #047857;' : ''}"
+          >
+            <span>${bypassActive ? '⚡ Verificación Omitida (Activo)' : '⚡ Omitir Biometría (Pruebas)'}</span>
+          </button>
+
           <button 
             type="button" 
             class="test-banner-btn-scroll" 
             id="btn-banner-to-footer"
             title="Ir directamente al pie de página para ver auditoría, código abierto y versión"
           >
-            <span>Ver Pie de Página y Auditoría</span>
+            <span>Ver Pie de Página</span>
             <span class="banner-down-arrow" aria-hidden="true">↓</span>
           </button>
         </div>
@@ -33,17 +50,22 @@ export function renderTestBanner(container: HTMLElement): void {
     </div>
   `;
 
-  const scrollBtn = container.querySelector('#btn-banner-to-footer');
-  if (scrollBtn) {
-    scrollBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const footer = document.getElementById('civic-footer-container');
-      if (footer) {
-        footer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        // Foco accesible al footer
-        footer.setAttribute('tabindex', '-1');
-        footer.focus({ preventScroll: true });
-      }
-    });
-  }
+  // Listener para alternar modo omisión de biometría en pruebas
+  container.querySelector('#btn-toggle-bypass-banner')?.addEventListener('click', () => {
+    soundFx.playTap();
+    const nextState = !isTestBypassEnabled();
+    setTestBypassEnabled(nextState);
+    renderTestBanner(container);
+  });
+
+  // Listener para scroll hacia el footer
+  container.querySelector('#btn-banner-to-footer')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    const footer = document.getElementById('civic-footer-container');
+    if (footer) {
+      footer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      footer.setAttribute('tabindex', '-1');
+      footer.focus({ preventScroll: true });
+    }
+  });
 }

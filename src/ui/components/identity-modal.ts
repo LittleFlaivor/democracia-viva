@@ -10,12 +10,15 @@ import {
   registerPasskey,
   requestBiometricAssertion,
   CitizenPasskeyCredential,
-  clearLocalCitizenCredential
+  clearLocalCitizenCredential,
+  isTestBypassEnabled,
+  setTestBypassEnabled
 } from '../../services/auth.ts';
 import { soundFx } from '../gamified/sound-fx.ts';
 
 export function renderIdentityModal(container: HTMLElement, onClose: () => void, onUpdated?: () => void): void {
   const currentCred = getLocalCitizenCredential();
+  const bypassActive = isTestBypassEnabled();
 
   container.innerHTML = `
     <div class="modal-overlay" id="identity-modal-overlay">
@@ -32,6 +35,15 @@ export function renderIdentityModal(container: HTMLElement, onClose: () => void,
           <span style="font-size: 0.85rem; color: var(--text-secondary);">
             Estándar W3C WebAuthn · Cero contraseñas · Privacidad Criptográfica
           </span>
+        </div>
+
+        <!-- Ajustes de Fase Alpha: Modo Prueba Rápido -->
+        <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.28); border-radius: 14px; padding: 12px 16px; margin-bottom: 1.25rem; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+          <div>
+            <strong style="font-size: 0.82rem; color: #b45309; display: block;">⚡ Modo Prueba Rápido (Omitir Biometría)</strong>
+            <span style="font-size: 0.74rem; color: var(--text-secondary);">Permite emitir votos de prueba directamente sin pedir huella ni PIN en cada acción.</span>
+          </div>
+          <input type="checkbox" id="chk-bypass-auth-modal" ${bypassActive ? 'checked' : ''} style="width: 20px; height: 20px; cursor: pointer; accent-color: #f59e0b;" />
         </div>
 
         <!-- Explicación Didáctica -->
@@ -150,5 +162,18 @@ export function renderIdentityModal(container: HTMLElement, onClose: () => void,
       onUpdated?.();
       renderIdentityModal(container, onClose, onUpdated);
     }, 500);
+  });
+
+  // Listener: Cambiar modo bypass
+  container.querySelector('#chk-bypass-auth-modal')?.addEventListener('change', (e) => {
+    soundFx.playTap();
+    const checked = (e.target as HTMLInputElement).checked;
+    setTestBypassEnabled(checked);
+    onUpdated?.();
+    if (feedbackEl) {
+      feedbackEl.innerHTML = checked
+        ? '<span style="color: #b45309; font-weight: 700;">⚡ Modo Prueba Rápido activado: se omitirá la biometría al votar.</span>'
+        : '<span style="color: #2563eb; font-weight: 600;">Modo biométrico estándar activado.</span>';
+    }
   });
 }
