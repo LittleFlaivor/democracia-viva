@@ -2801,6 +2801,226 @@
   }
 }
 
+/* ========================================================
+   PIE DE PÁGINA PROFESIONAL (CIVIC FOOTER)
+   Diseño institucional sobrio, badge de versión v0.5 Alpha
+   y enlaces a garantías de gobernanza y código abierto.
+   ======================================================== */
+.civic-footer {
+  width: 100%;
+  border-top: 1px solid var(--border-card);
+  background: var(--bg-surface);
+  margin-top: auto;
+  position: relative;
+  z-index: 15;
+  padding: 3.5rem 1.5rem 2rem;
+  transition: background-color 0.3s var(--ease-smooth), border-color 0.3s;
+}
+
+[data-theme="dark"] .civic-footer {
+  background: rgba(14, 16, 24, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top-color: var(--border-card);
+}
+
+.civic-footer-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2.75rem;
+}
+
+.footer-top-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 2.5rem;
+}
+
+.footer-brand-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.footer-logo-mark {
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-svg-icon {
+  width: 100%;
+  height: 100%;
+}
+
+.footer-brand-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.footer-version-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+  background: rgba(37, 99, 235, 0.08);
+  color: var(--color-primary);
+  border: 1px solid rgba(37, 99, 235, 0.25);
+  letter-spacing: 0.02em;
+}
+
+[data-theme="dark"] .footer-version-tag {
+  background: rgba(59, 130, 246, 0.16);
+  border-color: rgba(59, 130, 246, 0.35);
+  color: #60A5FA;
+}
+
+.footer-lead-text {
+  font-size: 0.84rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  max-width: 360px;
+  margin-bottom: 1.15rem;
+}
+
+.footer-status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: 9999px;
+  background: var(--vote-yes-bg);
+  border: 1px solid var(--vote-yes-border);
+  color: var(--vote-yes);
+  font-size: 0.75rem;
+  font-weight: 700;
+  width: fit-content;
+}
+
+.status-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--vote-yes);
+  box-shadow: 0 0 0 3px var(--vote-yes-glow);
+}
+
+.footer-col-heading {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-primary);
+  margin-bottom: 1.1rem;
+}
+
+.footer-link-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.footer-link-item {
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-link-item.active-topic {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.footer-link-item.github-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--color-primary);
+  font-weight: 600;
+  cursor: pointer;
+  width: fit-content;
+}
+
+.footer-link-item.github-link:hover {
+  color: var(--color-primary-hover);
+  text-decoration: underline;
+}
+
+.external-arrow {
+  font-size: 0.85rem;
+  transition: transform 0.2s ease;
+}
+
+.footer-link-item.github-link:hover .external-arrow {
+  transform: translate(2px, -2px);
+}
+
+.footer-bottom-bar {
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-size: 0.80rem;
+  color: var(--text-muted);
+}
+
+.footer-bottom-legal {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.footer-separator {
+  opacity: 0.6;
+}
+
+.footer-mono-pill {
+  font-size: 0.72rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  background: var(--bg-app-alt);
+  border: 1px solid var(--border-card);
+  color: var(--text-secondary);
+}
+
+@media (max-width: 900px) {
+  .footer-top-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 580px) {
+  .civic-footer {
+    padding: 2.5rem 1rem 1.75rem;
+  }
+  .footer-top-grid {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+  .footer-bottom-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
 
 
 

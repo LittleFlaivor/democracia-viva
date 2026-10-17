@@ -15,6 +15,7 @@ import { renderBoeModal } from './ui/gamified/boe-modal.ts';
 import { renderMonographModal } from './ui/gamified/monograph-modal.ts';
 import { renderVerificationModal } from './ui/components/verification-modal.ts';
 import { renderParliamentaryReportModal } from './ui/components/parliamentary-report-modal.ts';
+import { renderCivicFooter } from './ui/gamified/civic-footer.ts';
 
 let activeReceiptNullifier: string | null = null;
 let isParliamentaryReportOpen = false;
@@ -30,6 +31,7 @@ function initApp() {
   const hudContainer = document.getElementById('hud-barometers-container');
   const stageContainer = document.getElementById('game-stage-container');
   const modalContainer = document.getElementById('modal-root-container');
+  const footerContainer = document.getElementById('civic-footer-container');
 
   if (!dockContainer || !hudContainer || !stageContainer || !modalContainer) {
     console.error('Contenedores no encontrados en el DOM');
@@ -94,6 +96,10 @@ function initApp() {
       renderConsensusEureka(stageContainer!, openParliamentaryReport, openReceiptModal);
     } else {
       renderCardDeck(stageContainer!);
+    }
+
+    if (footerContainer) {
+      renderCivicFooter(footerContainer);
     }
 
     renderModals();
