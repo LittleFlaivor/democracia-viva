@@ -7,6 +7,17 @@
 export function renderCivicFooter(container: HTMLElement): void {
   container.innerHTML = `
     <div class="civic-footer-inner">
+      <!-- Banner Destacado Institucional de Versión en Pruebas -->
+      <div class="footer-alpha-notice-card">
+        <div class="alpha-notice-header">
+          <span class="alpha-notice-icon" aria-hidden="true">⚠️</span>
+          <span class="alpha-notice-badge">AVISO DE VERSIÓN EN PRUEBAS · v0.5 ALPHA</span>
+        </div>
+        <p class="alpha-notice-text">
+          <strong>Democracia Viva</strong> se encuentra actualmente en fase piloto de validación cívica, rendimiento de biometría Passkeys y resistencia criptográfica. Las deliberaciones y votos actuales forman parte de simulaciones ciudadanas abiertas sin vinculación jurídica oficial ante las Cortes Generales.
+        </p>
+      </div>
+
       <div class="footer-top-grid">
         <!-- Columna 1: Identidad y Versión -->
         <div class="footer-brand-col">
@@ -27,9 +38,9 @@ export function renderCivicFooter(container: HTMLElement): void {
             pruebas de conocimiento cero (ZK-SNARKs) y criptografía de clave pública verificable.
           </p>
 
-          <div class="footer-status-indicator">
-            <span class="status-pulse-dot" aria-hidden="true"></span>
-            <span class="status-pulse-label">Red Cívica Operativa · Consenso en Vivo</span>
+          <div class="footer-status-indicator test-mode">
+            <span class="status-pulse-amber-dot" aria-hidden="true"></span>
+            <span class="status-pulse-label">Entorno Piloto de Pruebas · Red Firestore Activa</span>
           </div>
         </div>
 

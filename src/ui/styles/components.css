@@ -3220,6 +3220,288 @@
   transform: none !important;
 }
 
+/* ========================================================
+   BANNER SUPERIOR DE ADVERTENCIA: VERSIÓN EN PRUEBAS (ALPHA)
+   ======================================================== */
+.civic-test-banner {
+  width: 100%;
+  background: linear-gradient(90deg, rgba(254, 243, 199, 0.85) 0%, rgba(254, 249, 195, 0.92) 50%, rgba(254, 243, 199, 0.85) 100%);
+  border-bottom: 1px solid rgba(245, 158, 11, 0.3);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 0.65rem 1.25rem;
+  position: relative;
+  z-index: 50;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+[data-theme="dark"] .civic-test-banner {
+  background: linear-gradient(90deg, rgba(69, 26, 3, 0.75) 0%, rgba(120, 53, 15, 0.65) 50%, rgba(69, 26, 3, 0.75) 100%);
+  border-bottom-color: rgba(245, 158, 11, 0.35);
+}
+
+.test-banner-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.test-banner-left {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex: 1 1 500px;
+  flex-wrap: wrap;
+}
+
+.test-pill-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(245, 158, 11, 0.18);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: #b45309;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+[data-theme="dark"] .test-pill-indicator {
+  background: rgba(245, 158, 11, 0.25);
+  border-color: rgba(251, 191, 36, 0.5);
+  color: #fde68a;
+}
+
+.test-amber-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #f59e0b;
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.8);
+  animation: pulseDot 2s infinite ease-in-out;
+}
+
+.test-pill-version {
+  background: rgba(255, 255, 255, 0.85);
+  color: #92400e;
+  padding: 0.1rem 0.4rem;
+  border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+[data-theme="dark"] .test-pill-version {
+  background: rgba(0, 0, 0, 0.35);
+  color: #fef3c7;
+}
+
+.test-banner-message {
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: #78350f;
+  margin: 0;
+  font-weight: 500;
+}
+
+[data-theme="dark"] .test-banner-message {
+  color: #fde68a;
+}
+
+.test-banner-right {
+  display: flex;
+  align-items: center;
+}
+
+.test-banner-btn-scroll {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(245, 158, 11, 0.45);
+  color: #92400e;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(180, 83, 9, 0.12);
+  transition: all 0.2s var(--ease-spring);
+  white-space: nowrap;
+}
+
+[data-theme="dark"] .test-banner-btn-scroll {
+  background: rgba(30, 27, 24, 0.9);
+  border-color: rgba(251, 191, 36, 0.4);
+  color: #fde68a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.test-banner-btn-scroll:hover {
+  transform: translateY(-1px);
+  background: #ffffff;
+  border-color: #f59e0b;
+  color: #78350f;
+  box-shadow: 0 4px 12px rgba(180, 83, 9, 0.2);
+}
+
+[data-theme="dark"] .test-banner-btn-scroll:hover {
+  background: rgba(45, 38, 30, 0.95);
+  color: #fff;
+  border-color: #fbbf24;
+}
+
+.banner-down-arrow {
+  font-size: 0.88rem;
+  font-weight: 800;
+  transition: transform 0.2s ease;
+}
+
+.test-banner-btn-scroll:hover .banner-down-arrow {
+  transform: translateY(2px);
+}
+
+/* Tag Alpha en el Profile Dock */
+.dock-alpha-tag {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+  background: rgba(245, 158, 11, 0.12);
+  color: #b45309;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  margin-left: 0.5rem;
+}
+
+[data-theme="dark"] .dock-alpha-tag {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+  border-color: rgba(245, 158, 11, 0.4);
+}
+
+/* Atajo de Scroll al Pie de Página en la baraja */
+.deck-footer-anchor-wrapper {
+  margin-top: 1.25rem;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.deck-footer-scroll-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-card);
+  padding: 0.45rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s var(--ease-spring);
+}
+
+.deck-footer-scroll-link:hover {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border-color: var(--color-civic-blue);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card);
+}
+
+.anchor-badge {
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--color-civic-blue);
+  padding: 0.15rem 0.45rem;
+  border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.anchor-arrow {
+  font-weight: 800;
+  font-size: 0.85rem;
+  transition: transform 0.2s ease;
+}
+
+.deck-footer-scroll-link:hover .anchor-arrow {
+  transform: translateY(2px);
+}
+
+/* Tarjeta destacada en el Footer */
+.footer-alpha-notice-card {
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.28);
+  border-radius: 18px;
+  padding: 1.25rem 1.6rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+[data-theme="dark"] .footer-alpha-notice-card {
+  background: rgba(245, 158, 11, 0.12);
+  border-color: rgba(245, 158, 11, 0.35);
+}
+
+.alpha-notice-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.alpha-notice-icon {
+  font-size: 1.15rem;
+}
+
+.alpha-notice-badge {
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #b45309;
+}
+
+[data-theme="dark"] .alpha-notice-badge {
+  color: #fbbf24;
+}
+
+.alpha-notice-text {
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.footer-status-indicator.test-mode {
+  background: rgba(245, 158, 11, 0.12);
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.status-pulse-amber-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #f59e0b;
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.7);
+  animation: pulseDot 2s infinite ease-in-out;
+}
+
+
 
 
 

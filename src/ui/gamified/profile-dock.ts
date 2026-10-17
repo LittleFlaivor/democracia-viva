@@ -36,6 +36,7 @@ export function renderProfileDock(container: HTMLElement) {
         <div class="dock-brand-mark">
           ${renderBrandLogo({ compact: false, showBadge: true })}
         </div>
+        <span class="dock-alpha-tag" title="Entorno de Pruebas v0.5 Alpha">Alpha en Pruebas</span>
 
         <!-- Ficha de Identidad Ciudadana Única Soberana (Opción 1) -->
         <div class="dock-user-profile hud-pill-capsule" title="Identidad soberana verificada con DNIe y credencial ZK Semaphore">

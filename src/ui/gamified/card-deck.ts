@@ -207,8 +207,33 @@ export function renderCardDeck(container: HTMLElement) {
           ` : ''}
         `}
       </div>
+
+      <!-- Atajo Cívico al Pie de Página y Versión Alpha -->
+      <div class="deck-footer-anchor-wrapper">
+        <button 
+          type="button" 
+          id="btn-deck-scroll-footer" 
+          class="deck-footer-scroll-link"
+          title="Ver pie de página, garantías constitucionales, versión y auditoría de código abierto"
+        >
+          <span class="anchor-badge">v0.5 Alpha</span>
+          <span class="anchor-label">Democracia Viva · Información Institucional y Auditoría</span>
+          <span class="anchor-arrow" aria-hidden="true">↓</span>
+        </button>
+      </div>
     </div>
   `;
+
+  // Listener para scroll suave hacia el pie de página
+  container.querySelector('#btn-deck-scroll-footer')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    const footer = document.getElementById('civic-footer-container');
+    if (footer) {
+      footer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      footer.setAttribute('tabindex', '-1');
+      footer.focus({ preventScroll: true });
+    }
+  });
 
   // Asignar listeners del estado sellado
   if (isSealed) {
