@@ -17,9 +17,11 @@ import { renderVerificationModal } from './ui/components/verification-modal.ts';
 import { renderParliamentaryReportModal } from './ui/components/parliamentary-report-modal.ts';
 import { renderCivicFooter } from './ui/gamified/civic-footer.ts';
 import { renderTestBanner } from './ui/gamified/test-banner.ts';
+import { renderIdentityModal } from './ui/components/identity-modal.ts';
 
 let activeReceiptNullifier: string | null = null;
 let isParliamentaryReportOpen = false;
+let isIdentityModalOpen = false;
 
 function initApp() {
   // Aplicar tema inicial (Light Editorial por defecto)
@@ -60,6 +62,16 @@ function initApp() {
     renderModals();
   }
 
+  function openIdentityModal() {
+    isIdentityModalOpen = true;
+    renderModals();
+  }
+
+  function closeIdentityModal() {
+    isIdentityModalOpen = false;
+    renderModals();
+  }
+
   function renderModals() {
     modalContainer!.innerHTML = '';
 
@@ -87,6 +99,12 @@ function initApp() {
       const wrapper = document.createElement('div');
       modalContainer!.appendChild(wrapper);
       renderParliamentaryReportModal(wrapper, closeParliamentaryReport);
+    } else if (isIdentityModalOpen) {
+      const wrapper = document.createElement('div');
+      modalContainer!.appendChild(wrapper);
+      renderIdentityModal(wrapper, closeIdentityModal, () => {
+        renderProfileDock(dockContainer!, openIdentityModal);
+      });
     }
   }
 
@@ -94,7 +112,7 @@ function initApp() {
     if (testBannerContainer) {
       renderTestBanner(testBannerContainer);
     }
-    renderProfileDock(dockContainer!);
+    renderProfileDock(dockContainer!, openIdentityModal);
     renderHudBarometers(hudContainer!);
 
     if (gameStore.isFinished()) {

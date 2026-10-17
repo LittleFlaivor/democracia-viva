@@ -56,20 +56,8 @@ export function renderCardDeck(container: HTMLElement) {
           })
           .join('')}
 
-        <!-- CARTA ACTIVA INTERACTIVA (DRAGGABLE O SELLADA) -->
+        <!-- CARTA ACTIVA INTERACTIVA (DELIBERATIVA Y ACCESIBLE) -->
         <div class="game-card active-card arcade-glow-card ${isSealed ? 'card-sealed' : ''}" id="active-card" style="z-index: 20;">
-          <!-- Sellos de Decisión Neón con Opacidad Reactiva (solo si no está sellada) -->
-          ${!isSealed ? `
-            <div class="stamp-overlay stamp-yes" id="stamp-yes">
-              <span class="stamp-border">✓ A FAVOR</span>
-            </div>
-            <div class="stamp-overlay stamp-no" id="stamp-no">
-              <span class="stamp-border">✕ EN CONTRA</span>
-            </div>
-            <div class="stamp-overlay stamp-delegate" id="stamp-delegate">
-              <span class="stamp-border">? NS / NC</span>
-            </div>
-          ` : ''}
 
           <!-- Contenido Superior de la Carta -->
           <div class="card-header">
@@ -142,31 +130,29 @@ export function renderCardDeck(container: HTMLElement) {
             </button>
           </div>
 
-          <!-- Pistas Táctiles Inferiores (solo si no está sellada) -->
+          <!-- Orientación de Voto Deliberativo Consciente (sin arrastre) -->
           ${!isSealed ? `
-            <div class="card-swipe-hints">
-              <span class="hint-red">← Desliza (En Contra)</span>
-              <span class="hint-purple">↑ Arriba (NS / NC)</span>
-              <span class="hint-green">Desliza (A Favor) →</span>
+            <div class="card-deliberation-footer">
+              <span class="deliberation-hint-text">Emite tu postura pulsando un botón inferior</span>
             </div>
           ` : ''}
         </div>
       </div>
 
-      <!-- BOTONES ARCADE TÁCTILES 3D CON TECLAS DE CONTROL -->
+      <!-- BOTONES DE VOTACIÓN CONSCIENTES Y ACCESIBLES -->
       <div class="deck-controls-magnetic arcade-controls-grid">
-        <!-- Botón En Contra (Tecla A / Izquierda) -->
+        <!-- 1. Botón A Favor (IZQUIERDA - Tecla A o ←) -->
         <button 
-          class="arcade-push-btn btn-arcade-no ${isSealed ? 'is-locked' : ''}" 
-          id="btn-swipe-no" 
-          ${isSealed ? 'disabled title="🔒 Voto ya sellado e inmutable para este artículo"' : 'title="Votar En Contra [Tecla A o ←]"'}
+          class="arcade-push-btn btn-arcade-yes ${isSealed ? 'is-locked' : ''}" 
+          id="btn-swipe-yes" 
+          ${isSealed ? 'disabled title="🔒 Voto ya sellado e inmutable para este artículo"' : 'title="Votar A Favor [Tecla A o ←]"'}
         >
           <div class="arcade-key-badge"><kbd>A</kbd></div>
-          <span class="arcade-btn-icon">${isSealed ? '🔒' : '✕'}</span>
-          <span class="arcade-btn-name">En Contra</span>
+          <span class="arcade-btn-icon">${isSealed ? '🔒' : '✓'}</span>
+          <span class="arcade-btn-name">A Favor</span>
         </button>
 
-        <!-- Botón NS / NC (Tecla W / Arriba) -->
+        <!-- 2. Botón NS / NC (CENTRO - Tecla W o ↑) -->
         <button 
           class="arcade-push-btn btn-arcade-delegate ${isSealed ? 'is-locked' : ''}" 
           id="btn-swipe-delegate" 
@@ -177,30 +163,30 @@ export function renderCardDeck(container: HTMLElement) {
           <span class="arcade-btn-name">NS / NC</span>
         </button>
 
-        <!-- Botón A Favor (Tecla D / Derecha) -->
+        <!-- 3. Botón En Contra (DERECHA - Tecla D o →) -->
         <button 
-          class="arcade-push-btn btn-arcade-yes ${isSealed ? 'is-locked' : ''}" 
-          id="btn-swipe-yes" 
-          ${isSealed ? 'disabled title="🔒 Voto ya sellado e inmutable para este artículo"' : 'title="Votar A Favor [Tecla D o →]"'}
+          class="arcade-push-btn btn-arcade-no ${isSealed ? 'is-locked' : ''}" 
+          id="btn-swipe-no" 
+          ${isSealed ? 'disabled title="🔒 Voto ya sellado e inmutable para este artículo"' : 'title="Votar En Contra [Tecla D o →]"'}
         >
           <div class="arcade-key-badge"><kbd>D</kbd></div>
-          <span class="arcade-btn-icon">${isSealed ? '🔒' : '✓'}</span>
-          <span class="arcade-btn-name">A Favor</span>
+          <span class="arcade-btn-icon">${isSealed ? '🔒' : '✕'}</span>
+          <span class="arcade-btn-name">En Contra</span>
         </button>
       </div>
 
-      <!-- Barra Inferior de Atajos Gamer -->
+      <!-- Barra Inferior de Atajos Accesibles -->
       <div class="arcade-hints-bar">
         ${isSealed ? `
           <span class="arcade-hint-item" style="color: #10b981; font-weight: 700;">
             🔒 Voto Sellado e Inmutable (1 Ciudadano = 1 Voto)
           </span>
         ` : `
-          <span class="arcade-hint-item">Controles: <kbd>A</kbd> Rechazar</span>
+          <span class="arcade-hint-item">Atajos: <kbd>A</kbd> A Favor</span>
           <span class="arcade-hint-dot">·</span>
           <span class="arcade-hint-item"><kbd>W</kbd> NS/NC</span>
           <span class="arcade-hint-dot">·</span>
-          <span class="arcade-hint-item"><kbd>D</kbd> Aprobar</span>
+          <span class="arcade-hint-item"><kbd>D</kbd> En Contra</span>
           ${gameStore.getCardIndex() > 0 && !gameStore.getSealedVoteForCard(currentCard.id) ? `
             <span class="arcade-hint-dot">·</span>
             <span class="arcade-hint-item"><kbd>Z</kbd> Deshacer</span>
@@ -249,18 +235,15 @@ export function renderCardDeck(container: HTMLElement) {
       gameStore.advanceCard();
     });
   } else {
-    // Solo activar física de arrastre si no está sellada
-    setupCardDragPhysics(container);
-
-    // Botones arcade con flujo Just-in-Time Passkey
-    container.querySelector('#btn-swipe-no')?.addEventListener('click', () => {
-      initiateVoteFlow('NO');
-    });
+    // Botones de votación con flujo Just-in-Time Passkey
     container.querySelector('#btn-swipe-yes')?.addEventListener('click', () => {
       initiateVoteFlow('YES');
     });
     container.querySelector('#btn-swipe-delegate')?.addEventListener('click', () => {
       initiateVoteFlow('DELEGATE');
+    });
+    container.querySelector('#btn-swipe-no')?.addEventListener('click', () => {
+      initiateVoteFlow('NO');
     });
   }
 
@@ -278,7 +261,7 @@ export function renderCardDeck(container: HTMLElement) {
     gameStore.openBoeModal(currentCard);
   });
 
-  // Atajos de teclado para votación
+  // Atajos de teclado para votación accesible (A = A Favor / Izquierda, W = NS/NC, D = En Contra / Derecha)
   const handleKeydown = (e: KeyboardEvent) => {
     if (
       gameStore.getActiveMonographCard() ||
@@ -292,7 +275,7 @@ export function renderCardDeck(container: HTMLElement) {
 
     // Si la carta está sellada, no permitir votar ni deshacer
     if (isSealed) {
-      if (key === 'enter' || key === 'arrowright') {
+      if (key === 'enter' || key === 'arrowright' || key === 'd') {
         gameStore.advanceCard();
       }
       return;
@@ -307,11 +290,11 @@ export function renderCardDeck(container: HTMLElement) {
     }
 
     if (key === 'arrowleft' || key === 'a') {
-      initiateVoteFlow('NO');
-    } else if (key === 'arrowright' || key === 'd') {
       initiateVoteFlow('YES');
     } else if (key === 'arrowup' || key === 'w') {
       initiateVoteFlow('DELEGATE');
+    } else if (key === 'arrowright' || key === 'd') {
+      initiateVoteFlow('NO');
     }
   };
 
@@ -354,104 +337,14 @@ export function renderCardDeck(container: HTMLElement) {
       return;
     }
 
-    cardEl.classList.add('fly-off');
-    if (decision === 'YES') {
-      cardEl.style.transform = 'translate3d(115vw, 20px, 0) rotate(26deg)';
-    } else if (decision === 'NO') {
-      cardEl.style.transform = 'translate3d(-115vw, 20px, 0) rotate(-26deg)';
-    } else {
-      cardEl.style.transform = 'translate3d(0, -115vh, 0) rotate(0deg)';
-    }
+    // Animación sobria de confirmación cívica (sin deslizamiento de casino/dating)
+    cardEl.classList.add('decision-committing');
+    cardEl.style.transition = 'all 0.28s cubic-bezier(0.16, 1, 0.3, 1)';
+    cardEl.style.opacity = '0.75';
+    cardEl.style.transform = 'scale(0.98)';
 
     setTimeout(async () => {
       await gameStore.playDecision(decision, credential);
-    }, 320);
-  }
-
-  function setupCardDragPhysics(parent: HTMLElement) {
-    const cardEl = parent.querySelector('#active-card') as HTMLElement;
-    if (!cardEl) return;
-
-    const stampYes = parent.querySelector('#stamp-yes') as HTMLElement;
-    const stampNo = parent.querySelector('#stamp-no') as HTMLElement;
-    const stampDelegate = parent.querySelector('#stamp-delegate') as HTMLElement;
-
-    let isDragging = false;
-    let startX = 0;
-    let startY = 0;
-    let currentX = 0;
-    let currentY = 0;
-
-    const onPointerDown = (e: PointerEvent) => {
-      if ((e.target as HTMLElement).closest('button')) return;
-
-      isDragging = true;
-      startX = e.clientX;
-      startY = e.clientY;
-      cardEl.classList.add('is-dragging');
-      try { cardEl.setPointerCapture(e.pointerId); } catch {}
-      soundFx.playSwipe();
-    };
-
-    const onPointerMove = (e: PointerEvent) => {
-      if (!isDragging) return;
-      currentX = e.clientX;
-      currentY = e.clientY;
-
-      const diffX = currentX - startX;
-      const diffY = currentY - startY;
-      const rotateDeg = diffX * 0.08;
-
-      cardEl.style.transform = `translate3d(${diffX}px, ${diffY}px, 0) rotate(${rotateDeg}deg)`;
-
-      const threshold = 75;
-      if (diffX > 15 && stampYes) {
-        stampYes.style.opacity = String(Math.min(1, (diffX - 15) / threshold));
-        if (stampNo) stampNo.style.opacity = '0';
-        if (stampDelegate) stampDelegate.style.opacity = '0';
-      } else if (diffX < -15 && stampNo) {
-        stampNo.style.opacity = String(Math.min(1, (-diffX - 15) / threshold));
-        if (stampYes) stampYes.style.opacity = '0';
-        if (stampDelegate) stampDelegate.style.opacity = '0';
-      } else if (diffY < -20 && Math.abs(diffX) < 45 && stampDelegate) {
-        stampDelegate.style.opacity = String(Math.min(1, (-diffY - 20) / threshold));
-        if (stampYes) stampYes.style.opacity = '0';
-        if (stampNo) stampNo.style.opacity = '0';
-      } else {
-        if (stampYes) stampYes.style.opacity = '0';
-        if (stampNo) stampNo.style.opacity = '0';
-        if (stampDelegate) stampDelegate.style.opacity = '0';
-      }
-    };
-
-    const onPointerUp = (e: PointerEvent) => {
-      if (!isDragging) return;
-      isDragging = false;
-      cardEl.classList.remove('is-dragging');
-      try { cardEl.releasePointerCapture(e.pointerId); } catch {}
-
-      const diffX = currentX - startX;
-      const diffY = currentY - startY;
-      const swipeThreshold = 90;
-
-      if (diffX > swipeThreshold) {
-        initiateVoteFlow('YES');
-      } else if (diffX < -swipeThreshold) {
-        initiateVoteFlow('NO');
-      } else if (diffY < -swipeThreshold && Math.abs(diffX) < 65) {
-        initiateVoteFlow('DELEGATE');
-      } else {
-        cardEl.style.transition = 'transform 0.38s cubic-bezier(0.16, 1, 0.3, 1)';
-        cardEl.style.transform = 'translate3d(0, 0, 0) rotate(0deg)';
-        if (stampYes) stampYes.style.opacity = '0';
-        if (stampNo) stampNo.style.opacity = '0';
-        if (stampDelegate) stampDelegate.style.opacity = '0';
-      }
-    };
-
-    cardEl.addEventListener('pointerdown', onPointerDown);
-    cardEl.addEventListener('pointermove', onPointerMove);
-    cardEl.addEventListener('pointerup', onPointerUp);
-    cardEl.addEventListener('pointercancel', onPointerUp);
+    }, 220);
   }
 }

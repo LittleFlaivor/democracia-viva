@@ -8,6 +8,7 @@ import { CivicAppStore } from '../../state/store.ts';
 import { GameStore } from '../../state/game-store.ts';
 import { renderBrandLogo } from './brand-logo.ts';
 import { soundFx } from './sound-fx.ts';
+import { getLocalCitizenCredential } from '../../services/auth.ts';
 
 export function getInitialTheme(): 'light' | 'dark' {
   const saved = localStorage.getItem('DEMOCRACIA_VIVA_THEME');
@@ -24,9 +25,8 @@ export function applyTheme(theme: 'light' | 'dark') {
   }
 }
 
-export function renderProfileDock(container: HTMLElement) {
-  const civicStore = CivicAppStore.getInstance();
-  const activeCitizen = civicStore.getActiveCitizen();
+export function renderProfileDock(container: HTMLElement, onOpenIdentityModal?: () => void) {
+  const localCred = getLocalCitizenCredential();
   const currentTheme = (document.documentElement.getAttribute('data-theme') as 'light' | 'dark') || getInitialTheme();
 
   container.innerHTML = `
@@ -38,12 +38,17 @@ export function renderProfileDock(container: HTMLElement) {
         </div>
         <span class="dock-alpha-tag" title="Entorno de Pruebas v0.5 Alpha">Alpha en Pruebas</span>
 
-        <!-- Ficha de Identidad Ciudadana Única Soberana (Opción 1) -->
-        <div class="dock-user-profile hud-pill-capsule" title="Identidad soberana verificada con DNIe y credencial ZK Semaphore">
-          <span class="dock-user-avatar">${activeCitizen.avatar}</span>
-          <span class="dock-user-name">${activeCitizen.name}</span>
-          <span class="dock-user-badge">DNIe Verificado ✓</span>
-        </div>
+        <!-- Ficha de Identidad Ciudadana Soberana (Interactiva) -->
+        <button 
+          type="button" 
+          class="dock-user-profile hud-pill-capsule interactive" 
+          id="btn-dock-identity" 
+          title="Ver estado de identidad cívica y autenticación Passkey"
+        >
+          <span class="dock-user-avatar">${localCred ? '🛡️' : '🔑'}</span>
+          <span class="dock-user-name">${localCred ? 'Ciudadano Soberano' : 'Acceso con Passkey'}</span>
+          <span class="dock-user-badge ${localCred ? 'is-verified' : ''}">${localCred ? 'Passkey Vinculada ✓' : 'Fricción Cero'}</span>
+        </button>
       </div>
 
       <!-- Derecha: Interruptor de Sonido e Interruptor Dual Claro / Oscuro -->
@@ -74,10 +79,16 @@ export function renderProfileDock(container: HTMLElement) {
 
 
 
+  // Listener para abrir modal de identidad cívica / Passkey
+  container.querySelector('#btn-dock-identity')?.addEventListener('click', () => {
+    soundFx.playTap();
+    onOpenIdentityModal?.();
+  });
+
   // Listener para cambio de sonido
   container.querySelector('#btn-sound-toggle')?.addEventListener('click', () => {
     soundFx.toggleMute();
-    renderProfileDock(container);
+    renderProfileDock(container, onOpenIdentityModal);
   });
 
   // Listener para cambio de tema
@@ -86,6 +97,6 @@ export function renderProfileDock(container: HTMLElement) {
     const active = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
     const next = active === 'dark' ? 'light' : 'dark';
     applyTheme(next);
-    renderProfileDock(container);
+    renderProfileDock(container, onOpenIdentityModal);
   });
 }

@@ -578,8 +578,9 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  user-select: none;
-  touch-action: none;
+  user-select: auto;
+  touch-action: pan-y;
+  cursor: default;
   overflow: hidden;
   transition: border-color 0.25s, box-shadow 0.25s;
 }
@@ -3500,6 +3501,53 @@
   box-shadow: 0 0 8px rgba(245, 158, 11, 0.7);
   animation: pulseDot 2s infinite ease-in-out;
 }
+
+/* Orientación de Voto Deliberativo (Sin Arrastre) */
+.card-deliberation-footer {
+  margin-top: 1rem;
+  text-align: center;
+  padding: 0.5rem 0 0.1rem;
+}
+
+.deliberation-hint-text {
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+/* HUD Limpio de Progresión Legislativa */
+.hud-progress-clean {
+  justify-content: space-between;
+}
+
+.hud-decree-context {
+  display: flex;
+  align-items: center;
+}
+
+.hud-decree-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-medium);
+  padding: 0.35rem 0.8rem;
+  border-radius: var(--radius-full);
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+.decree-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #2563eb;
+  box-shadow: 0 0 6px rgba(37, 99, 235, 0.6);
+}
+
 
 
 
