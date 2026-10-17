@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 44 44" fill="none">
+  <defs>
+    <!-- Gradiente Principal: Azul Real a Cyan Vivo -->
+    <linearGradient id="dv-logo-grad" x1="4" y1="4" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#2563EB" />
+      <stop offset="50%" stop-color="#3B82F6" />
+      <stop offset="100%" stop-color="#06B6D4" />
+    </linearGradient>
+
+    <!-- Gradiente de Acento Vivo: Verde Esmeralda a Cyan -->
+    <linearGradient id="dv-pulse-grad" x1="18" y1="14" x2="38" y2="34" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#10B981" />
+      <stop offset="100%" stop-color="#06B6D4" />
+    </linearGradient>
+
+    <style>
+      .logo-base-line {
+        stroke: #0F172A;
+      }
+      @media (prefers-color-scheme: dark) {
+        .logo-base-line {
+          stroke: #F8FAFC;
+        }
+      }
+    </style>
+  </defs>
+
+  <!-- 1. El Portal Cívico / Ágora: Arco protector con geometría pura y esquinas redondeadas -->
+  <path 
+    d="M 8 36 L 8 20 C 8 12.268 14.268 6 22 6 C 29.732 6 36 12.268 36 20 L 36 36" 
+    stroke="url(#dv-logo-grad)" 
+    stroke-width="3.8" 
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- 2. La Columna y Base de Consenso: Línea de suelo institucional -->
+  <line 
+    x1="5" y1="36" x2="39" y2="36" 
+    class="logo-base-line" 
+    stroke-width="3.5" 
+    stroke-linecap="round"
+  />
+
+  <!-- 3. La Chispa / Voto Vivo en Movimiento: Checkmark ascendente orgánico -->
+  <path 
+    d="M 14 22 L 20 28 L 34 14" 
+    stroke="url(#dv-pulse-grad)" 
+    stroke-width="4.5" 
+    stroke-linecap="round" 
+    stroke-linejoin="round"
+  />
+</svg>
