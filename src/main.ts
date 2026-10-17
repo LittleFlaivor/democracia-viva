@@ -159,8 +159,8 @@ function initApp() {
   }, 10000);
 
   // Al emitir el primer voto, mostrar banner si aún no se ha mostrado
-  gameStore.subscribe((state) => {
-    if (state.history.length > 0) {
+  gameStore.subscribe(() => {
+    if (Object.keys(gameStore.getDecisions()).length > 0) {
       clearTimeout(gentleTimer);
       showGentlePwaBanner();
     }

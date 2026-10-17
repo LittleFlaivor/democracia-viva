@@ -1618,7 +1618,7 @@
   gap: 0.9rem;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 860px) {
   .parties-affinity-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -1636,18 +1636,12 @@
   transition: all 0.25s var(--ease-spring);
 }
 
-@media (max-width: 640px) {
-  .party-affinity-card {
-    flex-direction: column !important;
-    align-items: stretch !important;
-    gap: 0.75rem !important;
-    padding: 0.95rem 1rem !important;
-  }
-  .party-card-right {
-    align-items: stretch !important;
-    min-width: 0 !important;
-    width: 100% !important;
-  }
+.party-affinity-stat-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  width: 100%;
 }
 
 .party-affinity-card:hover {
@@ -1858,6 +1852,315 @@
   justify-content: center;
   gap: 1rem;
   flex-wrap: wrap;
+}
+
+/* ========================================================
+   ADAPTACIÓN MOBILE-FIRST DEL PUENTE DE CONSENSO (EUREKA)
+   ======================================================== */
+@media (max-width: 767px) {
+  .eureka-stage-wrapper {
+    padding: 0 0.25rem 2rem 0.25rem !important;
+    max-width: 100vw !important;
+    box-sizing: border-box !important;
+  }
+
+  .eureka-content-box {
+    padding: 1.25rem 0.85rem !important;
+    border-radius: 20px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+
+  .eureka-achievement-pill {
+    padding: 4px 10px !important;
+    font-size: 0.62rem !important;
+    letter-spacing: 0.04em !important;
+    margin-bottom: 0.85rem !important;
+    display: flex !important;
+    justify-content: center !important;
+    text-align: center !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .eureka-title {
+    font-size: 1.45rem !important;
+    line-height: 1.2 !important;
+    margin-bottom: 0.5rem !important;
+    text-align: center !important;
+  }
+
+  .eureka-lead {
+    font-size: 0.84rem !important;
+    line-height: 1.45 !important;
+    margin: 0 auto 1.5rem !important;
+    text-align: center !important;
+  }
+
+  /* Estadística Principal */
+  .eureka-metric-banner {
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    padding: 1.25rem 1rem !important;
+    gap: 0.5rem !important;
+    border-radius: 18px !important;
+    margin-bottom: 1.5rem !important;
+  }
+
+  .eureka-big-stat {
+    font-size: 3.2rem !important;
+    line-height: 1 !important;
+  }
+
+  .eureka-stat-label > div:first-child {
+    font-size: 1.05rem !important;
+    text-align: center !important;
+  }
+
+  .eureka-stat-label > div:last-child {
+    font-size: 0.8rem !important;
+    line-height: 1.4 !important;
+    text-align: center !important;
+  }
+
+  /* Secciones y Tarjetas de Voto */
+  .results-card-section {
+    padding: 1rem 0.85rem !important;
+    border-radius: 18px !important;
+    margin-top: 1.25rem !important;
+  }
+
+  .results-section-header {
+    margin-bottom: 1rem !important;
+  }
+
+  .results-section-title {
+    font-size: 1.05rem !important;
+    line-height: 1.3 !important;
+  }
+
+  .results-section-subtitle {
+    font-size: 0.8rem !important;
+    line-height: 1.4 !important;
+  }
+
+  .article-result-card {
+    padding: 0.95rem 0.85rem !important;
+    border-radius: 14px !important;
+  }
+
+  .article-result-top {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.35rem !important;
+    margin-bottom: 0.65rem !important;
+  }
+
+  .article-result-title {
+    font-size: 0.92rem !important;
+    line-height: 1.3 !important;
+    margin-top: 0.2rem !important;
+  }
+
+  .status-approved-badge {
+    font-size: 0.65rem !important;
+    padding: 2px 8px !important;
+    align-self: flex-start !important;
+  }
+
+  .vote-segmented-bar {
+    height: 22px !important;
+    border-radius: 6px !important;
+    margin-bottom: 0.65rem !important;
+  }
+
+  .bar-segment {
+    font-size: 0.62rem !important;
+  }
+
+  .user-vote-callout {
+    padding: 0.5rem 0.65rem !important;
+    font-size: 0.74rem !important;
+    line-height: 1.35 !important;
+    border-radius: 8px !important;
+  }
+
+  /* Filtros de Partidos en Móvil */
+  .results-section-header-row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.75rem !important;
+  }
+
+  .party-filter-tabs {
+    display: flex !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 3px !important;
+    border-radius: 12px !important;
+    background: var(--bg-surface) !important;
+    gap: 3px !important;
+  }
+
+  .party-filter-btn {
+    flex: 1 1 0 !important;
+    text-align: center !important;
+    padding: 6px 4px !important;
+    font-size: 0.7rem !important;
+    white-space: nowrap !important;
+  }
+
+  /* Tarjetas de Afinidad de Partidos en Móvil */
+  .parties-affinity-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
+
+  .party-affinity-card {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.65rem !important;
+    padding: 0.85rem 0.95rem !important;
+    border-radius: 16px !important;
+  }
+
+  .party-card-left {
+    align-items: flex-start !important;
+    gap: 0.75rem !important;
+    width: 100% !important;
+  }
+
+  .party-logo-wrapper {
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 42px !important;
+  }
+
+  .party-logo-badge {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .party-name-row {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.35rem !important;
+    flex-wrap: wrap !important;
+  }
+
+  .party-short-name {
+    font-size: 1.05rem !important;
+  }
+
+  .party-seats-pill {
+    font-size: 0.65rem !important;
+    padding: 1px 6px !important;
+  }
+
+  .winner-tag {
+    font-size: 0.65rem !important;
+    padding: 1px 7px !important;
+  }
+
+  .party-full-name {
+    font-size: 0.74rem !important;
+  }
+
+  .party-stance-text {
+    font-size: 0.76rem !important;
+    line-height: 1.35 !important;
+    margin-top: 0.25rem !important;
+    max-width: 100% !important;
+  }
+
+  .party-card-right {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    padding-top: 0.45rem !important;
+    border-top: 1px solid var(--border-subtle) !important;
+  }
+
+  .party-affinity-stat-row {
+    display: flex !important;
+    align-items: baseline !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+  }
+
+  .party-affinity-value {
+    font-size: 1.25rem !important;
+    text-align: right !important;
+  }
+
+  .party-affinity-track {
+    width: 100% !important;
+    height: 6px !important;
+    margin: 0.25rem 0 0 !important;
+  }
+
+  .party-affinity-caption {
+    font-size: 0.68rem !important;
+  }
+
+  /* Certificado ZK Limpio en Móvil */
+  .clean-zk-certificate-card {
+    padding: 1.25rem 0.85rem !important;
+    border-radius: 18px !important;
+    gap: 0.45rem !important;
+    margin-top: 1.25rem !important;
+  }
+
+  .zk-cert-badge {
+    font-size: 0.62rem !important;
+    padding: 2px 8px !important;
+  }
+
+  .zk-cert-title {
+    font-size: 1.05rem !important;
+  }
+
+  .zk-cert-desc {
+    font-size: 0.78rem !important;
+    line-height: 1.4 !important;
+  }
+
+  .btn-zk-inspect {
+    width: 100% !important;
+    padding: 10px 12px !important;
+    font-size: 0.75rem !important;
+    text-align: center !important;
+    white-space: normal !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Acciones Finales en Móvil */
+  .eureka-final-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 0.6rem !important;
+    margin-top: 1.5rem !important;
+  }
+
+  .eureka-final-actions button {
+    width: 100% !important;
+    text-align: center !important;
+    justify-content: center !important;
+    padding: 12px 16px !important;
+    font-size: 0.88rem !important;
+    box-sizing: border-box !important;
+  }
+
+  #btn-open-acta-final {
+    order: -1 !important;
+  }
 }
 
 /* ========================================================

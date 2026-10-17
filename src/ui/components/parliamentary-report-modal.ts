@@ -80,11 +80,14 @@ export function renderParliamentaryReportModal(
         </div>
 
         <!-- Tabla de Resultados por Artículo -->
-        <h4 style="margin-bottom: 1rem;">1. Desglose del Voto Ciudadano vs. Voto del Congreso</h4>
-        <div style="overflow-x: auto; margin-bottom: 2rem;">
-          <table style="width: 100%; border-collapse: collapse; font-size: 0.82rem; text-align: left;">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.6rem; flex-wrap: wrap; gap: 0.3rem;">
+          <h4 style="margin: 0;">1. Desglose del Voto Ciudadano vs. Voto del Congreso</h4>
+          <span style="font-size: 0.7rem; color: var(--text-muted);">↔ Desliza la tabla horizontalmente</span>
+        </div>
+        <div style="overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 2rem; border-radius: 12px; border: 1px solid var(--border-card);">
+          <table style="width: 100%; min-width: 520px; border-collapse: collapse; font-size: 0.82rem; text-align: left;">
             <thead>
-              <tr style="border-bottom: 1px solid var(--border-medium); color: var(--text-muted);">
+              <tr style="border-bottom: 1px solid var(--border-medium); color: var(--text-muted); background: var(--bg-app-alt);">
                 <th style="padding: 0.75rem 0.5rem;">Artículo</th>
                 <th style="padding: 0.75rem 0.5rem;">Voto Directo / Delegado</th>
                 <th style="padding: 0.75rem 0.5rem;">Sentido Ciudadano</th>

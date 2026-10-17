@@ -182,7 +182,7 @@ export function renderConsensusEureka(
             <div class="party-filter-tabs" role="tablist">
               <button class="party-filter-btn active" data-filter="all">Todos (${partyRankings.length})</button>
               <button class="party-filter-btn" data-filter="major">Principales (4)</button>
-              <button class="party-filter-btn" data-filter="high">Mayor Sintonía (≥66%)</button>
+              <button class="party-filter-btn" data-filter="high">Sintonía ≥66%</button>
             </div>
           </div>
 
@@ -208,13 +208,15 @@ export function renderConsensusEureka(
                   </div>
 
                   <div class="party-card-right">
-                    <div class="party-affinity-value font-mono" style="color: ${party.color};">
-                      ${party.affinityPercent}%
+                    <div class="party-affinity-stat-row">
+                      <span class="party-affinity-caption">coincidencia</span>
+                      <span class="party-affinity-value font-mono" style="color: ${party.color};">
+                        ${party.affinityPercent}%
+                      </span>
                     </div>
                     <div class="party-affinity-track">
                       <div class="party-affinity-fill" style="width: ${party.affinityPercent}%; background: ${party.color};"></div>
                     </div>
-                    <span class="party-affinity-caption">coincidencia</span>
                   </div>
                 </div>
               `;
