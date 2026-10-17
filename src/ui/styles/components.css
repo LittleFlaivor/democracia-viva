@@ -812,12 +812,24 @@
     color: var(--text-primary) !important;
     margin-bottom: 0.5rem !important;
   }
-  .card-subtitle {
-    font-size: clamp(0.86rem, 3.4vw, 0.94rem) !important;
-    line-height: 1.55 !important;
+  .card-subtitle,
+  .card-subtitle-paragraph {
+    font-size: clamp(0.85rem, 3.2vw, 0.91rem) !important;
+    line-height: 1.54 !important;
     color: var(--text-secondary) !important;
     font-weight: 450 !important;
-    margin-bottom: 0.65rem !important;
+    margin: 0 !important;
+  }
+  .card-description-block {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.55rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+  .card-lead-paragraph {
+    color: var(--text-primary) !important;
+    font-weight: 500 !important;
+    font-size: clamp(0.87rem, 3.4vw, 0.93rem) !important;
   }
   .card-tradeoff-strip {
     display: flex !important;
@@ -919,6 +931,28 @@
   border-radius: 50%;
   background: var(--color-primary);
   box-shadow: 0 0 8px var(--color-primary);
+}
+
+.card-description-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin: 0.65rem 0 0.9rem;
+  text-align: left;
+}
+
+.card-subtitle-paragraph {
+  font-size: clamp(0.88rem, 3.2vw, 0.94rem);
+  line-height: 1.58;
+  color: var(--text-secondary);
+  font-weight: 450;
+  margin: 0;
+}
+
+.card-lead-paragraph {
+  color: var(--text-primary);
+  font-weight: 500;
+  font-size: clamp(0.9rem, 3.4vw, 0.96rem);
 }
 
 .card-tradeoff-strip {

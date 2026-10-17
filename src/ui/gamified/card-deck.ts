@@ -73,7 +73,13 @@ export function renderCardDeck(container: HTMLElement) {
           <!-- Cuerpo: Titular, Resumen y Desglose Visual Bilateral del Dilema -->
           <div class="card-body">
             <h2 class="card-question font-display">${currentCard.headlineQuestion}</h2>
-            <p class="card-subtitle">${currentCard.subtitle}</p>
+            <div class="card-description-block">
+              ${currentCard.subtitle
+                .split('\n\n')
+                .filter(Boolean)
+                .map((para, i) => `<p class="card-subtitle-paragraph ${i === 0 ? 'card-lead-paragraph' : ''}">${para.trim()}</p>`)
+                .join('')}
+            </div>
 
             ${currentCard.keyPoints ? `
               <!-- Síntesis Rápida Bilateral (Facilidad Total de Comprensión en 3s) -->

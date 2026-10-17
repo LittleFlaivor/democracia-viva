@@ -47,7 +47,11 @@ export const GAMIFIED_DECK: GamifiedCard[] = [
     category: 'Vivienda y Alquiler',
     badge: 'Art. 1 BOE · Contención de Rentas',
     headlineQuestion: '¿Topar por ley las subidas del alquiler al 2.5% anual en ciudades tensionadas?',
-    subtitle: 'Esta medida establece un límite legal obligatorio del 2,5% a las subidas de precio en las renovaciones de contratos en municipios declarados tensionados. Su objetivo principal es blindar a las familias inquilinas frente a subidas abusivas (de hasta el 30%) y asegurar la estabilidad en sus hogares, frente al riesgo de que algunos propietarios opten por retirar sus pisos del mercado del alquiler tradicional.',
+    subtitle: `Esta disposición introduce un tope legal obligatorio del 2,5% anual a las revisiones y renovaciones de contratos de arrendamiento de vivienda habitual en aquellos municipios declarados oficialmente como zonas de mercado residencial tensionado. Esta declaración se activa cuando las familias destinan de media más del 30% de sus ingresos al pago del alquiler o cuando los precios hayan superado en más de 3 puntos el IPC autonómico en el último lustro.
+
+En el plano social, la medida busca frenar la escalada inflacionaria que actualmente expulsa a familias trabajadoras y jóvenes de sus barrios habituales ante subidas repentinas del 20% al 35%, protegiendo el derecho constitucional a una vivienda digna y aportando estabilidad a más de 3,5 millones de hogares inquilinos en toda España.
+
+No obstante, colectivos de propietarios y economistas alertan de que una contención obligatoria de precios sin estímulos paralelos puede desincentivar la puesta en alquiler de viviendas vacías, provocar un trasvase masivo de inmuebles hacia el mercado turístico o de temporada, y endurecer las exigencias de solvencia o fianzas a los nuevos inquilinos.`,
     keyPoints: {
       pro: 'Frena subidas abusivas y garantiza estabilidad de hogar a familias inquilinas',
       con: 'Riesgo de que propietarios retiren pisos del mercado tradicional o endurezcan fianzas'
@@ -160,7 +164,11 @@ export const GAMIFIED_DECK: GamifiedCard[] = [
     category: 'Incentivos y Fiscalidad',
     badge: 'Art. 2 BOE · Bonificación IRPF',
     headlineQuestion: '¿Bonificar el 70% del IRPF a propietarios que rebajen voluntariamente el alquiler un 10%?',
-    subtitle: 'Incentiva a los pequeños arrendadores a reducir un 10% el precio del alquiler en zonas de alta demanda a cambio de una deducción extraordinaria del 70% en su IRPF y el respaldo de un fondo público de garantía frente a impagos. Busca abaratar las rentas mediante estímulos económicos y seguridad jurídica, asumiendo el Estado una reducción temporal de sus ingresos fiscales.',
+    subtitle: `El artículo diseña un sistema de incentivos fiscales positivos orientado a pequeños y medianos arrendadores. Aquellos propietarios que reduzcan voluntariamente al menos un 10% el precio del alquiler respecto al contrato anterior en áreas tensionadas obtendrán una bonificación fiscal extraordinaria del 70% en el rendimiento neto del capital inmobiliario en su declaración del IRPF.
+
+Como garantía adicional para activar el parque residencial privado, la ley contempla la creación de un Fondo Público de Cobertura que avala y anticipa las rentas mensuales impagadas en caso de demora o insolvencia sobrevenida del inquilino, amortiguando el principal temor de los arrendadores y evitando litigios judiciales prolongados.
+
+Sus defensores destacan que premiar la moderación de rentas en lugar de aplicar medidas punitivas fomenta la cooperación entre caseros e inquilinos, como ocurre en modelos de éxito europeo. Por contra, los sectores críticos recuerdan que esta bonificación conlleva una merma fiscal anual estimada en más de 800 millones de euros de dinero público, el cual podría invertirse directamente en construir vivienda pública protegida.`,
     keyPoints: {
       pro: 'Rebaja directa del 10% en el alquiler premiando al casero con un gran ahorro fiscal',
       con: 'Coste para Hacienda asumido por el conjunto de los contribuyentes públicos'
@@ -255,7 +263,11 @@ export const GAMIFIED_DECK: GamifiedCard[] = [
     category: 'Vivienda Vacía y Fondos',
     badge: 'Art. 3 BOE · Recargo IBI Fondos',
     headlineQuestion: '¿Cobrar un 150% más de IBI a grandes fondos y bancos con pisos vacíos más de 2 años?',
-    subtitle: 'Faculta a los ayuntamientos a aplicar un recargo de hasta el 150% en el Impuesto de Bienes Inmuebles (IBI) a entidades financieras, corporaciones y grandes tenedores que mantengan viviendas desocupadas sin causa justificada durante más de dos años. Su finalidad es movilizar miles de pisos cerrados hacia el alquiler residencial, garantizando que no se penalice a particulares ni segundas residencias familiares.',
+    subtitle: `Esta norma faculta a los ayuntamientos a imponer un recargo tributario de hasta el 150% en la cuota líquida del Impuesto sobre Bienes Inmuebles (IBI) sobre aquellas viviendas de uso residencial que permanezcan desocupadas con carácter permanente y sin justificación durante más de dos años ininterrumpidos. La medida se dirige de forma expresa a entidades financieras, sociedades inmobiliarias y fondos de inversión titulares de cuatro o más inmuebles urbanos.
+
+El propósito fundamental es desalentar el acaparamiento especulativo de activos habitacionales cerrados a cal y canto, forzando a las corporaciones tenedoras a comercializarlos o volcarlos al mercado del alquiler residencial. El precepto blinda de forma rigurosa y exime expresamente de cualquier recargo a segundas residencias vacacionales, traslados laborales temporales o viviendas en litigio judicial o reforma de habitabilidad.
+
+Aunque cuenta con un amplio respaldo ciudadano para desbloquear vivienda ociosa en grandes ciudades, diversos juristas y municipios señalan el reto administrativo que supone acreditar de forma fehaciente la desocupación continuada mediante patrones de consumo de agua o luz, así como el riesgo de recursos contenciosos promovidos por fondos ante los tribunales.`,
     keyPoints: {
       pro: 'Moviliza miles de viviendas acaparadas por especulación hacia familias que las necesitan',
       con: 'Requiere blindaje jurídico estricto para resistir recursos de fondos ante tribunales'
