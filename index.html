@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Democracia Viva | Decisiones Cívicas Verificables</title>
+  <meta name="description" content="Plataforma interactiva de democracia líquida y voto criptográfico verificable. Toma las riendas del Real Decreto-ley de Vivienda con fricción cero y consenso cívico.">
+  <meta name="theme-color" content="#F8F9FA">
+
+  <!-- Tipografía Moderna Geométrica Estilo Product Sans (Outfit + Plus Jakarta Sans) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Estilos del Sistema de Diseño -->
+  <link rel="stylesheet" href="./src/ui/styles/tokens.css">
+  <link rel="stylesheet" href="./src/ui/styles/typography.css">
+  <link rel="stylesheet" href="./src/ui/styles/layout.css">
+  <link rel="stylesheet" href="./src/ui/styles/components.css">
+</head>
+<body class="gamified-body">
+  <!-- Fondo Dinámico con Movimiento Orgánico Flotante Multicapa -->
+  <div class="ambient-mesh-background" id="ambient-mesh" aria-hidden="true">
+    <div class="ambient-orb-layer" id="layer-1"><div class="ambient-orb orb-1"></div></div>
+    <div class="ambient-orb-layer" id="layer-2"><div class="ambient-orb orb-2"></div></div>
+    <div class="ambient-orb-layer" id="layer-3"><div class="ambient-orb orb-3"></div></div>
+    <div class="ambient-orb-layer" id="layer-4"><div class="ambient-orb orb-4"></div></div>
+    <div class="ambient-orb-layer" id="layer-5"><div class="ambient-orb orb-5"></div></div>
+    <div class="ambient-cursor-layer" id="layer-cursor"><div class="ambient-orb orb-cursor"></div></div>
+  </div>
+
+  <!-- 1. Dock Discreto de Perfiles y Selector de Tema (Esquina Superior) -->
+  <header id="profile-dock-container"></header>
+
+  <!-- 2. Escenario Principal del Juego -->
+  <main class="game-viewport">
+    <!-- Barómetros HUD Flotantes Superiores -->
+    <section id="hud-barometers-container" aria-label="Barómetros de Impacto en Vivo"></section>
+
+    <!-- Mazo 3D Central de Cartas / Pantalla Eureka -->
+    <section id="game-stage-container" aria-label="Mazo Central Cívico"></section>
+  </main>
+
+  <!-- Contenedor de Modales (Novela Gráfica, BOE, Acta y Recibo ZK) -->
+  <div id="modal-root-container"></div>
+
+  <script type="module" src="./src/main.ts"></script>
+</body>
+</html>

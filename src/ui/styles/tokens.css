@@ -1,0 +1,129 @@
+/**
+ * SISTEMA DE DISEÑO: TOKENS AWWWARDS SOTD (LIGHT EDITORIAL FIRST & DUAL THEME)
+ * Estética de gobernanza suiza y software de alta gama (Stripe, Apple, Linear).
+ * Modo Claro por defecto con sombras físicas multicapa + Modo Oscuro de precisión.
+ */
+
+:root {
+  /* TEMA CLARO EDITORIAL (POR DEFECTO) */
+  --bg-app: #F8FAFD;
+  --bg-app-alt: #F1F5F9;
+  --bg-surface: #FFFFFF;
+  --bg-elevated: #FFFFFF;
+  --bg-card-glass: rgba(255, 255, 255, 0.88);
+  --bg-glass-blur: blur(24px) saturate(180%);
+
+  /* Superficies para Ilustraciones SVG */
+  --svg-card-bg: #F8FAFC;
+  --svg-accent-subtle: #EEF2F6;
+
+  /* Bordes de Máxima Precisión (1px crisp) */
+  --border-subtle: rgba(15, 23, 42, 0.06);
+  --border-card: #E2E8F0;
+  --border-medium: #CBD5E1;
+  --border-active: #94A3B8;
+
+  /* Tipografías y Contrastes de Tinta */
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --text-muted: #94A3B8;
+  --text-inverse: #FFFFFF;
+
+  /* Paleta Institucional de Confianza y Autoridad */
+  --color-primary: #1D4ED8;
+  --color-primary-hover: #1E40AF;
+  --color-primary-subtle: rgba(29, 78, 216, 0.08);
+  --color-primary-border: rgba(29, 78, 216, 0.2);
+
+  /* Acentos Semánticos Electorales */
+  --vote-yes: #059669;
+  --vote-yes-hover: #047857;
+  --vote-yes-bg: #ECFDF5;
+  --vote-yes-border: #A7F3D0;
+  --vote-yes-glow: rgba(5, 150, 105, 0.2);
+
+  --vote-no: #DC2626;
+  --vote-no-hover: #B91C1C;
+  --vote-no-bg: #FEF2F2;
+  --vote-no-border: #FECACA;
+  --vote-no-glow: rgba(220, 38, 38, 0.2);
+
+  --vote-delegate: #D97706;
+  --vote-delegate-hover: #B45309;
+  --vote-delegate-bg: #FFFBEB;
+  --vote-delegate-border: #FDE68A;
+  --vote-delegate-glow: rgba(217, 119, 6, 0.2);
+
+  /* Sombras Físicas Multicapa (Apple / Stripe style) */
+  --shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
+  --shadow-card: 0 4px 6px -1px rgba(15, 23, 42, 0.04), 0 20px 25px -5px rgba(15, 23, 42, 0.05), 0 0 0 1px rgba(15, 23, 42, 0.05);
+  --shadow-float: 0 25px 50px -12px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(15, 23, 42, 0.06);
+  --shadow-magnetic: 0 12px 24px -4px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(15, 23, 42, 0.06);
+
+  /* Radios Geométricos Sofisticados */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --radius-full: 9999px;
+
+  /* Dinámica Física */
+  --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Anchura Unificada para Todo el Contenido Central del Juego */
+  --game-col-width: clamp(340px, 92vw, 490px);
+}
+
+/* ========================================================
+   MODO OSCURO DE ALTA PRECISIÓN (PRECISION DARK)
+   ======================================================== */
+[data-theme="dark"] {
+  --bg-app: #090A0F;
+  --bg-app-alt: #11131A;
+  --bg-surface: #12141D;
+  --bg-elevated: #181B26;
+  --bg-card-glass: rgba(18, 20, 29, 0.88);
+
+  --svg-card-bg: #151824;
+  --svg-accent-subtle: #232738;
+
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-card: rgba(255, 255, 255, 0.12);
+  --border-medium: rgba(255, 255, 255, 0.18);
+  --border-active: rgba(255, 255, 255, 0.28);
+
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+  --text-inverse: #090A0F;
+
+  --color-primary: #3B82F6;
+  --color-primary-hover: #60A5FA;
+  --color-primary-subtle: rgba(59, 130, 246, 0.15);
+  --color-primary-border: rgba(59, 130, 246, 0.3);
+
+  --vote-yes: #10B981;
+  --vote-yes-hover: #34D399;
+  --vote-yes-bg: rgba(16, 185, 129, 0.14);
+  --vote-yes-border: rgba(16, 185, 129, 0.35);
+  --vote-yes-glow: rgba(16, 185, 129, 0.25);
+
+  --vote-no: #F43F5E;
+  --vote-no-hover: #FB7185;
+  --vote-no-bg: rgba(244, 63, 94, 0.14);
+  --vote-no-border: rgba(244, 63, 94, 0.35);
+  --vote-no-glow: rgba(244, 63, 94, 0.25);
+
+  --vote-delegate: #F59E0B;
+  --vote-delegate-hover: #FBBF24;
+  --vote-delegate-bg: rgba(245, 158, 11, 0.14);
+  --vote-delegate-border: rgba(245, 158, 11, 0.35);
+  --vote-delegate-glow: rgba(245, 158, 11, 0.25);
+
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
+  --shadow-card: 0 20px 45px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  --shadow-float: 0 30px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.12);
+  --shadow-magnetic: 0 14px 28px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
