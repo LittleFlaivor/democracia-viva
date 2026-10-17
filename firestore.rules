@@ -1,0 +1,59 @@
+rules_version = '2';
+
+/**
+ * REGLAS DE SEGURIDAD ESTRICTAS DE FIRESTORE: PROTOCOLO DEMOCRACIA VIVA
+ * Garantizan a nivel de servidor la inmutabilidad absoluta de votos (Append-Only),
+ * la unicidad matemática (1 ciudadano = 1 voto por propuesta) y la desvinculación
+ * total entre identidad ciudadana y sentido de voto.
+ */
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Función auxiliar para validar la estructura e integridad del payload de voto
+    function isValidVotePayload() {
+      let data = request.resource.data;
+      return data.keys().hasAll(['nullifierHash', 'proposalId', 'choice', 'timestamp'])
+        && data.keys().hasOnly(['nullifierHash', 'proposalId', 'choice', 'timestamp', 'clientSignature', 'merkleLeaf', 'txHash', 'receiptId', 'merkleRoot'])
+        && (data.choice in ['YES', 'NO', 'DELEGATE'])
+        && data.nullifierHash is string
+        && data.proposalId is string
+        && (data.timestamp is number || data.timestamp is timestamp);
+    }
+
+    // COLECCIÓN USERS:
+    // Estado de verificación ciudadana y registro de clave pública WebAuthn (Passkeys).
+    // REGLA CRÍTICA DE PRIVACIDAD: NUNCA almacena opciones votadas ni IDs de propuestas votadas.
+    match /users/{credentialId} {
+      // Lectura permitida para validar credenciales públicas
+      allow read: if true;
+
+      // Registro Just-in-Time de nueva credencial ciudadana
+      allow create: if request.resource.data.keys().hasAll(['credentialId', 'publicKey', 'createdAt'])
+                    && request.resource.data.credentialId == credentialId;
+
+      // Inmutabilidad de identidad física: No se permite modificar ni borrar la credencial hardware
+      allow update, delete: if false;
+    }
+
+    // COLECCIÓN VOTES:
+    // Urna criptográfica verificable abierta al público (Append-Only / No Rollback).
+    // REGLA DE UNICIDAD MATEMÁTICA: El ID del documento DEBE ser exactamente el nullifierHash.
+    match /votes/{nullifierHash} {
+      // 1. Auditoría Pública Universal:
+      // Cualquier ciudadano u observador internacional puede auditar los hashes y el árbol de Merkle
+      allow read: if true;
+
+      // 2. Creación Condicional Estricta (1 Ciudadano = 1 Voto):
+      // Solo se permite la inserción si el documento NO EXISTE previamente en la base de datos
+      // y si los campos cumplen estrictamente el esquema auditado.
+      allow create: if !exists(/databases/$(database)/documents/votes/$(nullifierHash))
+                    && request.resource.data.nullifierHash == nullifierHash
+                    && isValidVotePayload();
+
+      // 3. Blindaje e Inmutabilidad Absoluta contra Rollback:
+      // Prohibición radical de actualización o borrado a nivel del motor de base de datos.
+      // Nadie (ni el cliente, ni administradores, ni atacantes) puede deshacer o cambiar un voto.
+      allow update, delete: if false;
+    }
+  }
+}

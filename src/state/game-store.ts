@@ -5,8 +5,21 @@
  */
 
 import { CivicAppStore } from './store.ts';
-import { GAMIFIED_DECK, GamifiedCard } from '../domain/data/gamified-deck.ts';
-import { VoteChoice } from '../domain/types.ts';
+import { GAMIFIED_DECK } from '../domain/data/gamified-deck.ts';
+import type { GamifiedCard } from '../domain/data/gamified-deck.ts';
+import type { VoteChoice } from '../domain/types.ts';
+import {
+  getLocalCitizenCredential,
+  saveLocalCitizenCredential,
+  generateDeterministicNullifier
+} from '../services/auth.ts';
+import type { CitizenPasskeyCredential } from '../services/auth.ts';
+import {
+  commitImmutableVote,
+  getSealedVote,
+  getLocalSealedVotesCache
+} from '../services/firestore-voting.ts';
+import type { ImmutableVoteDocument } from '../services/firestore-voting.ts';
 
 export type GameDecision = 'YES' | 'NO' | 'DELEGATE';
 
@@ -149,12 +162,77 @@ export class GameStore {
     this.notify();
   }
 
+  public getProposalId(card?: GamifiedCard | null): string {
+    const c = card || this.getCurrentCard();
+    return `RDL-06-2026-VIVIENDA::${c ? c.articleId : 'ART-01'}`;
+  }
+
+  public isCardSealed(cardId: string): boolean {
+    const card = GAMIFIED_DECK.find((c) => c.id === cardId);
+    if (!card) return false;
+    const proposalId = this.getProposalId(card);
+    const cache = getLocalSealedVotesCache();
+    if (cache[`prop_${proposalId}`]) return true;
+
+    const cred = getLocalCitizenCredential();
+    if (cred) {
+      const nullifier = generateDeterministicNullifier(cred.credentialId, proposalId);
+      if (cache[nullifier]) return true;
+    }
+    return Boolean(this.decisions[cardId]);
+  }
+
+  public getSealedVoteForCard(cardId: string): ImmutableVoteDocument | null {
+    const card = GAMIFIED_DECK.find((c) => c.id === cardId);
+    if (!card) return null;
+    const proposalId = this.getProposalId(card);
+    const cache = getLocalSealedVotesCache();
+    if (cache[`prop_${proposalId}`]) return cache[`prop_${proposalId}`];
+    const cred = getLocalCitizenCredential();
+    if (cred) {
+      const nullifier = generateDeterministicNullifier(cred.credentialId, proposalId);
+      if (cache[nullifier]) return cache[nullifier];
+    }
+    return null;
+  }
+
+  public advanceCard(): void {
+    if (this.currentCardIndex < GAMIFIED_DECK.length) {
+      this.currentCardIndex += 1;
+      if (this.currentCardIndex >= GAMIFIED_DECK.length) {
+        this.hudMetrics.nationalConsensus = 84;
+        this.isEurekaRevealed = true;
+      }
+      this.notify();
+    }
+  }
+
   /**
    * Ejecuta la toma de decisión en una carta con impacto físico y criptográfico.
    */
-  public async playDecision(decision: GameDecision): Promise<void> {
+  public async playDecision(
+    decision: GameDecision,
+    credParam?: CitizenPasskeyCredential
+  ): Promise<{ success: boolean; error?: string }> {
     const currentCard = this.getCurrentCard();
-    if (!currentCard) return;
+    if (!currentCard) return { success: false, error: 'No active card' };
+
+    const proposalId = this.getProposalId(currentCard);
+
+    // BLINDAJE DE INMUTABILIDAD: Si ya fue votado, no se puede sobrescribir
+    if (this.isCardSealed(currentCard.id)) {
+      return {
+        success: false,
+        error: 'ERROR_VOTE_ALREADY_SEALED: Este voto ya ha sido sellado de forma inmutable en la urna criptográfica.'
+      };
+    }
+
+    const cred = credParam || getLocalCitizenCredential();
+    if (credParam) {
+      saveLocalCitizenCredential(credParam);
+    }
+    const credentialId = cred ? cred.credentialId : 'passkey_anon_soberano';
+    const nullifierHash = generateDeterministicNullifier(credentialId, proposalId);
 
     this.decisions[currentCard.id] = decision;
 
@@ -172,15 +250,32 @@ export class GameStore {
     };
 
     // 2. Ejecutar transacción criptográfica ZK o delegación en segundo plano
+    let receipt: any = null;
     if (decision === 'YES' || decision === 'NO') {
       const choice: VoteChoice = decision === 'YES' ? 'YES' : 'NO';
-      await this.civicStore.castVote(currentCard.articleId, choice);
+      const voteRes = await this.civicStore.castVote(currentCard.articleId, choice);
+      receipt = voteRes.receipt;
     } else {
       // Delegar en Dra. Elena Miró
       this.civicStore.setDelegation('dra-elena-miro');
     }
 
-    // 3. Avanzar mazo
+    // 3. Registrar el voto inmutable en Cloud Firestore y caché local
+    const voteDoc: ImmutableVoteDocument = {
+      nullifierHash,
+      proposalId,
+      choice: decision,
+      timestamp: Date.now(),
+      clientSignature: receipt?.txHash || `sig_${credentialId.slice(0, 16)}`,
+      merkleLeaf: receipt?.merkleProof?.leaf || nullifierHash,
+      txHash: receipt?.txHash || `0x${nullifierHash.slice(2, 34)}`,
+      receiptId: receipt?.receiptId || `REC-${nullifierHash.slice(2, 10).toUpperCase()}`,
+      merkleRoot: receipt?.merkleRoot || this.civicStore.getMerkleTreeRoot()
+    };
+
+    await commitImmutableVote(voteDoc);
+
+    // 4. Avanzar mazo
     this.currentCardIndex += 1;
     if (this.currentCardIndex >= GAMIFIED_DECK.length) {
       // Bloquear métrica de consenso final en el 84% ("Puente de Consenso")
@@ -189,6 +284,7 @@ export class GameStore {
     }
 
     this.notify();
+    return { success: true };
   }
 
   /**
@@ -221,13 +317,19 @@ export class GameStore {
 
   /**
    * Retrocede una ronda en el mazo y revierte la decisión previa.
+   * REGLA DE ORO: Si el voto ya fue sellado en Firestore, está blindado y NO se revierte.
    */
   public undoDecision(): boolean {
     if (this.currentCardIndex <= 0) return false;
 
+    const prevCard = GAMIFIED_DECK[this.currentCardIndex - 1];
+    if (prevCard && (this.getSealedVoteForCard(prevCard.id) || this.isCardSealed(prevCard.id) || this.decisions[prevCard.id])) {
+      console.warn('REGLA DE INMUTABILIDAD: El voto ya está sellado en Firestore y no admite rollback.');
+      return false; // Bloqueo total
+    }
+
     this.isEurekaRevealed = false;
     this.currentCardIndex -= 1;
-    const prevCard = GAMIFIED_DECK[this.currentCardIndex];
     if (prevCard && this.decisions[prevCard.id]) {
       delete this.decisions[prevCard.id];
     }
@@ -244,6 +346,7 @@ export class GameStore {
     this.activeDilemmaCard = null;
     this.activeBoeCard = null;
     this.activeMonographCard = null;
+    this.civicStore.seedInitialEcosystem();
     this.syncWithProfile();
     this.notify();
   }

@@ -3021,6 +3021,173 @@
   }
 }
 
+/* ========================================================
+   MODAL DE AUTENTICACIÓN WEBAUTHN / PASSKEYS JUST-IN-TIME
+   ======================================================== */
+.passkey-icon-halo {
+  position: relative;
+  width: 76px;
+  height: 76px;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.15) 0%, rgba(37, 99, 235, 0.02) 70%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #2563eb;
+}
+
+[data-theme="dark"] .passkey-icon-halo {
+  background: radial-gradient(circle, rgba(96, 165, 250, 0.2) 0%, rgba(96, 165, 250, 0.03) 70%);
+  color: #60a5fa;
+}
+
+.passkey-pulse-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px solid rgba(37, 99, 235, 0.35);
+  animation: passkeyPulse 2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+}
+
+@keyframes passkeyPulse {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.2;
+  }
+  100% {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+}
+
+/* ========================================================
+   ESTADO DE TARJETA: VOTO SELLADO E INMUTABLE (POST-VOTO LOCK)
+   ======================================================== */
+.game-card.card-sealed {
+  border-color: rgba(16, 185, 129, 0.45) !important;
+  box-shadow: 0 12px 36px rgba(16, 185, 129, 0.15), 0 0 0 1px rgba(16, 185, 129, 0.25) !important;
+}
+
+[data-theme="dark"] .game-card.card-sealed {
+  border-color: rgba(52, 211, 153, 0.4) !important;
+  box-shadow: 0 14px 40px rgba(5, 150, 105, 0.22), 0 0 0 1px rgba(52, 211, 153, 0.3) !important;
+}
+
+.sealed-banner {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(5, 150, 105, 0.06));
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 14px;
+  padding: 12px 14px;
+  margin: 12px 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sealed-icon {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.sealed-text-box {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.sealed-title {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 0.92rem;
+  color: #059669;
+}
+
+[data-theme="dark"] .sealed-title {
+  color: #34d399;
+}
+
+.sealed-subtitle {
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+}
+
+.sealed-receipt-box {
+  background: var(--bg-surface, #ffffff);
+  border: 1px dashed var(--border-subtle, #cbd5e1);
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin-bottom: 14px;
+  text-align: left;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+[data-theme="dark"] .sealed-receipt-box {
+  background: rgba(15, 23, 42, 0.6);
+  border-color: rgba(148, 163, 184, 0.2);
+}
+
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.receipt-label {
+  color: var(--text-tertiary, #94a3b8);
+  font-size: 0.68rem;
+}
+
+.receipt-val {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.btn-download-receipt {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 11px 16px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #059669, #047857);
+  color: white;
+  border: none;
+  font-weight: 700;
+  font-size: 0.86rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+  transition: all 0.2s ease;
+}
+
+.btn-download-receipt:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(5, 150, 105, 0.35);
+}
+
+/* Bloqueo de botones arcade post-voto */
+.arcade-push-btn.is-locked {
+  opacity: 0.45 !important;
+  cursor: not-allowed !important;
+  filter: grayscale(0.8);
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.arcade-push-btn.is-locked:hover {
+  transform: none !important;
+}
+
+
 
 
 

@@ -7,9 +7,15 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test:redteam": "node --experimental-strip-types --test tests/redteam-qa.test.js"
+    "test:redteam": "node --experimental-strip-types --test tests/redteam-qa.test.js",
+    "test:security": "node --experimental-strip-types --test tests/redteam-passkeys-security.test.js",
+    "test:privacy": "node --experimental-strip-types --test tests/civic-privacy-audit.test.js",
+    "test": "node --experimental-strip-types --test tests/*.test.js"
   },
   "devDependencies": {
     "vite": "^6.2.0"
+  },
+  "dependencies": {
+    "firebase": "^13.0.0"
   }
 }

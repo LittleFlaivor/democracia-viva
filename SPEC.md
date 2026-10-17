@@ -191,6 +191,86 @@ Para garantizar un voto consciente, no polarizado, transparente y riguroso sin a
 
 ---
 
+## 8. PROTOCOLO DE IDENTIDAD DIGITAL, WEBAUTHN PASSKEYS Y URNA INMUTABLE (FIRESTORE APPEND-ONLY)
+
+### 8.1. Autenticación Biométrica Nativa (W3C WebAuthn Level 3 / FIDO2)
+* **Cero Contraseñas / Cero Wallets:** Democracia Viva erradica la fricción de frases semilla (*seed phrases*), extensiones de billetera (Metamask) y contraseñas débiles. El ciudadano se autentica y firma soberanamente mediante el enclave de seguridad hardware de su dispositivo nativo (Windows Hello, Touch ID, Face ID o llave física FIDO2/YubiKey).
+* **Flujo Unificado Just-in-Time (JIT Auth):**
+  1. El ciudadano explora deliberaciones, dilemas y monográficos con navegación 100% libre sin barreras de entrada ni login previo forzoso.
+  2. En el instante exacto en que decide confirmar su voto (mediante swipe o botón arcade), el sistema detecta si el dispositivo posee una credencial cívica activa.
+  3. **Si es nuevo votante:** Se despliega el modal interactivo de enrolamiento biométrico, invocando `navigator.credentials.create()`, generando un par de claves asimétricas en hardware (curva elíptica NIST P-256 / COSE ES256), registrando la clave pública en Firestore `users/{credentialId}` y autenticando una sesión anónima en Firebase Auth.
+  4. **Si ya existe credencial:** Se solicita una afirmación biométrica instantánea (`navigator.credentials.get()`) sobre el hash de la acción cívica.
+
+### 8.2. Arquitectura de Identidad Desacoplada (Decoupled Identity)
+Para preservar de forma inviolable el secreto del voto estipulado en la Constitución Española y en la Carta de Derechos Digitales:
+* **Colección `users/{credentialId}` (Censo Cívico Verificado):**
+  Almacena exclusivamente el estado de verificación y la clave pública hardware:
+  ```json
+  {
+    "credentialId": "base64url_hardware_id",
+    "publicKey": "base64url_public_key",
+    "createdAt": 1776412800000,
+    "deviceType": "Biométrico Plataforma (FaceID / TouchID / Windows Hello)",
+    "dnieVerified": true
+  }
+  ```
+  **REGLA CRÍTICA DE PRIVACIDAD:** Esta colección jamás almacena, referencia ni enlaza qué propuesta ha votado el ciudadano, ni qué sentido de voto eligió.
+* **Colección `votes/{nullifierHash}` (Urna Criptográfica de Libre Auditoría):**
+  Cada voto es anónimo, autosuficiente e inmutable. El ID del documento es estrictamente el `nullifierHash`:
+  ```json
+  {
+    "nullifierHash": "0x7f4a8b...",
+    "proposalId": "RDL-06-2026-VIVIENDA::ART-01",
+    "choice": "YES",
+    "timestamp": 1776412815000,
+    "clientSignature": "0x39a1b...",
+    "merkleLeaf": "0x89c7d...",
+    "txHash": "0x4fe2a...",
+    "receiptId": "REC-7F4A8B",
+    "merkleRoot": "0x12b5c..."
+  }
+  ```
+  **AISLAMIENTO TOTAL:** Ningún campo de `votes` contiene `credentialId`, nombres, DNI, dirección IP ni identificación personal.
+
+### 8.3. Función Determinista de Nulificador Criptográfico
+Para hacer cumplir la regla democrática de oro (**1 Ciudadano = 1 Voto**) sin comprometer el anonimato:
+$$\text{nullifierHash} = \text{SHA256}(\text{credentialId} \parallel \text{proposalId} \parallel \text{secretSalt})$$
+* **Determinismo:** El mismo votante intentando votar en el mismo decreto generará siempre el mismo `nullifierHash`.
+* **Resistencia a Preimagen:** Dado un `nullifierHash`, es computacionalmente imposible derivar la identidad ni la credencial hardware del votante.
+* **Incorrelacionabilidad Cruzada:** Dado que `proposalId` forma parte de la preimagen del hash, los votos de un mismo ciudadano en dos artículos distintos generan nullifiers completamente dispares, imposibilitando trazados de perfilado político.
+
+### 8.4. Blindaje del Servidor de Base de Datos (`firestore.rules`)
+La inmutabilidad no depende de la buena fe del frontend ni del cliente; está garantizada en el núcleo del motor Cloud Firestore mediante reglas de seguridad formales:
+```rules
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{credentialId} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasAll(['credentialId', 'publicKey', 'createdAt'])
+                    && request.resource.data.credentialId == credentialId;
+      allow update, delete: if false;
+    }
+    match /votes/{nullifierHash} {
+      allow read: if true;
+      allow create: if !exists(/databases/$(database)/documents/votes/$(nullifierHash))
+                    && request.resource.data.nullifierHash == nullifierHash
+                    && isValidVotePayload();
+      allow update, delete: if false; // BLOQUEO TOTAL CONTRA ROLLBACK O ALTERACIÓN
+    }
+  }
+}
+```
+
+### 8.5. Estado de Interfaz Post-Voto (UI Sealed Lock & Recibo Verificable)
+Cuando el sistema detecta que el `nullifierHash` del usuario ya está registrado en la propuesta activa:
+1. La tarjeta transiciona automáticamente al estado **"Voto Sellado e Inmutable"** (`.card-sealed`).
+2. Se desactivan los controles de votación (botones arcade con candado y `.is-locked`), y se bloquean los gestos de deslizamiento (*swipe*).
+3. Se bloquea cualquier mecanismo de retroceso o deshacer (`undoDecision()` retorna `false` y oculta el atajo `[Z]`), consolidando la irreversibilidad absoluta.
+4. Se habilita el botón de descarga del **Recibo Criptográfico Oficial (`.json`)** para verificación ciudadana independiente.
+
+---
+
 *Fin de la Especificación Formal.*
 
 

@@ -15,8 +15,9 @@ import {
 import { signWithPasskey, sponsorUserOp } from '../domain/crypto/account-abstraction.ts';
 import { VerifiableMerkleTree } from '../domain/crypto/merkle-tree.ts';
 import { LiquidDemocracyDAGEngine } from '../domain/liquid-democracy/dag-engine.ts';
-import { DelegationResolver, RawVoteRecord } from '../domain/liquid-democracy/delegation-resolver.ts';
-import { ArticleVoteAggregation, CitizenProfile, VoteChoice, VoteReceipt } from '../domain/types.ts';
+import { DelegationResolver } from '../domain/liquid-democracy/delegation-resolver.ts';
+import type { RawVoteRecord } from '../domain/liquid-democracy/delegation-resolver.ts';
+import type { ArticleVoteAggregation, CitizenProfile, VoteChoice, VoteReceipt } from '../domain/types.ts';
 
 const STORAGE_KEY = 'DEMOCRACIA_VIVA_STATE_V1';
 
