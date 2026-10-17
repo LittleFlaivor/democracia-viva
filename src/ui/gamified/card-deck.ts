@@ -56,10 +56,13 @@ export function renderCardDeck(container: HTMLElement) {
         <!-- CARTA ACTIVA INTERACTIVA (DELIBERATIVA Y ACCESIBLE) -->
         <div class="game-card active-card arcade-glow-card" id="active-card" style="z-index: 20;">
 
-          <!-- Contenido Superior de la Carta -->
+          <!-- Contenido Superior de la Carta: Área Temática y Artículo Oficial -->
           <div class="card-header">
-            <span class="card-category">${currentCard.category}</span>
-            <span class="badge-mono" style="font-size: 0.72rem;">${currentCard.articleId}</span>
+            <div class="card-topic-tag">
+              <span class="topic-dot"></span>
+              <span class="card-category">${currentCard.category}</span>
+            </div>
+            <span class="badge-mono" style="font-size: 0.74rem;">${currentCard.badge.split('·')[0].trim()}</span>
           </div>
 
           <!-- Micro-Ilustración Vectorial Editorial -->
@@ -67,64 +70,88 @@ export function renderCardDeck(container: HTMLElement) {
             ${currentCard.svgIllustration || ''}
           </div>
 
+          <!-- Cuerpo: Titular, Resumen y Desglose Visual Bilateral del Dilema -->
           <div class="card-body">
             <h2 class="card-question font-display">${currentCard.headlineQuestion}</h2>
             <p class="card-subtitle">${currentCard.subtitle}</p>
+
+            ${currentCard.keyPoints ? `
+              <!-- Síntesis Rápida Bilateral (Facilidad Total de Comprensión en 3s) -->
+              <div class="card-tradeoff-strip" role="group" aria-label="Síntesis del Dilema">
+                <div class="tradeoff-pill tradeoff-pro" title="A Favor: Impacto Social Favorable">
+                  <span class="tradeoff-badge">✓ A FAVOR</span>
+                  <span class="tradeoff-text">${currentCard.keyPoints.pro}</span>
+                </div>
+                <div class="tradeoff-pill tradeoff-con" title="A Debate: Riesgo o Contrapartida">
+                  <span class="tradeoff-badge">✕ A DEBATE</span>
+                  <span class="tradeoff-text">${currentCard.keyPoints.con}</span>
+                </div>
+              </div>
+            ` : ''}
           </div>
 
-          <!-- Capas de Profundidad Progresiva -->
+          <!-- Píldoras de Consulta Rápida y Profundización Intuitiva -->
           <div class="card-actions-quick">
-            <button class="btn-action-pill btn-monograph-pill" id="btn-open-monograph" title="Monográfico riguroso con datos de ambas partes (2 min)">
-              <span>📊 Monográfico (2 min)</span>
+            <button class="btn-action-pill btn-monograph-pill" id="btn-open-monograph" title="Datos oficiales, gráficos y contexto (2 min)">
+              <span>📊 Datos Clave</span>
             </button>
-            <button class="btn-action-pill btn-dilemma-pill" id="btn-open-dilemma" title="Ver dilema visual con avatares enfrentados">
-              <span>⚡ El Dilema</span>
+            <button class="btn-action-pill btn-dilemma-pill" id="btn-open-dilemma" title="Voces reales ciudadanas enfrentadas">
+              <span>👥 2 Visiones</span>
             </button>
-            <button class="btn-action-pill btn-boe-pill" id="btn-open-boe" title="Ver artículo oficial del BOE">
-              <span>📜 Texto BOE</span>
+            <button class="btn-action-pill btn-boe-pill" id="btn-open-boe" title="Texto literal aprobado en el BOE">
+              <span>📜 Ley BOE</span>
             </button>
           </div>
 
-          <!-- Orientación de Voto Deliberativo Consciente (sin arrastre) -->
+          <!-- Orientación de Voto Deliberativo Consciente -->
           <div class="card-deliberation-footer">
-            <span class="deliberation-hint-text">Emite tu postura pulsando un botón inferior</span>
+            <span class="deliberation-hint-text">
+              <span class="hint-pulse-dot" aria-hidden="true"></span>
+              ¿Cuál es tu postura ciudadana?
+            </span>
           </div>
         </div>
       </div>
 
-      <!-- BOTONES DE VOTACIÓN CONSCIENTES Y ACCESIBLES (SIEMPRE ABIERTOS EN PRUEBAS) -->
+      <!-- BOTONES DE VOTACIÓN ERGONÓMICOS (AL ALCANCE DEL PULGAR) -->
       <div class="deck-controls-magnetic arcade-controls-grid">
-        <!-- 1. Botón A Favor (IZQUIERDA - Tecla A o ←) -->
+        <!-- 1. Botón A Favor (IZQUIERDA) -->
         <button 
           class="arcade-push-btn btn-arcade-yes" 
           id="btn-swipe-yes" 
           title="Votar A Favor [Tecla A o ←]"
+          aria-label="Votar A Favor"
         >
           <div class="arcade-key-badge"><kbd>A</kbd></div>
           <span class="arcade-btn-icon">✓</span>
           <span class="arcade-btn-name">A Favor</span>
+          <span class="arcade-btn-sub">Aprobar</span>
         </button>
 
-        <!-- 2. Botón NS / NC (CENTRO - Tecla W o ↑) -->
+        <!-- 2. Botón NS / NC (CENTRO) -->
         <button 
           class="arcade-push-btn btn-arcade-delegate" 
           id="btn-swipe-delegate" 
-          title="No sabe / No contesta [Tecla W o ↑]"
+          title="Delegar en expertos o abstenerse [Tecla W o ↑]"
+          aria-label="No sabe / No contesta o delegar"
         >
           <div class="arcade-key-badge"><kbd>W</kbd></div>
           <span class="arcade-btn-icon">?</span>
           <span class="arcade-btn-name">NS / NC</span>
+          <span class="arcade-btn-sub">Duda / Delegar</span>
         </button>
 
-        <!-- 3. Botón En Contra (DERECHA - Tecla D o →) -->
+        <!-- 3. Botón En Contra (DERECHA) -->
         <button 
           class="arcade-push-btn btn-arcade-no" 
           id="btn-swipe-no" 
           title="Votar En Contra [Tecla D o →]"
+          aria-label="Votar En Contra"
         >
           <div class="arcade-key-badge"><kbd>D</kbd></div>
           <span class="arcade-btn-icon">✕</span>
           <span class="arcade-btn-name">En Contra</span>
+          <span class="arcade-btn-sub">Rechazar</span>
         </button>
       </div>
 
@@ -139,8 +166,6 @@ export function renderCardDeck(container: HTMLElement) {
           <span class="arcade-hint-dot">·</span>
           <span class="arcade-hint-item"><kbd>Z</kbd> Deshacer</span>
         ` : ''}
-      </div>
-
       </div>
     </div>
   `;

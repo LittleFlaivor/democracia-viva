@@ -12,6 +12,10 @@ export interface GamifiedCard {
   badge: string;
   headlineQuestion: string;
   subtitle: string;
+  keyPoints?: {
+    pro: string;
+    con: string;
+  };
   svgIllustration: string;
   dilemma: {
     lawIntent: {
@@ -40,10 +44,14 @@ export const GAMIFIED_DECK: GamifiedCard[] = [
     id: 'CARD-01',
     articleId: 'ART-01',
     order: 1,
-    category: 'DILEMA 1 DE 3 · PRECIOS DE ALQUILER',
+    category: 'Vivienda y Alquiler',
     badge: 'Art. 1 BOE · Contención de Rentas',
     headlineQuestion: '¿Topar por ley las subidas del alquiler al 2.5% anual en ciudades tensionadas?',
-    subtitle: 'Fija un límite obligatorio a las subidas en contratos vigentes para blindar a las familias frente a subidas abusivas del 30%, frente al riesgo de que arrendadores retiren oferta de alquiler residencial tradicional.',
+    subtitle: 'Límite legal imperativo a las renovaciones de contratos vigentes en áreas tensionadas.',
+    keyPoints: {
+      pro: 'Frena subidas abusivas del +30% a familias inquilinas',
+      con: 'Riesgo de que propietarios retiren pisos del mercado'
+    },
     svgIllustration: `
       <svg viewBox="0 0 400 160" width="100%" height="160" fill="none" xmlns="http://www.w3.org/2000/svg" class="card-svg-art">
         <rect width="400" height="160" rx="12" fill="var(--svg-card-bg)" />
@@ -103,10 +111,14 @@ export const GAMIFIED_DECK: GamifiedCard[] = [
     id: 'CARD-02',
     articleId: 'ART-02',
     order: 2,
-    category: 'DILEMA 2 DE 3 · ALIANZA FISCAL',
+    category: 'Incentivos y Fiscalidad',
     badge: 'Art. 2 BOE · Bonificación IRPF',
     headlineQuestion: '¿Perdonar el 70% del IRPF a propietarios que rebajen su alquiler un 10%?',
-    subtitle: 'Recompensa a propietarios que abaraten rentas con deducciones fiscales del 70% en el IRPF y un fondo público de cobertura de impagos, equilibrando el incentivo privado frente al coste para las cuentas del Estado.',
+    subtitle: 'Rebaja voluntaria de rentas con bonificación del 70% en el IRPF y aval público ante impagos.',
+    keyPoints: {
+      pro: 'Rebaja el 10% de alquiler con premio del 70% IRPF al casero',
+      con: 'Coste fiscal para Hacienda asumido con dinero público'
+    },
     svgIllustration: `
       <svg viewBox="0 0 400 160" width="100%" height="160" fill="none" xmlns="http://www.w3.org/2000/svg" class="card-svg-art">
         <rect width="400" height="160" rx="12" fill="var(--svg-card-bg)" />
@@ -158,10 +170,14 @@ export const GAMIFIED_DECK: GamifiedCard[] = [
     id: 'CARD-03',
     articleId: 'ART-03',
     order: 3,
-    category: 'DILEMA 3 DE 3 · FUNCIÓN SOCIAL DEL SUELO',
+    category: 'Vivienda Vacía y Fondos',
     badge: 'Art. 3 BOE · Recargo IBI Fondos',
     headlineQuestion: '¿Cobrar un 150% más de IBI a grandes fondos y bancos con pisos vacíos más de 2 años?',
-    subtitle: 'Grava con un recargo extraordinario a corporaciones y entidades financieras que acaparan pisos desocupados para especular, impulsando su salida inmediata al mercado sin penalizar segundas residencias de particulares.',
+    subtitle: 'Recargo municipal directo sobre inmuebles desocupados en manos de entidades financieras y grandes fondos.',
+    keyPoints: {
+      pro: 'Moviliza miles de pisos vacíos de bancos hacia el alquiler',
+      con: 'Exige blindaje jurídico para evitar recursos en tribunales'
+    },
     svgIllustration: `
       <svg viewBox="0 0 400 160" width="100%" height="160" fill="none" xmlns="http://www.w3.org/2000/svg" class="card-svg-art">
         <rect width="400" height="160" rx="12" fill="var(--svg-card-bg)" />
