@@ -23,41 +23,41 @@ export function renderBoeModal(container: HTMLElement, card: GamifiedCard) {
           <span class="badge-mono" style="color: var(--accent-brass); border-color: var(--border-accent);">
             CAPA 3 · MODO AUDITOR BOE & CONGRESO
           </span>
-          <h3 class="font-display" style="font-size: 1.4rem; margin-top: 0.4rem; color: var(--text-main);">
+          <h3 class="font-display" style="font-size: 1.35rem; margin-top: 0.5rem; color: var(--text-primary); line-height: 1.3;">
             ${article.articleNumber}: ${article.title}
           </h3>
-          <div style="font-size: 0.78rem; color: var(--color-muted); margin-top: 0.2rem;">
+          <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.3rem;">
             ${DECREE_VIVIENDA.officialCode} · Publicado en BOE el ${DECREE_VIVIENDA.publishedDate}
           </div>
         </div>
 
         <!-- Texto Literal del BOE -->
         <div style="margin-bottom: 1.5rem;">
-          <div style="font-size: 0.72rem; color: var(--color-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 0.4rem;">
+          <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 750; letter-spacing: 0.04em; margin-bottom: 0.5rem;">
             Redacción Oficial Aprobada en Consejo de Ministros:
           </div>
-          <div class="code-audit-block" style="white-space: pre-wrap; font-size: 0.82rem; line-height: 1.65; color: #E0E1E8;">
+          <div class="code-audit-block" style="white-space: pre-wrap; font-size: 0.86rem; line-height: 1.6; color: var(--text-primary); background: var(--bg-app-alt); border: 1px solid var(--border-card); border-radius: 12px; padding: 1rem 1.15rem;">
 ${article.boeFormalText}
           </div>
         </div>
 
         <!-- Registro del Congreso -->
-        <div style="background: rgba(0,0,0,0.35); border: 1px solid var(--border-subtle); border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem;">
-          <div style="font-size: 0.74rem; font-weight: 700; color: var(--accent-brass); text-transform: uppercase; margin-bottom: 0.35rem;">
+        <div style="background: var(--bg-app-alt); border: 1px solid var(--border-card); border-radius: 12px; padding: 1rem 1.15rem; margin-bottom: 1.5rem;">
+          <div style="font-size: 0.74rem; font-weight: 750; color: var(--accent-brass); text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 0.5rem;">
             Votación Oficial en el Congreso de los Diputados (350 Diputados):
           </div>
-          <div style="display: flex; gap: 1rem; align-items: center; font-size: 0.88rem;">
-            <span style="color: ${article.congressVote.result === 'APROBADO' ? '#79D1AB' : '#E8837D'}; font-weight: 700;">
+          <div style="display: flex; gap: 1rem; align-items: center; font-size: 0.88rem; flex-wrap: wrap;">
+            <span style="color: ${article.congressVote.result === 'APROBADO' ? '#059669' : '#DC2626'}; font-weight: 750;">
               Resultado: ${article.congressVote.result}
             </span>
-            <span style="color: var(--color-muted);">
-              (${article.congressVote.yes} Sí / ${article.congressVote.no} No / ${article.congressVote.abstain} Abs)
+            <span style="color: var(--text-secondary); font-weight: 500;">
+              (${article.congressVote.yes} Sí / ${article.congressVote.no} No / ${article.congressVote.abstain} Abstenciones)
             </span>
           </div>
         </div>
 
         <div style="display: flex; justify-content: flex-end;">
-          <button class="btn-vote btn-vote-abstain" id="btn-close-boe-action">
+          <button class="btn-vote btn-vote-abstain" id="btn-close-boe-action" style="min-width: 160px; justify-content: center;">
             Volver a la Carta de Juego
           </button>
         </div>

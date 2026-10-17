@@ -1,5 +1,5 @@
 // Service Worker: Democracia Viva PWA
-const CACHE_NAME = 'democracia-viva-v0.5-alpha';
+const CACHE_NAME = 'democracia-viva-v0.5.2-alpha';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -37,6 +37,20 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Network-First para navegaciones HTML para recibir siempre la versión más reciente en vivo
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request).then((networkRes) => {
+        if (networkRes && networkRes.status === 200) {
+          const toCache = networkRes.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put('/index.html', toCache));
+        }
+        return networkRes;
+      }).catch(() => caches.match('/index.html'))
+    );
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then((cached) => {
       if (cached) return cached;
@@ -50,10 +64,6 @@ self.addEventListener('fetch', (event) => {
           caches.open(CACHE_NAME).then((cache) => cache.put(event.request, toCache));
         }
         return response;
-      }).catch(() => {
-        if (event.request.mode === 'navigate') {
-          return caches.match('/index.html');
-        }
       });
     })
   );
