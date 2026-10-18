@@ -1,5 +1,5 @@
 // Service Worker: Democracia Viva PWA
-const CACHE_NAME = 'democracia-viva-v0.5.2-alpha';
+const CACHE_NAME = 'democracia-viva-v1.0.0';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -27,6 +27,18 @@ self.addEventListener('activate', (event) => {
   );
 });
 
+// Soporte para control de ciclo de vida y limpieza forzada desde la app
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+  if (event.data && event.data.type === 'CLEAR_CACHE') {
+    event.waitUntil(
+      caches.keys().then((keys) => Promise.all(keys.map((key) => caches.delete(key))))
+    );
+  }
+});
+
 self.addEventListener('fetch', (event) => {
   // Only handle GET requests and skip firebase firestore/auth requests
   if (event.request.method !== 'GET') return;
@@ -37,10 +49,10 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Network-First para navegaciones HTML para recibir siempre la versión más reciente en vivo
+  // Network-First para navegaciones HTML con reload para recibir siempre la versión más reciente en vivo
   if (event.request.mode === 'navigate') {
     event.respondWith(
-      fetch(event.request).then((networkRes) => {
+      fetch(event.request, { cache: 'reload' }).then((networkRes) => {
         if (networkRes && networkRes.status === 200) {
           const toCache = networkRes.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put('/index.html', toCache));

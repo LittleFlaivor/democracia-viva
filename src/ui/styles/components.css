@@ -11,7 +11,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.35rem 1.5rem 0.15rem 1.5rem;
+  padding: 0.35rem 1.5rem;
   background: transparent;
   border-bottom: none;
   position: sticky;
@@ -44,12 +44,12 @@
 
 @media (max-width: 767px) {
   .profile-dock-bar {
-    padding: 0.2rem 0.65rem 0.15rem 0.65rem !important;
+    padding: 0 0.65rem !important;
     flex-direction: row !important;
     align-items: center !important;
     justify-content: space-between !important;
-    height: 46px !important;
-    max-height: 46px !important;
+    height: 48px !important;
+    max-height: 48px !important;
     gap: 0.35rem !important;
     width: 100% !important;
     max-width: 100vw !important;
@@ -58,21 +58,81 @@
   .dock-left-group {
     display: flex !important;
     align-items: center !important;
+    height: 100% !important;
     flex-shrink: 0 !important;
   }
+  .dock-brand-btn {
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    height: 100%;
+    cursor: pointer;
+    color: inherit;
+    font: inherit;
+    outline: none;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+  .dock-brand-btn:hover {
+    opacity: 0.88;
+  }
+  .dock-brand-btn:active {
+    transform: scale(0.96);
+  }
   .dock-brand-mark {
+    display: flex !important;
+    align-items: center !important;
+    height: 100% !important;
     flex-shrink: 0 !important;
   }
   .brand-logo-container {
+    display: inline-flex !important;
+    align-items: center !important;
+    height: 100% !important;
     gap: 0.35rem !important;
   }
   .brand-logo-symbol {
     width: 28px !important;
     height: 28px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+  }
+  .brand-logo-text {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: 1 !important;
+  }
+  .brand-text-row {
+    display: flex !important;
+    align-items: center !important;
+    line-height: 1 !important;
+    gap: 0.35rem !important;
   }
   .brand-word-democracia,
   .brand-word-viva {
     font-size: 1.05rem !important;
+    line-height: 1 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+  }
+  .brand-pulse-status {
+    display: inline-block !important;
+    width: 7px !important;
+    height: 7px !important;
+    border-radius: 50% !important;
+    background-color: #10B981 !important;
+    box-shadow: 0 0 10px #10B981 !important;
+    margin-left: 2px !important;
+    flex-shrink: 0 !important;
+    animation: logoStatusPulse 2s infinite ease-in-out !important;
+    vertical-align: middle !important;
   }
   .brand-tagline {
     display: none !important;
@@ -83,6 +143,7 @@
   .dock-right-group {
     display: flex !important;
     align-items: center !important;
+    height: 100% !important;
     gap: 0.3rem !important;
     flex-shrink: 0 !important;
   }
@@ -180,6 +241,48 @@
 /* ========================================================
    LOGOTIPO OFICIAL VECTORIAL: DEMOCRACIA VIVA
    ======================================================== */
+.dock-brand-btn {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+  outline: none;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.dock-brand-btn:hover {
+  opacity: 0.88;
+}
+
+.dock-brand-btn:active {
+  transform: scale(0.96);
+}
+
+.dock-brand-btn.has-pending-update .brand-pulse-status {
+  background-color: #06B6D4 !important;
+  box-shadow: 0 0 12px #06B6D4 !important;
+  animation: logoUpdatePulse 1s infinite ease-in-out !important;
+}
+
+@keyframes logoUpdatePulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.6); opacity: 0.6; }
+}
+
+.dock-brand-mark {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  flex-shrink: 0;
+}
+
 .brand-logo-container {
   display: inline-flex;
   align-items: center;
@@ -197,6 +300,7 @@
 .brand-compact .brand-word-democracia,
 .brand-compact .brand-word-viva {
   font-size: 1.15rem;
+  line-height: 1;
 }
 
 .brand-compact .brand-tagline {
@@ -225,12 +329,14 @@
 .brand-logo-text {
   display: flex;
   flex-direction: column;
-  line-height: 1.05;
+  justify-content: center;
+  line-height: 1;
 }
 
 .brand-text-row {
   display: flex;
-  align-items: baseline;
+  align-items: center;
+  line-height: 1;
   gap: 0.35rem;
 }
 
@@ -240,6 +346,7 @@
   font-size: 1.35rem;
   color: var(--text-primary);
   letter-spacing: -0.03em;
+  line-height: 1;
 }
 
 .brand-word-viva {
@@ -250,6 +357,7 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   letter-spacing: -0.02em;
+  line-height: 1;
 }
 
 .brand-pulse-status {
@@ -260,12 +368,58 @@
   background-color: #10B981;
   box-shadow: 0 0 10px #10B981;
   margin-left: 2px;
+  flex-shrink: 0;
+  vertical-align: middle;
   animation: logoStatusPulse 2s infinite ease-in-out;
 }
 
 @keyframes logoStatusPulse {
   0%, 100% { transform: scale(1); opacity: 1; }
   50% { transform: scale(1.35); opacity: 0.5; }
+}
+
+/* Toast flotante de actualización PWA */
+.dock-update-toast {
+  position: fixed;
+  top: 56px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15, 23, 42, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: #F8FAFC;
+  padding: 0.45rem 1.1rem;
+  border-radius: 9999px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  z-index: 99999;
+  animation: fadeInDown 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.update-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-top-color: #38BDF8;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translate(-50%, -10px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 .brand-tagline {

@@ -38,11 +38,19 @@ export function renderProfileDock(
 
   container.innerHTML = `
     <nav class="profile-dock-bar hud-floating-menu" aria-label="Menú Principal Integrado">
-      <!-- Izquierda: Logotipo Oficial Alineado Limpio a la Izquierda (Sin iconos flotantes al centro) -->
+      <!-- Izquierda: Logotipo Oficial interactivo (Inicio y Actualización forzada) -->
       <div class="dock-left-group">
-        <div class="dock-brand-mark">
-          ${renderBrandLogo({ compact: true, showBadge: false })}
-        </div>
+        <button 
+          type="button" 
+          class="dock-brand-btn" 
+          id="btn-logo-home" 
+          title="Democracia Viva: Ir al inicio y actualizar versión" 
+          aria-label="Democracia Viva: Ir al inicio y actualizar"
+        >
+          <div class="dock-brand-mark">
+            ${renderBrandLogo({ compact: true, showBadge: false })}
+          </div>
+        </button>
       </div>
 
       <!-- Derecha: TODOS los Iconos de Estado y Utilidad Apilados y Compactos con Iconografía Vectorial Monocromática (0 Emojis) -->
@@ -153,6 +161,21 @@ export function renderProfileDock(
       </div>
     </nav>
   `;
+
+  // Listener para el logo: reiniciar al inicio (carta 1) y forzar actualización
+  container.querySelector('#btn-logo-home')?.addEventListener('click', async () => {
+    soundFx.playTap();
+    await pwaService.forceUpdateAndReload();
+  });
+
+  // Escuchar si hay una nueva versión disponible para destacar el logo
+  window.addEventListener('dv-pwa-update-available', () => {
+    const brandBtn = container.querySelector('#btn-logo-home');
+    if (brandBtn) {
+      brandBtn.classList.add('has-pending-update');
+      brandBtn.setAttribute('title', '¡Nueva versión disponible! Pulsa para actualizar ahora');
+    }
+  }, { once: true });
 
   // Listener para botón de instalación PWA
   container.querySelector('#btn-dock-install')?.addEventListener('click', async () => {
