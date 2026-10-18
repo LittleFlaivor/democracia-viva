@@ -56,9 +56,6 @@ export function renderCardDeck(container: HTMLElement) {
         <!-- CARTA ACTIVA INTERACTIVA (DELIBERATIVA Y ACCESIBLE) -->
         <div class="game-card active-card arcade-glow-card" id="active-card" style="z-index: 20;">
 
-          <!-- Badge Overlay de Intención Táctil Flotante -->
-          <div class="card-swipe-badge-overlay" id="swipe-badge-overlay" aria-hidden="true"></div>
-
           <!-- Contenido Superior de la Carta: Área Temática y Artículo Oficial -->
           <div class="card-header">
             <div class="card-topic-tag">
@@ -99,6 +96,14 @@ export function renderCardDeck(container: HTMLElement) {
                   <path d="M4 16v-4M8 16V8M12 16v-6M16 16V4" />
                 </svg>
                 <span>Datos Clave</span>
+              </button>
+              <button class="btn-action-pill btn-dilemma-pill" id="btn-open-dilemma" title="Voces reales ciudadanas enfrentadas">
+                <svg class="pill-svg-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M13 17v-1.5a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3V17" />
+                  <circle cx="8" cy="6.5" r="2.5" />
+                  <path d="M17 17v-1.5a3 3 0 0 0-2-2.83M12.5 4a2.5 2.5 0 0 1 0 5" />
+                </svg>
+                <span>2 Visiones</span>
               </button>
               <button class="btn-action-pill btn-boe-pill" id="btn-open-boe" title="Texto literal aprobado en el BOE">
                 <svg class="pill-svg-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -178,130 +183,9 @@ export function renderCardDeck(container: HTMLElement) {
     gameStore.openBoeModal(currentCard);
   });
 
-  // GESTIÓN TÁCTIL Y DE ARRASTRE DIRECTO (SWIPE FLUIDO DE LA CARTA)
-  const cardEl = container.querySelector('#active-card') as HTMLElement;
-  const overlayBadge = container.querySelector('#swipe-badge-overlay') as HTMLElement;
-
-  if (cardEl) {
-    let startX = 0;
-    let startY = 0;
-    let deltaX = 0;
-    let deltaY = 0;
-    let isDragging = false;
-    let isCommitting = false;
-
-    const onPointerDown = (e: PointerEvent) => {
-      if (isCommitting) return;
-      const target = e.target as HTMLElement;
-      // No iniciar arrastre si se interactúa con botones de acción rápida
-      if (target.closest('button, a, input, select, textarea, .btn-action-pill')) {
-        return;
-      }
-      if (e.pointerType === 'mouse' && e.button !== 0) return;
-
-      isDragging = true;
-      startX = e.clientX;
-      startY = e.clientY;
-      deltaX = 0;
-      deltaY = 0;
-
-      try {
-        cardEl.setPointerCapture(e.pointerId);
-      } catch (_) {}
-
-      cardEl.classList.add('is-dragging');
-    };
-
-    const onPointerMove = (e: PointerEvent) => {
-      if (!isDragging || isCommitting) return;
-
-      deltaX = e.clientX - startX;
-      deltaY = e.clientY - startY;
-
-      // Amortiguación vertical para priorizar intención deliberada horizontal
-      const dampedY = deltaY * 0.45;
-      const rotation = deltaX * 0.05;
-
-      cardEl.style.transform = `translate3d(${deltaX}px, ${dampedY}px, 0) rotate(${rotation}deg)`;
-
-      // Feedback visual reactivo de alta fidelidad
-      const thresholdX = 35;
-      const thresholdY = -35;
-
-      if (deltaX < -thresholdX) {
-        // Hacia la izquierda -> A Favor (Verde)
-        cardEl.classList.add('intent-glow-yes');
-        cardEl.classList.remove('intent-glow-no', 'intent-glow-delegate');
-        if (overlayBadge) {
-          overlayBadge.innerHTML = `<span class="swipe-pill swipe-pill-yes">✓ A Favor</span>`;
-          overlayBadge.style.opacity = `${Math.min(1, Math.max(0, (Math.abs(deltaX) - 20) / 60))}`;
-        }
-      } else if (deltaX > thresholdX) {
-        // Hacia la derecha -> En Contra (Rojo)
-        cardEl.classList.add('intent-glow-no');
-        cardEl.classList.remove('intent-glow-yes', 'intent-glow-delegate');
-        if (overlayBadge) {
-          overlayBadge.innerHTML = `<span class="swipe-pill swipe-pill-no">✕ En Contra</span>`;
-          overlayBadge.style.opacity = `${Math.min(1, Math.max(0, (Math.abs(deltaX) - 20) / 60))}`;
-        }
-      } else if (deltaY < thresholdY && Math.abs(deltaX) < 35) {
-        // Hacia arriba -> NS / NC (Ámbar)
-        cardEl.classList.add('intent-glow-delegate');
-        cardEl.classList.remove('intent-glow-yes', 'intent-glow-no');
-        if (overlayBadge) {
-          overlayBadge.innerHTML = `<span class="swipe-pill swipe-pill-delegate">? NS / NC</span>`;
-          overlayBadge.style.opacity = `${Math.min(1, Math.max(0, (Math.abs(deltaY) - 20) / 60))}`;
-        }
-      } else {
-        cardEl.classList.remove('intent-glow-yes', 'intent-glow-no', 'intent-glow-delegate');
-        if (overlayBadge) {
-          overlayBadge.style.opacity = '0';
-        }
-      }
-    };
-
-    const onPointerUp = (e: PointerEvent) => {
-      if (!isDragging) return;
-      isDragging = false;
-      cardEl.classList.remove('is-dragging');
-
-      try {
-        cardEl.releasePointerCapture(e.pointerId);
-      } catch (_) {}
-
-      const commitThresholdX = 65;
-      const commitThresholdY = -60;
-
-      if (deltaX < -commitThresholdX) {
-        isCommitting = true;
-        initiateVoteFlow('YES');
-      } else if (deltaX > commitThresholdX) {
-        isCommitting = true;
-        initiateVoteFlow('NO');
-      } else if (deltaY < commitThresholdY && Math.abs(deltaX) < 55) {
-        isCommitting = true;
-        initiateVoteFlow('DELEGATE');
-      } else {
-        // Snap-back elástico con física de muelle
-        cardEl.style.transition = 'transform 0.38s cubic-bezier(0.175, 0.885, 0.32, 1.25), box-shadow 0.28s ease, border-color 0.28s ease';
-        cardEl.style.transform = 'translate3d(0, 0, 0) rotate(0deg)';
-        cardEl.classList.remove('intent-glow-yes', 'intent-glow-no', 'intent-glow-delegate');
-        if (overlayBadge) {
-          overlayBadge.style.opacity = '0';
-        }
-        setTimeout(() => {
-          if (!isDragging && !isCommitting && cardEl) {
-            cardEl.style.transition = '';
-          }
-        }, 390);
-      }
-    };
-
-    cardEl.addEventListener('pointerdown', onPointerDown);
-    cardEl.addEventListener('pointermove', onPointerMove);
-    cardEl.addEventListener('pointerup', onPointerUp);
-    cardEl.addEventListener('pointercancel', onPointerUp);
-  }
+  // NOTA: Se ha eliminado la función de arrastrar/deslizar (swipe) la carta para votar
+  // con el fin de evitar votos accidentales al tocar la pantalla.
+  // La votación es 100% deliberada y se efectúa exclusivamente mediante los botones dedicados.
 
   // Limpieza de cualquier listener previo de atajos de teclado
   window.removeEventListener('keydown', (window as any)._cardKeyHandler);
@@ -333,15 +217,13 @@ export function renderCardDeck(container: HTMLElement) {
         triggerFlyOff(decision, authRes.credential);
       }
     } catch (err: any) {
-      // Si el usuario cancela la biometría, devolver carta al centro suavemente
+      // Si el usuario cancela la biometría, restablecer estado visual de la carta
       const card = container.querySelector('#active-card') as HTMLElement;
-      const overlay = container.querySelector('#swipe-badge-overlay') as HTMLElement;
       if (card) {
-        card.classList.remove('decision-committing', 'intent-glow-yes', 'intent-glow-no', 'intent-glow-delegate');
-        card.style.transition = 'transform 0.38s cubic-bezier(0.175, 0.885, 0.32, 1.25)';
-        card.style.transform = 'translate3d(0, 0, 0) rotate(0deg)';
+        card.classList.remove('decision-committing');
+        card.style.transition = 'transform 0.28s ease, opacity 0.28s ease';
+        card.style.transform = 'translate3d(0, 0, 0)';
         card.style.opacity = '1';
-        if (overlay) overlay.style.opacity = '0';
       }
     }
   }
