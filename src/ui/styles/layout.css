@@ -217,32 +217,34 @@ body.gamified-body {
   .orb-2 { width: 320px !important; height: 320px !important; }
   .orb-3 { width: 300px !important; height: 300px !important; }
 
-  /* Por defecto o durante la votación del mazo: 100dvh Zero-Scroll exacto */
+  /* Por defecto o durante la votación del mazo: 100dvh Zero-Scroll exacto con botones fijos inferiores */
   body.gamified-body {
     height: 100dvh;
     max-height: 100dvh;
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start;
   }
 
-  .game-viewport {
-    padding: 0.15rem 0.65rem 0.1rem;
+  body.gamified-body:not(.view-results-active) .game-viewport {
+    padding: 0.25rem 0.65rem calc(74px + env(safe-area-inset-bottom, 0px)) !important;
     max-width: 100vw;
     box-sizing: border-box;
-    justify-content: space-between;
+    justify-content: flex-start;
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 0.15rem;
+    gap: 0.25rem;
     min-height: 0;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
   }
 
   #hud-barometers-container {
     width: 100%;
-    margin-bottom: 0.1rem;
+    margin-bottom: 0.15rem;
     flex-shrink: 0;
   }
 
@@ -251,9 +253,9 @@ body.gamified-body {
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
     min-height: 0;
-    overflow: hidden;
   }
 
   /* ========================================================

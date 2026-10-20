@@ -32,11 +32,11 @@ export function renderCardDeck(container: HTMLElement) {
           .map((card, idx) => {
             const depthIndex = idx + 1;
             const scale = 1 - depthIndex * 0.04;
-            const translateY = depthIndex * 12;
+            const translateY = -depthIndex * 8;
             return `
             <div 
               class="game-card card-depth" 
-              style="transform: scale(${scale}) translateY(${translateY}px); z-index: ${10 - depthIndex}; opacity: ${0.88 - depthIndex * 0.2};"
+              style="transform: scale(${scale}) translateY(${translateY}px); transform-origin: top center; z-index: ${10 - depthIndex}; opacity: ${0.88 - depthIndex * 0.2};"
             >
               <div class="card-header">
                 <span class="card-category">${card.category}</span>
