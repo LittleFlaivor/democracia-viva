@@ -652,9 +652,6 @@ export function renderConsensusEureka(
           <button class="btn-secondary" id="btn-replay-deck" title="Volver al primer artículo conservando todos los votos ya contabilizados">
             ↺ Votar de Nuevo
           </button>
-          <button class="btn-secondary btn-empty-urn" id="btn-empty-urn" title="Vaciar la urna de pruebas y empezar de nuevo desde 0 votos">
-            🗑 Vaciar Urna (Pruebas)
-          </button>
           <button class="btn-primary btn-primary-prominent" id="btn-open-acta-final">
             🏛️ Ver Dictamen y Acta Parlamentaria
           </button>
@@ -680,11 +677,6 @@ export function renderConsensusEureka(
   container.querySelector('#btn-replay-deck')?.addEventListener('click', () => {
     soundFx.playTap();
     gameStore.replayDeck();
-  });
-
-  container.querySelector('#btn-empty-urn')?.addEventListener('click', () => {
-    soundFx.playUndo();
-    gameStore.resetGame();
   });
 
   // Listeners para acordeón interactivo en cada fila de partido
