@@ -1,5 +1,5 @@
 // Service Worker: Democracia Viva PWA
-const CACHE_NAME = 'democracia-viva-v1.6.5';
+const CACHE_NAME = 'democracia-viva-v1.6.6';
 const STATIC_ASSETS = [
   '/',
   '/index.html',

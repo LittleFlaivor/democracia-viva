@@ -298,8 +298,8 @@ export function renderConsensusEureka(
 
           <!-- Cuadrícula de 3 Columnas para el Podio de Mayor Sintonía -->
           <div class="top3-affinity-grid">
-            ${top3Parties.map((party, index) => `
-              <div class="top-affinity-card podium-${index + 1}" data-party-id="${party.id}">
+            ${top3Parties.map((party) => `
+              <div class="top-affinity-card" data-party-id="${party.id}">
                 <!-- Marca / Logo oficial + Nombres + Escaños -->
                 <div class="top-card-identity">
                   <div class="party-logo-wrapper" title="${party.name}">
