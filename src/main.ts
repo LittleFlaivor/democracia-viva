@@ -254,6 +254,19 @@ function initApp() {
   civicStore.subscribe(() => renderAll());
   gameStore.subscribe(() => renderAll());
 
+  // Escuchar reinicio de urna desde el Panel de Administración (/admin) o pestañas hermanas
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'DEMOCRACIA_VIVA_RESET_TRIGGER' || (e.key === 'DEMOCRACIA_VIVA_STATE_V3' && !e.newValue)) {
+      gameStore.resetGame();
+      renderAll();
+    }
+  });
+
+  window.addEventListener('DEMOCRACIA_VIVA_RESET_TRIGGER', () => {
+    gameStore.resetGame();
+    renderAll();
+  });
+
   // Render inicial
   renderAll();
 }
