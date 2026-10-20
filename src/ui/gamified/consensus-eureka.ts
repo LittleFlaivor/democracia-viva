@@ -207,22 +207,16 @@ export function renderConsensusEureka(
           <div class="top3-affinity-grid">
             ${top3Parties.map((party, index) => `
               <div class="top-affinity-card podium-${index + 1}" data-party-id="${party.id}">
-                <!-- Encabezado de la tarjeta: Medalla y Escaños -->
-                <div class="top-card-header">
-                  <div class="podium-badge podium-${index + 1}">
-                    <span>${index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉'}</span>
-                    <span>${index === 0 ? '1º Mayor Sintonía' : index === 1 ? '2º Puesto' : '3º Puesto'}</span>
-                  </div>
-                  <span class="party-seats-pill">${party.seats} ${party.seats === 1 ? 'escaño' : 'escaños'}</span>
-                </div>
-
-                <!-- Marca / Logo oficial + Nombres -->
+                <!-- Marca / Logo oficial + Nombres + Escaños -->
                 <div class="top-card-identity">
                   <div class="party-logo-wrapper" title="${party.name}">
                     <img src="${party.logoUrl}" alt="${party.shortName}" class="party-logo-img" loading="lazy" />
                   </div>
                   <div class="top-card-names">
-                    <span class="top-card-short-name font-display">${party.shortName}</span>
+                    <div class="top-card-name-row">
+                      <span class="top-card-short-name font-display">${party.shortName}</span>
+                      <span class="party-seats-pill">${party.seats} ${party.seats === 1 ? 'escaño' : 'escaños'}</span>
+                    </div>
                     <span class="top-card-full-name" title="${party.name}">${party.name}</span>
                   </div>
                 </div>
