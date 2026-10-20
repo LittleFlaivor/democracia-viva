@@ -211,10 +211,9 @@ export function renderConsensusEureka(
 
               return `
                 <div class="national-result-card" data-card-id="${card.id}">
-                  <!-- Cabecera: Insignia de Artículo, Censo y Estado de Consenso -->
+                  <!-- Cabecera: Insignia de Artículo y Estado de Consenso -->
                   <div class="national-card-header">
                     <span class="art-badge">${detail.badge}</span>
-                    <span class="national-card-census font-mono" title="Muestra censal simulada">${stats.totalVotes.toLocaleString('es-ES')} votos</span>
                     <span class="national-status-pill">${stats.statusLabel}</span>
                   </div>
 
