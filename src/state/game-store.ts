@@ -17,7 +17,8 @@ import type { CitizenPasskeyCredential } from '../services/auth.ts';
 import {
   commitImmutableVote,
   getSealedVote,
-  getLocalSealedVotesCache
+  getLocalSealedVotesCache,
+  clearLocalSealedVotesCache
 } from '../services/firestore-voting.ts';
 import type { ImmutableVoteDocument } from '../services/firestore-voting.ts';
 
@@ -246,8 +247,10 @@ export class GameStore {
       const voteRes = await this.civicStore.castVote(currentCard.articleId, choice);
       receipt = voteRes.receipt;
     } else {
-      // Delegar en Dra. Elena Miró
+      // Delegar en Dra. Elena Miró y registrar formalmente la delegación/abstención en la urna
       this.civicStore.setDelegation('dra-elena-miro');
+      const voteRes = await this.civicStore.castVote(currentCard.articleId, 'ABSTAIN');
+      receipt = voteRes.receipt;
     }
 
     // 3. Registrar el voto inmutable en Cloud Firestore y caché local
@@ -322,8 +325,13 @@ export class GameStore {
 
     this.isEurekaRevealed = false;
     this.currentCardIndex -= 1;
-    if (prevCard && this.decisions[prevCard.id]) {
-      delete this.decisions[prevCard.id];
+    if (prevCard) {
+      if (this.decisions[prevCard.id]) {
+        delete this.decisions[prevCard.id];
+      }
+      if (typeof window !== 'undefined') {
+        this.civicStore.undoVote(prevCard.articleId);
+      }
     }
 
     this.recalculateHudMetrics();
@@ -348,6 +356,7 @@ export class GameStore {
     this.activeDilemmaCard = null;
     this.activeBoeCard = null;
     this.activeMonographCard = null;
+    clearLocalSealedVotesCache();
     this.civicStore.seedInitialEcosystem();
     this.syncWithProfile();
     this.notify();

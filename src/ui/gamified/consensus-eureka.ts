@@ -12,7 +12,7 @@ import { GAMIFIED_DECK } from '../../domain/data/gamified-deck.ts';
 import { CONGRESS_PARTIES } from '../../domain/data/party-badges.ts';
 import { soundFx } from './sound-fx.ts';
 
-// Estadísticas de Voto Social Nacional por Artículo (Resultados Agregados de la Ciudadanía)
+// Estadísticas Dinámicas de Voto Social por Artículo
 interface ArticleStats {
   totalVotes: number;
   yesVotes: number;
@@ -24,38 +24,144 @@ interface ArticleStats {
   statusLabel: string;
 }
 
-const ARTICLE_NATIONAL_STATS: Record<string, ArticleStats> = {
-  'CARD-01': {
-    totalVotes: 128306,
-    yesVotes: 84682,
-    nsncVotes: 15397,
-    noVotes: 28227,
-    yesPercent: 66,
-    nsncPercent: 12,
-    noPercent: 22,
-    statusLabel: 'Mayoría Social'
-  },
-  'CARD-02': {
-    totalVotes: 128306,
-    yesVotes: 100078,
-    nsncVotes: 10265,
-    noVotes: 17963,
-    yesPercent: 78,
-    nsncPercent: 8,
-    noPercent: 14,
-    statusLabel: 'Gran Consenso'
-  },
-  'CARD-03': {
-    totalVotes: 128306,
-    yesVotes: 110343,
-    nsncVotes: 7698,
-    noVotes: 10265,
-    yesPercent: 86,
-    nsncPercent: 6,
-    noPercent: 8,
-    statusLabel: 'Mayoría Rotunda'
+function computeDonutGradient(yesPct: number, nsncPct: number, noPct: number, totalVotes: number): string {
+  if (totalVotes === 0 || (yesPct === 0 && nsncPct === 0 && noPct === 0)) {
+    return 'conic-gradient(var(--border-card) 0deg 360deg)';
   }
-};
+
+  if (yesPct === 100) return 'conic-gradient(#10B981 0deg 360deg)';
+  if (noPct === 100) return 'conic-gradient(#F43F5E 0deg 360deg)';
+  if (nsncPct === 100) return 'conic-gradient(#F59E0B 0deg 360deg)';
+
+  const segments: Array<{ color: string; deg: number }> = [];
+  if (yesPct > 0) segments.push({ color: '#10B981', deg: (yesPct / 100) * 360 });
+  if (nsncPct > 0) segments.push({ color: '#F59E0B', deg: (nsncPct / 100) * 360 });
+  if (noPct > 0) segments.push({ color: '#F43F5E', deg: (noPct / 100) * 360 });
+
+  if (segments.length === 1) {
+    return `conic-gradient(${segments[0].color} 0deg 360deg)`;
+  }
+
+  const parts: string[] = [];
+  let currentAngle = 0;
+  const gap = 2;
+
+  for (let i = 0; i < segments.length; i++) {
+    const seg = segments[i];
+    const startAngle = currentAngle;
+    const endAngle = i === segments.length - 1 ? 360 : currentAngle + seg.deg - gap;
+    parts.push(`${seg.color} ${Math.round(startAngle)}deg ${Math.round(endAngle)}deg`);
+    if (i < segments.length - 1) {
+      parts.push(`var(--bg-surface) ${Math.round(endAngle)}deg ${Math.round(endAngle + gap)}deg`);
+      currentAngle = endAngle + gap;
+    }
+  }
+
+  return `conic-gradient(${parts.join(', ')})`;
+}
+
+function getLiveArticleStats(
+  articleId: string,
+  userChoice: GameDecision | undefined,
+  civicStore: CivicAppStore
+): ArticleStats {
+  let agg;
+  try {
+    agg = civicStore.getArticleAggregation(articleId);
+  } catch {
+    agg = null;
+  }
+
+  let yesVotes = agg ? agg.totalYes : 0;
+  let noVotes = agg ? agg.totalNo : 0;
+  let nsncVotes = agg ? agg.totalAbstain : 0;
+  let totalVotes = yesVotes + noVotes + nsncVotes;
+
+  // Si por sincronización local agg no computa aún el voto pero el usuario ha votado:
+  if (totalVotes === 0 && userChoice) {
+    if (userChoice === 'YES') yesVotes = 1;
+    else if (userChoice === 'NO') noVotes = 1;
+    else nsncVotes = 1;
+    totalVotes = 1;
+  }
+
+  let yesPercent = 0;
+  let noPercent = 0;
+  let nsncPercent = 0;
+
+  if (totalVotes > 0) {
+    yesPercent = Math.round((yesVotes / totalVotes) * 100);
+    noPercent = Math.round((noVotes / totalVotes) * 100);
+    nsncPercent = Math.round((nsncVotes / totalVotes) * 100);
+
+    const sum = yesPercent + noPercent + nsncPercent;
+    if (sum !== 100) {
+      const diff = 100 - sum;
+      if (yesPercent >= noPercent && yesPercent >= nsncPercent) {
+        yesPercent += diff;
+      } else if (noPercent >= yesPercent && noPercent >= nsncPercent) {
+        noPercent += diff;
+      } else {
+        nsncPercent += diff;
+      }
+    }
+  }
+
+  const rawVoterCount = agg ? agg.totalVotesCount : (totalVotes > 0 ? 1 : 0);
+  let statusLabel = 'Sin votos aún';
+  if (totalVotes === 0) {
+    statusLabel = 'Sin votos aún';
+  } else if (rawVoterCount === 1) {
+    if (yesVotes > 0) statusLabel = 'Aprobado (1er Voto)';
+    else if (noVotes > 0) statusLabel = 'Rechazado (1er Voto)';
+    else statusLabel = 'Abstención (1er Voto)';
+  } else if (yesPercent === 50 && noPercent === 50) {
+    statusLabel = 'Empate Técnico (50/50)';
+  } else if (yesPercent >= 75) {
+    statusLabel = yesPercent === 100 ? 'Consenso Unánime (100%)' : 'Consenso Rotundo';
+  } else if (yesPercent > 50) {
+    statusLabel = 'Mayoría Aprobatoria';
+  } else if (noPercent >= 75) {
+    statusLabel = noPercent === 100 ? 'Rechazo Unánime (100%)' : 'Rechazo Rotundo';
+  } else if (noPercent > 50) {
+    statusLabel = 'Mayoría de Rechazo';
+  } else if (nsncPercent >= 50) {
+    statusLabel = 'Mayoría en Delegación';
+  } else {
+    statusLabel = 'Votación Dividida';
+  }
+
+  return {
+    totalVotes,
+    yesVotes,
+    noVotes,
+    nsncVotes,
+    yesPercent,
+    noPercent,
+    nsncPercent,
+    statusLabel
+  };
+}
+
+function getSmartUserSubline(userVote: GameDecision, stats: ArticleStats): string {
+  if (stats.totalVotes === 0) {
+    return 'Voto sellado criptográficamente y anclado en la urna.';
+  }
+  if (stats.totalVotes === 1) {
+    return 'Tu voto inaugura el escrutinio oficial de la urna activa.';
+  }
+  if (userVote === 'YES') {
+    if (stats.yesPercent > 50) return 'En sintonía con la mayoría ciudadana a favor';
+    if (stats.yesPercent === 50 && stats.noPercent === 50) return 'Posición en empate técnico con el censo';
+    return 'Postura de contrapeso frente al rechazo mayoritario';
+  }
+  if (userVote === 'NO') {
+    if (stats.noPercent > 50) return 'En sintonía con la mayoría ciudadana en contra';
+    if (stats.yesPercent === 50 && stats.noPercent === 50) return 'Posición en empate técnico con el censo';
+    return 'Postura de contrapeso frente a la aprobación mayoritaria';
+  }
+  return 'Abstención cívica deliberada sin posicionamiento partidista';
+}
 
 export function renderConsensusEureka(
   container: HTMLElement,
@@ -67,6 +173,39 @@ export function renderConsensusEureka(
   const decisions = gameStore.getDecisions();
   const merkleRoot = civicStore.getMerkleTreeRoot();
   const activeCitizen = civicStore.getActiveCitizen();
+  const totalAuditedVotes = civicStore.getTotalMerkleLeavesCount();
+
+  // Cálculo del Consenso Cívico General del Paquete Normativo (3 Artículos)
+  const totalArticles = GAMIFIED_DECK.length;
+  let approvedCount = 0;
+  let articlesWithVotes = 0;
+
+  GAMIFIED_DECK.forEach((card) => {
+    const stats = getLiveArticleStats(card.articleId, decisions[card.id], civicStore);
+    if (stats.totalVotes > 0) articlesWithVotes++;
+    if (stats.yesVotes > stats.noVotes) approvedCount++;
+  });
+
+  const calculatedConsensus = totalArticles > 0 ? Math.round((approvedCount / totalArticles) * 100) : 0;
+  let calculatedConsensusTitle = 'Consenso Cívico Alcanzado';
+  let calculatedConsensusText = 'Votación auditada sobre el paquete normativo del RDL 2/2026 de Vivienda.';
+
+  if (calculatedConsensus === 100) {
+    calculatedConsensusTitle = 'Consenso Pleno Ciudadano (100%)';
+    calculatedConsensusText = 'Los 3 artículos del decreto han obtenido respaldo mayoritario favorable en la urna.';
+  } else if (calculatedConsensus >= 66) {
+    calculatedConsensusTitle = 'Mayoría Favorable del Decreto';
+    calculatedConsensusText = `${approvedCount} de los ${totalArticles} artículos del decreto han sido aprobados por el veredicto cívico.`;
+  } else if (calculatedConsensus > 0) {
+    calculatedConsensusTitle = 'Respaldo Parcial Condicionado';
+    calculatedConsensusText = `${approvedCount} de los ${totalArticles} artículos han sido aprobados, requiriendo revisión y enmienda en los restantes.`;
+  } else if (articlesWithVotes === 0) {
+    calculatedConsensusTitle = 'Urna Abierta en Blanco';
+    calculatedConsensusText = 'La urna de pruebas ha arrancado desde 0 votos. Registra sufragios para computar el primer consenso.';
+  } else {
+    calculatedConsensusTitle = 'Rechazo General del Decreto';
+    calculatedConsensusText = 'La ciudadanía ha emitido un mandato de rechazo o enmienda a la totalidad del decreto.';
+  }
 
   // 1. Calcular Afinidades Políticas Matemáticas para los 12 Partidos
   const ARTICLE_SHORT_TITLES: Record<string, { badge: string; title: string }> = {
@@ -103,7 +242,7 @@ export function renderConsensusEureka(
     let score = 0;
     const cardKeys = ['CARD-01', 'CARD-02', 'CARD-03'];
     const articleMatches = cardKeys.map((key) => {
-      const userVote = decisions[key] || 'YES';
+      const userVote = decisions[key] || 'DELEGATE';
       const partyVote = party.votes[key] || 'DELEGATE';
       const isMatch = userVote === partyVote;
       const isHalf = (userVote === 'DELEGATE' || partyVote === 'DELEGATE') && !isMatch;
@@ -152,19 +291,20 @@ export function renderConsensusEureka(
         </h1>
 
         <p class="eureka-lead">
-          Frente al ruido y la confrontación partidista, la deliberación ciudadana revela una verdad oculta:
-          la sociedad civil apoya medidas de equilibrio con un <b>84% de acuerdo social mayoritario</b>.
+          ${totalAuditedVotes === 0
+            ? 'Frente al ruido y la confrontación partidista, la urna ciudadana está abierta y lista para registrar la deliberación social verificable en tiempo real.'
+            : `Frente al ruido y la confrontación partidista, la deliberación ciudadana revela la posición real de la sociedad civil: un <b>${calculatedConsensus}% de respaldo medio</b> en el paquete normativo.`}
         </p>
 
-        <!-- Estadística Impacto Eureka -->
+        <!-- Estadística Impacto Eureka Dinámica -->
         <div class="eureka-metric-banner">
-          <div class="font-display eureka-big-stat">84%</div>
+          <div class="font-display eureka-big-stat">${calculatedConsensus}%</div>
           <div class="eureka-stat-label">
             <div style="font-weight: 800; font-size: 1.2rem; color: var(--text-primary);">
-              Consenso Cívico Alcanzado
+              ${calculatedConsensusTitle}
             </div>
             <div style="font-size: 0.88rem; color: var(--text-secondary); margin-top: 0.25rem; line-height: 1.5;">
-              Respaldada la combinación de límites frente a incrementos abusivos, incentivos fiscales al pequeño arrendador y movilización de pisos vacíos de grandes fondos.
+              ${calculatedConsensusText}
             </div>
           </div>
         </div>
@@ -177,32 +317,30 @@ export function renderConsensusEureka(
             <div class="results-header-top-meta">
               <div class="results-header-eyebrow">
                 <span>📊</span>
-                <span>AUDITORÍA DEL VOTO NACIONAL</span>
+                <span>AUDITORÍA DEL VOTO EN VIVO</span>
               </div>
-              <div class="census-transparency-pill" title="Datos de muestra cívica en red de pruebas de Democracia Viva">
+              <div class="census-transparency-pill" title="Recuento auditado de votos verificables en la urna de pruebas">
                 <span class="census-pulse-dot"></span>
-                <span class="census-pill-text font-mono"><b>128.306</b> votos auditados</span>
-                <span class="census-pill-tag">Simulación / Testnet</span>
+                <span class="census-pill-text font-mono"><b>${totalAuditedVotes.toLocaleString('es-ES')}</b> ${totalAuditedVotes === 1 ? 'voto auditado' : 'votos auditados'}</span>
+                <span class="census-pill-tag">Cómputo en Vivo / Testnet</span>
               </div>
             </div>
             <h3 class="results-section-title font-display">
-              Radiografía de Voto: Tu Elección frente al País
+              Radiografía de Voto: Tu Elección frente al Censo
             </h3>
             <p class="results-section-subtitle">
-              Comparativa directa entre el veredicto de 128.306 votos registrados en España (muestra simulada) y tus 3 decisiones registradas:
+              ${totalAuditedVotes === 0
+                ? 'Urna de pruebas inicializada desde 0. Escrutinio en tiempo real listo para registrar sufragios.'
+                : `Escrutinio en tiempo real sobre los ${totalAuditedVotes.toLocaleString('es-ES')} ${totalAuditedVotes === 1 ? 'voto registrado' : 'votos registrados'} en la urna criptográfica y tus 3 decisiones:`}
             </p>
           </div>
 
           <div class="articles-breakdown-list">
             ${GAMIFIED_DECK.map((card) => {
-              const stats = ARTICLE_NATIONAL_STATS[card.id] || {
-                totalVotes: 128306, yesVotes: 84682, nsncVotes: 15397, noVotes: 28227,
-                yesPercent: 70, nsncPercent: 10, noPercent: 20, statusLabel: 'Aprobado'
-              };
+              const stats = getLiveArticleStats(card.articleId, decisions[card.id], civicStore);
               const userVote = decisions[card.id] || 'YES';
               const userVoteText = userVote === 'YES' ? 'A Favor' : userVote === 'NO' ? 'En Contra' : 'NS / NC';
               const userVoteClass = userVote === 'YES' ? 'vote-tag-yes' : userVote === 'NO' ? 'vote-tag-no' : 'vote-tag-nsnc';
-              const isWithMajority = (userVote === 'YES' && stats.yesPercent >= 50) || (userVote === 'NO' && stats.noPercent >= 50);
 
               const detail = ARTICLE_EXECUTIVE_DETAILS[card.id] || {
                 badge: card.articleId,
@@ -210,8 +348,25 @@ export function renderConsensusEureka(
                 summary: card.headlineQuestion
               };
 
-              const degYes = Math.round((stats.yesPercent / 100) * 360);
-              const degNsnc = Math.round(((stats.yesPercent + stats.nsncPercent) / 100) * 360);
+              const donutGradient = computeDonutGradient(stats.yesPercent, stats.nsncPercent, stats.noPercent, stats.totalVotes);
+
+              let donutBigVal = '0%';
+              let donutSubLabel = 'SIN VOTOS';
+              if (stats.totalVotes > 0) {
+                if (stats.yesPercent > stats.noPercent && stats.yesPercent >= stats.nsncPercent) {
+                  donutBigVal = `${stats.yesPercent}%`;
+                  donutSubLabel = 'A FAVOR';
+                } else if (stats.noPercent > stats.yesPercent && stats.noPercent >= stats.nsncPercent) {
+                  donutBigVal = `${stats.noPercent}%`;
+                  donutSubLabel = 'EN CONTRA';
+                } else if (stats.nsncPercent > stats.yesPercent && stats.nsncPercent > stats.noPercent) {
+                  donutBigVal = `${stats.nsncPercent}%`;
+                  donutSubLabel = 'NS / NC';
+                } else if (stats.yesPercent === stats.noPercent) {
+                  donutBigVal = `${stats.yesPercent}%`;
+                  donutSubLabel = 'EMPATE';
+                }
+              }
 
               return `
                 <div class="national-result-card" data-card-id="${card.id}">
@@ -225,12 +380,12 @@ export function renderConsensusEureka(
                   <h4 class="national-card-title font-display">${detail.title}</h4>
                   <p class="national-card-desc">${detail.summary}</p>
 
-                  <!-- Escenario Central: Dial Donut Segmentado con Gaps -->
+                  <!-- Escenario Central: Dial Donut Segmentado Dinámico -->
                   <div class="national-donut-stage">
-                    <div class="consensus-donut-dial" style="background: conic-gradient(#10B981 0deg ${degYes}deg, var(--bg-surface) ${degYes}deg ${degYes + 2}deg, #F59E0B ${degYes + 2}deg ${degNsnc}deg, var(--bg-surface) ${degNsnc}deg ${degNsnc + 2}deg, #F43F5E ${degNsnc + 2}deg 358deg, var(--bg-surface) 358deg 360deg);" title="Votación Nacional: ${stats.yesPercent}% SÍ (${stats.yesVotes.toLocaleString('es-ES')}) · ${stats.nsncPercent}% NS/NC · ${stats.noPercent}% NO">
+                    <div class="consensus-donut-dial" style="background: ${donutGradient};" title="${stats.totalVotes === 0 ? 'Sin votos registrados aún' : `Votación: ${stats.yesPercent}% SÍ (${stats.yesVotes.toLocaleString('es-ES')}) · ${stats.nsncPercent}% NS/NC (${stats.nsncVotes.toLocaleString('es-ES')}) · ${stats.noPercent}% NO (${stats.noVotes.toLocaleString('es-ES')})`}">
                       <div class="donut-center-info">
-                        <span class="donut-big-val font-mono">${stats.yesPercent}%</span>
-                        <span class="donut-sub-label">A FAVOR</span>
+                        <span class="donut-big-val font-mono">${donutBigVal}</span>
+                        <span class="donut-sub-label">${donutSubLabel}</span>
                       </div>
                     </div>
 
@@ -268,7 +423,7 @@ export function renderConsensusEureka(
                         Tu voto: <b>${userVoteText}</b>
                       </div>
                       <div class="user-vote-subline">
-                        ${isWithMajority ? 'Coincides con la mayoría social' : userVote === 'DELEGATE' ? 'Abstención cívica sin posicionar' : 'Postura de contrapeso crítico'}
+                        ${getSmartUserSubline(userVote, stats)}
                       </div>
                     </div>
                   </div>
@@ -279,7 +434,7 @@ export function renderConsensusEureka(
 
           <!-- Nota al pie de Transparencia Censal -->
           <div class="census-transparency-footnote">
-            <span>ℹ️ <b>Transparencia y Censo:</b> Los 128.306 votos computados corresponden a una muestra de simulación cívica para validar la resistencia matemática del protocolo antes de la apertura del censo oficial.</span>
+            <span>ℹ️ <b>Transparencia y Censo:</b> Los votos se contabilizan en tiempo real desde 0 mediante firmas WebAuthn y árbol de Merkle inmutable. Cada decisión se sella sin intermediarios en la urna descentralizada de pruebas.</span>
           </div>
         </div>
 

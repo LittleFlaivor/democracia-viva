@@ -57,7 +57,7 @@ export function renderParliamentaryReportModal(
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
             <div>
               <div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 700;">TOTAL SUFRAGIOS CÍVICOS</div>
-              <div style="font-size: 1.1rem; font-weight: 700; color: var(--text-primary);">${totalVotes} Votos Válidos</div>
+              <div style="font-size: 1.1rem; font-weight: 700; color: var(--text-primary);">${totalVotes} ${totalVotes === 1 ? 'Voto Válido' : 'Votos Válidos'}</div>
             </div>
             <div>
               <div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 700;">RED DE ANCLAJE L2</div>
@@ -99,6 +99,7 @@ export function renderParliamentaryReportModal(
               ${aggregations
                 .map((agg) => {
                   const art = DECREE_VIVIENDA.articles.find((a) => a.id === agg.articleId)!;
+                  const hasVotes = agg.totalElectoralWeight > 0;
                   const isDivergent = agg.congressComparison.citizensApproved !== agg.congressComparison.congressApproved;
 
                   return `
@@ -107,21 +108,21 @@ export function renderParliamentaryReportModal(
                       ${art.articleNumber}
                     </td>
                     <td style="padding: 0.85rem 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.78rem;">
-                      ${agg.directWeightYes + agg.directWeightNo} dir / ${agg.delegatedWeightYes + agg.delegatedWeightNo} del
+                      ${agg.directWeightYes + agg.directWeightNo + agg.directWeightAbstain} dir / ${agg.delegatedWeightYes + agg.delegatedWeightNo + agg.delegatedWeightAbstain} del
                     </td>
                     <td style="padding: 0.85rem 0.5rem;">
-                      <span style="color: ${agg.citizensApproved ? '#79D1AB' : '#E8837D'}; font-weight: 700;">
-                        ${agg.citizensApproved ? 'APRUEBA' : 'RECHAZA'} (${agg.pctYes}% SÍ)
+                      <span style="color: ${hasVotes ? (agg.citizensApproved ? '#79D1AB' : '#E8837D') : 'var(--text-muted)'}; font-weight: 700;">
+                        ${hasVotes ? `${agg.citizensApproved ? 'APRUEBA' : 'RECHAZA'} (${agg.pctYes}% SÍ)` : 'Pendiente (0 votos)'}
                       </span>
                     </td>
                     <td style="padding: 0.85rem 0.5rem;">
                       <span style="color: ${art.congressVote.result === 'APROBADO' ? '#79D1AB' : '#E8837D'}; font-weight: 700;">
                         ${art.congressVote.result}
                       </span>
-                      ${isDivergent ? `<span style="color: #E8837D; font-size: 0.7rem; display: block;">⚡ DISCREPANCIA</span>` : ''}
+                      ${hasVotes && isDivergent ? `<span style="color: #E8837D; font-size: 0.7rem; display: block;">⚡ DISCREPANCIA</span>` : ''}
                     </td>
                     <td style="padding: 0.85rem 0.5rem; font-family: 'JetBrains Mono', monospace;">
-                      ${agg.consensusIndex}%
+                      ${hasVotes ? `${agg.consensusIndex}%` : '–'}
                     </td>
                   </tr>
                 `;

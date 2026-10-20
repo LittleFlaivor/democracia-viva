@@ -26,7 +26,7 @@ export function renderCivicBarometer(
           <h3 style="margin-bottom: 0.25rem;">Barómetro Cívico</h3>
         </div>
         <span class="badge-mono" style="font-size: 0.72rem;">
-          ${totalVotes} votos anclados
+          ${totalVotes} ${totalVotes === 1 ? 'voto anclado' : 'votos anclados'}
         </span>
       </div>
 
@@ -58,7 +58,7 @@ export function renderCivicBarometer(
                   ${article.articleNumber}: ${article.title.slice(0, 38)}...
                 </span>
                 <span class="badge-mono" style="font-size: 0.72rem;">
-                  Consenso: ${agg.consensusIndex}%
+                  Consenso: ${hasVotes ? `${agg.consensusIndex}%` : '–'}
                 </span>
               </div>
 
@@ -87,19 +87,23 @@ export function renderCivicBarometer(
                   </div>
                   <div>
                     <span style="color: var(--text-muted);">Ciudadanía: </span>
-                    <span style="font-weight: 700; color: ${agg.citizensApproved ? '#79D1AB' : '#E8837D'};">
-                      ${hasVotes ? (agg.citizensApproved ? 'APRUEBA' : 'RECHAZA') : 'Pendiente'}
+                    <span style="font-weight: 700; color: ${hasVotes ? (agg.citizensApproved ? '#79D1AB' : '#E8837D') : 'var(--text-muted)'};">
+                      ${hasVotes ? (agg.citizensApproved ? 'APRUEBA' : 'RECHAZA') : 'Sin votos'}
                     </span>
                   </div>
                 </div>
 
                 ${
-                  hasVotes && isDivergent
-                    ? `<div style="margin-top: 0.5rem; display: flex; align-items: center; justify-content: space-between;">
-                        <span class="divergence-pill high">⚡ DISCREPANCIA PARLAMENTARIA (${agg.congressComparison.divergencePct}% brecha)</span>
-                       </div>`
+                  hasVotes
+                    ? (isDivergent
+                        ? `<div style="margin-top: 0.5rem; display: flex; align-items: center; justify-content: space-between;">
+                            <span class="divergence-pill high">⚡ DISCREPANCIA PARLAMENTARIA (${agg.congressComparison.divergencePct}% brecha)</span>
+                           </div>`
+                        : `<div style="margin-top: 0.5rem; display: flex; align-items: center; justify-content: space-between;">
+                            <span class="divergence-pill aligned">✓ Sintonía con el Congreso</span>
+                           </div>`)
                     : `<div style="margin-top: 0.5rem; display: flex; align-items: center; justify-content: space-between;">
-                        <span class="divergence-pill aligned">✓ Sintonía con el Congreso</span>
+                        <span class="divergence-pill" style="opacity: 0.8; background: var(--bg-surface); border: 1px dashed var(--border-medium); color: var(--text-muted);">⏳ Pendiente de votos cívicos</span>
                        </div>`
                 }
               </div>

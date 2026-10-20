@@ -24,7 +24,7 @@ export interface ImmutableVoteDocument {
   merkleRoot: string;
 }
 
-const LOCAL_SEALED_VOTES_KEY = 'DEMOCRACIA_VIVA_SEALED_VOTES_CACHE_V1';
+const LOCAL_SEALED_VOTES_KEY = 'DEMOCRACIA_VIVA_SEALED_VOTES_CACHE_V3';
 const memorySealedVotesCache: Record<string, ImmutableVoteDocument> = {};
 
 /**

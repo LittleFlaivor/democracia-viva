@@ -19,7 +19,7 @@ import { DelegationResolver } from '../domain/liquid-democracy/delegation-resolv
 import type { RawVoteRecord } from '../domain/liquid-democracy/delegation-resolver.ts';
 import type { ArticleVoteAggregation, CitizenProfile, VoteChoice, VoteReceipt } from '../domain/types.ts';
 
-const STORAGE_KEY = 'DEMOCRACIA_VIVA_STATE_V1';
+const STORAGE_KEY = 'DEMOCRACIA_VIVA_STATE_V3';
 
 export type ViewMode = 'POCKET' | 'BOE'; // 'POCKET' = Cómo afecta a tu vida | 'BOE' = Qué dice el BOE
 
@@ -132,8 +132,9 @@ export class CivicAppStore {
   }
 
   /**
-   * Semilla inicial representativa para que la plataforma cobre vida instantáneamente:
-   * Delegaciones técnicas realistas y votos deliberados por colectivos y expertos.
+   * Semilla inicial limpia: Los votos arrancan estrictamente desde 0.
+   * Se preservan las identidades cívicas y una delegación pedagógica inicial,
+   * pero sin sufragios pre-emitidos para permitir un escrutinio real y verificable.
    */
   public seedInitialEcosystem() {
     this.delegations.clear();
@@ -143,23 +144,11 @@ export class CivicAppStore {
     this.spentNullifiers.clear();
     this.initDefaultViewModes();
 
-    // 1. Delegación previa pedagógica:
+    // 1. Delegación previa pedagógica de ejemplo (sin emitir votos aún):
     // Lucía Ramos delega inicialmente en Asociación Vecinal Vivienda Digna para Vivienda
     this.delegations.set('lucia-ramos', 'asoc-vivienda-digna');
 
-    // 2. Votos pre-emitidos por delegados en el debate público
-    // La Dra. Elena Miró ya ha publicado sus votos técnicos:
-    this.seedVote('dra-elena-miro', 'ART-01', 'YES'); // A favor de topes con moderación
-    this.seedVote('dra-elena-miro', 'ART-02', 'YES'); // Muy a favor de incentivos fiscales
-    this.seedVote('dra-elena-miro', 'ART-03', 'YES'); // A favor de movilización forzosa
-    this.seedVote('dra-elena-miro', 'ART-04', 'ABSTAIN'); // Abstención por falta de compensación a pequeños propietarios
-
-    // La Asociación Vecinal Vivienda Digna vota:
-    this.seedVote('asoc-vivienda-digna', 'ART-01', 'YES');
-    this.seedVote('asoc-vivienda-digna', 'ART-02', 'NO'); // En contra de desgravación masiva a rentistas
-    this.seedVote('asoc-vivienda-digna', 'ART-03', 'YES');
-    this.seedVote('asoc-vivienda-digna', 'ART-04', 'YES'); // Prioridad absoluta antidesahucios
-
+    // 2. La urna de votos arranca limpia con 0 votos registrados.
     this.saveToStorage();
   }
 
@@ -428,6 +417,42 @@ export class CivicAppStore {
       const errorMsg = err instanceof Error ? err.message : String(err);
       return { success: false, error: `Fallo en el protocolo de votación: ${errorMsg}` };
     }
+  }
+
+  /**
+   * Revierte el voto del ciudadano activo en un artículo específico (entorno de pruebas ágiles).
+   */
+  public undoVote(articleId: string): boolean {
+    const activeCitizen = this.getActiveCitizen();
+    const voteIdx = this.directVotes.findIndex(
+      (v) => v.articleId === articleId && v.citizenId === activeCitizen.id
+    );
+    if (voteIdx === -1) return false;
+
+    const [removedVote] = this.directVotes.splice(voteIdx, 1);
+    this.spentNullifiers.delete(removedVote.nullifierHash);
+
+    // Eliminar recibo correspondiente
+    const receiptIdx = this.receipts.findIndex((r) => r.nullifierHash === removedVote.nullifierHash);
+    if (receiptIdx !== -1) {
+      this.receipts.splice(receiptIdx, 1);
+    }
+
+    // Reconstruir árbol de Merkle desde cero con las hojas restantes
+    this.merkleTree = new VerifiableMerkleTree();
+    for (const r of this.receipts) {
+      const leaf = VerifiableMerkleTree.computeLeafHash(
+        r.nullifierHash,
+        r.choice,
+        r.scopeHash,
+        r.timestamp
+      );
+      this.merkleTree.insertLeaf(leaf);
+    }
+
+    this.saveToStorage();
+    this.notify();
+    return true;
   }
 
   /**
