@@ -1,7 +1,7 @@
 /**
- * INSIGNIAS VECTORIALES OFICIALES DE LOS PARTIDOS DEL CONGRESO (XV LEGISLATURA)
+ * LOGOTIPOS VECTORIALES OFICIALES DE LOS PARTIDOS DEL CONGRESO (XV LEGISLATURA)
  * 12 fuerzas políticas con representación parlamentaria en el Congreso de los Diputados.
- * Diseñadas para máxima nitidez (vectorial puro), contraste Awwwards y reconocimiento instantáneo.
+ * Conectadas con sus archivos vectoriales SVG oficiales en /parties/*.svg.
  */
 
 export interface PartyDefinition {
@@ -13,6 +13,7 @@ export interface PartyDefinition {
   isMajor: boolean;
   stanceSummary: string;
   votes: Record<string, 'YES' | 'NO' | 'DELEGATE'>;
+  logoUrl: string;
   badgeSvg: string;
 }
 
@@ -30,15 +31,8 @@ export const CONGRESS_PARTIES: PartyDefinition[] = [
       'CARD-02': 'YES',
       'CARD-03': 'NO',
     },
-    badgeSvg: `
-      <svg viewBox="0 0 48 48" width="44" height="44" class="party-logo-badge">
-        <rect width="48" height="48" rx="12" fill="#0284C7"/>
-        <!-- Gaviota / Charrán del PP -->
-        <path d="M12 21C16 16 21 18 24 20C27 18 32 16 36 21C33.5 19.5 28 19 24 22.5C20 19 14.5 19.5 12 21Z" fill="#FFFFFF"/>
-        <!-- Tipografía PP -->
-        <text x="24" y="36" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="14" fill="#FFFFFF" letter-spacing="0.5">PP</text>
-      </svg>
-    `
+    logoUrl: '/parties/pp.svg',
+    badgeSvg: `<img src="/parties/pp.svg" alt="PP" class="party-logo-img" loading="lazy" />`
   },
   {
     id: 'psoe',
@@ -53,16 +47,8 @@ export const CONGRESS_PARTIES: PartyDefinition[] = [
       'CARD-02': 'YES',
       'CARD-03': 'YES',
     },
-    badgeSvg: `
-      <svg viewBox="0 0 48 48" width="44" height="44" class="party-logo-badge">
-        <rect width="48" height="48" rx="12" fill="#E11D48"/>
-        <!-- Rosa y Puño estilizado -->
-        <circle cx="24" cy="19" r="6" fill="#FFFFFF"/>
-        <path d="M21 19C21 17.5 22.5 16 24 16C25.5 16 27 17.5 27 19C27 20.5 25.5 22 24 22C22.5 22 21 20.5 21 19Z" fill="#E11D48"/>
-        <!-- Siglas PSOE -->
-        <text x="24" y="36" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="11" fill="#FFFFFF" letter-spacing="0.5">PSOE</text>
-      </svg>
-    `
+    logoUrl: '/parties/psoe.svg',
+    badgeSvg: `<img src="/parties/psoe.svg" alt="PSOE" class="party-logo-img" loading="lazy" />`
   },
   {
     id: 'vox',
@@ -77,12 +63,8 @@ export const CONGRESS_PARTIES: PartyDefinition[] = [
       'CARD-02': 'NO',
       'CARD-03': 'NO',
     },
-    badgeSvg: `
-      <svg viewBox="0 0 48 48" width="44" height="44" class="party-logo-badge">
-        <rect width="48" height="48" rx="12" fill="#5AC035"/>
-        <text x="24" y="30" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="14" fill="#FFFFFF" letter-spacing="0.5">VOX</text>
-      </svg>
-    `
+    logoUrl: '/parties/vox.svg',
+    badgeSvg: `<img src="/parties/vox.svg" alt="VOX" class="party-logo-img" loading="lazy" />`
   },
   {
     id: 'sumar',
@@ -97,14 +79,8 @@ export const CONGRESS_PARTIES: PartyDefinition[] = [
       'CARD-02': 'NO',
       'CARD-03': 'YES',
     },
-    badgeSvg: `
-      <svg viewBox="0 0 48 48" width="44" height="44" class="party-logo-badge">
-        <rect width="48" height="48" rx="12" fill="#E61455"/>
-        <!-- Símbolo '+' de Sumar -->
-        <path d="M24 12V22M19 17H29" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round"/>
-        <text x="24" y="35" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="9.5" fill="#FFFFFF" letter-spacing="-0.2">sumar</text>
-      </svg>
-    `
+    logoUrl: '/parties/sumar.svg',
+    badgeSvg: `<img src="/parties/sumar.svg" alt="Sumar" class="party-logo-img" loading="lazy" />`
   },
   {
     id: 'erc',
@@ -119,14 +95,8 @@ export const CONGRESS_PARTIES: PartyDefinition[] = [
       'CARD-02': 'YES',
       'CARD-03': 'YES',
     },
-    badgeSvg: `
-      <svg viewBox="0 0 48 48" width="44" height="44" class="party-logo-badge">
-        <rect width="48" height="48" rx="12" fill="#F95838"/>
-        <!-- Chevrons republicanos de ERC -->
-        <path d="M16 14L24 22L32 14" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-        <text x="24" y="35" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="11" fill="#FFFFFF" letter-spacing="0.5">ERC</text>
-      </svg>
-    `
+    logoUrl: '/parties/erc.svg',
+    badgeSvg: `<img src="/parties/erc.svg" alt="ERC" class="party-logo-img" loading="lazy" />`
   },
   {
     id: 'junts',
@@ -141,21 +111,15 @@ export const CONGRESS_PARTIES: PartyDefinition[] = [
       'CARD-02': 'YES',
       'CARD-03': 'NO',
     },
-    badgeSvg: `
-      <svg viewBox="0 0 48 48" width="44" height="44" class="party-logo-badge">
-        <rect width="48" height="48" rx="12" fill="#00C7AE"/>
-        <!-- Estrella estilizada de Junts -->
-        <circle cx="24" cy="18" r="4.5" fill="#FFFFFF"/>
-        <text x="24" y="34" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="9" fill="#FFFFFF" letter-spacing="0.3">JUNTS</text>
-      </svg>
-    `
+    logoUrl: '/parties/junts.svg',
+    badgeSvg: `<img src="/parties/junts.svg" alt="Junts" class="party-logo-img" loading="lazy" />`
   },
   {
     id: 'bildu',
     name: 'EH Bildu',
     shortName: 'EH Bildu',
     seats: 6,
-    color: '#00A651',
+    color: '#03CFB5',
     isMajor: false,
     stanceSummary: 'Co-negociador del límite del 2.5% y del recargo a fondos buitre; defiende la función social de la vivienda como derecho humano.',
     votes: {
@@ -163,14 +127,8 @@ export const CONGRESS_PARTIES: PartyDefinition[] = [
       'CARD-02': 'YES',
       'CARD-03': 'YES',
     },
-    badgeSvg: `
-      <svg viewBox="0 0 48 48" width="44" height="44" class="party-logo-badge">
-        <rect width="48" height="48" rx="12" fill="#00A651"/>
-        <!-- Puente continuo de Bildu -->
-        <path d="M15 22C15 17 21 17 24 21C27 17 33 17 33 22" stroke="#FFFFFF" stroke-width="2.8" stroke-linecap="round" fill="none"/>
-        <text x="24" y="35" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="9" fill="#FFFFFF" letter-spacing="0.2">BILDU</text>
-      </svg>
-    `
+    logoUrl: '/parties/bildu.svg',
+    badgeSvg: `<img src="/parties/bildu.svg" alt="EH Bildu" class="party-logo-img" loading="lazy" />`
   },
   {
     id: 'pnv',
@@ -185,15 +143,8 @@ export const CONGRESS_PARTIES: PartyDefinition[] = [
       'CARD-02': 'YES',
       'CARD-03': 'NO',
     },
-    badgeSvg: `
-      <svg viewBox="0 0 48 48" width="44" height="44" class="party-logo-badge">
-        <rect width="48" height="48" rx="12" fill="#16A34A"/>
-        <!-- Aldra / Cruz vasca estilizada -->
-        <path d="M24 13V25M17 19H31" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round"/>
-        <path d="M19 15L29 23M29 15L19 23" stroke="#DC2626" stroke-width="2" stroke-linecap="round"/>
-        <text x="24" y="36" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="8.5" fill="#FFFFFF" letter-spacing="0.2">PNV</text>
-      </svg>
-    `
+    logoUrl: '/parties/pnv.svg',
+    badgeSvg: `<img src="/parties/pnv.svg" alt="EAJ-PNV" class="party-logo-img" loading="lazy" />`
   },
   {
     id: 'podemos',
@@ -208,15 +159,8 @@ export const CONGRESS_PARTIES: PartyDefinition[] = [
       'CARD-02': 'NO',
       'CARD-03': 'YES',
     },
-    badgeSvg: `
-      <svg viewBox="0 0 48 48" width="44" height="44" class="party-logo-badge">
-        <rect width="48" height="48" rx="12" fill="#7C3AED"/>
-        <!-- Círculos de Podemos -->
-        <circle cx="24" cy="18" r="6.5" fill="none" stroke="#FFFFFF" stroke-width="2.2"/>
-        <circle cx="24" cy="18" r="3.2" fill="#FFFFFF"/>
-        <text x="24" y="34" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="8.5" fill="#FFFFFF" letter-spacing="-0.2">podemos</text>
-      </svg>
-    `
+    logoUrl: '/parties/podemos.svg',
+    badgeSvg: `<img src="/parties/podemos.svg" alt="Podemos" class="party-logo-img" loading="lazy" />`
   },
   {
     id: 'bng',
@@ -231,15 +175,8 @@ export const CONGRESS_PARTIES: PartyDefinition[] = [
       'CARD-02': 'NO',
       'CARD-03': 'YES',
     },
-    badgeSvg: `
-      <svg viewBox="0 0 48 48" width="44" height="44" class="party-logo-badge">
-        <rect width="48" height="48" rx="12" fill="#0284C7"/>
-        <!-- Franja azul celeste y estrella roja de Galiza -->
-        <path d="M12 36L36 12" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
-        <polygon points="24,14 25.5,18.5 30,18.5 26.5,21 28,25.5 24,23 20,25.5 21.5,21 18,18.5 22.5,18.5" fill="#EF4444"/>
-        <text x="24" y="37" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="9" fill="#FFFFFF" letter-spacing="0.3">BNG</text>
-      </svg>
-    `
+    logoUrl: '/parties/bng.svg',
+    badgeSvg: `<img src="/parties/bng.svg" alt="BNG" class="party-logo-img" loading="lazy" />`
   },
   {
     id: 'cc',
@@ -254,14 +191,8 @@ export const CONGRESS_PARTIES: PartyDefinition[] = [
       'CARD-02': 'YES',
       'CARD-03': 'NO',
     },
-    badgeSvg: `
-      <svg viewBox="0 0 48 48" width="44" height="44" class="party-logo-badge">
-        <rect width="48" height="48" rx="12" fill="#EAB308"/>
-        <!-- Estrellas / Identidad Canaria -->
-        <polygon points="24,12 25.8,17.2 31.2,17.2 27,20.4 28.7,25.6 24,22.2 19.3,25.6 21,20.4 16.8,17.2 22.2,17.2" fill="#1E3A8A"/>
-        <text x="24" y="36" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="12" fill="#1E3A8A" letter-spacing="0.5">CC</text>
-      </svg>
-    `
+    logoUrl: '/parties/cc.svg',
+    badgeSvg: `<img src="/parties/cc.svg" alt="Coalición Canaria" class="party-logo-img" loading="lazy" />`
   },
   {
     id: 'upn',
@@ -276,13 +207,7 @@ export const CONGRESS_PARTIES: PartyDefinition[] = [
       'CARD-02': 'YES',
       'CARD-03': 'NO',
     },
-    badgeSvg: `
-      <svg viewBox="0 0 48 48" width="44" height="44" class="party-logo-badge">
-        <rect width="48" height="48" rx="12" fill="#DC2626"/>
-        <!-- Corona y escudo de UPN en azul y blanco -->
-        <rect x="14" y="14" width="20" height="4" rx="2" fill="#1E40AF"/>
-        <text x="24" y="33" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="900" font-size="10" fill="#FFFFFF" letter-spacing="0.4">UPN</text>
-      </svg>
-    `
+    logoUrl: '/parties/upn.svg',
+    badgeSvg: `<img src="/parties/upn.svg" alt="UPN" class="party-logo-img" loading="lazy" />`
   }
 ];

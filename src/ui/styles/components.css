@@ -2234,174 +2234,414 @@
   box-shadow: 0 2px 8px -1px rgba(37, 99, 235, 0.35);
 }
 
+/* ========================================================
+   SECCIÓN 2: AFINIDAD CON LOS PARTIDOS (COMPACTA Y OFICIAL)
+   ======================================================== */
+
+.affinity-quick-summary-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  background: var(--bg-app-alt);
+  border: 1px solid var(--border-card);
+  border-radius: 999px;
+  padding: 0.4rem 0.95rem;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.9rem;
+  flex-wrap: wrap;
+}
+
+.affinity-summary-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.summary-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.summary-dot.high {
+  background: #10B981;
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.5);
+}
+
+.summary-dot.low {
+  background: #EF4444;
+}
+
+.affinity-summary-divider {
+  color: var(--border-medium);
+}
+
 .parties-affinity-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 0.9rem;
+  gap: 0.55rem;
 }
 
 @media (min-width: 860px) {
   .parties-affinity-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 0.55rem 0.85rem;
   }
 }
 
-.party-affinity-card {
+.party-affinity-row {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-card);
+  border-radius: 14px;
+  transition: all 0.2s var(--ease-spring);
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.party-affinity-row:hover {
+  border-color: var(--border-medium);
+  box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.06);
+  transform: translateY(-1px);
+}
+
+.party-row-winner {
+  border: 1.5px solid var(--color-primary);
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.04) 0%, var(--bg-surface) 100%);
+  box-shadow: 0 4px 14px -2px rgba(37, 99, 235, 0.12);
+}
+
+.party-row-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1.1rem;
-  background: var(--bg-app-alt);
-  border: 1px solid var(--border-card);
-  border-radius: 18px;
-  padding: 1.1rem 1.25rem;
-  transition: all 0.25s var(--ease-spring);
-}
-
-.party-affinity-stat-row {
-  display: flex;
-  align-items: baseline;
-  justify-content: flex-end;
+  padding: 0.55rem 0.85rem;
+  cursor: pointer;
+  user-select: none;
   gap: 0.5rem;
-  width: 100%;
+  outline: none;
 }
 
-.party-affinity-card:hover {
-  border-color: var(--border-medium);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px -4px rgba(0, 0, 0, 0.06);
+.party-row-header:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
 }
 
-.party-affinity-winner {
-  border: 2px solid var(--color-primary);
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, var(--bg-surface) 100%);
-  box-shadow: 0 8px 24px -4px rgba(37, 99, 235, 0.12);
-}
-
-.party-card-left {
+.party-row-left-cluster {
   display: flex;
   align-items: center;
-  gap: 0.9rem;
+  gap: 0.55rem;
   flex: 1;
   min-width: 0;
+  overflow: hidden;
+}
+
+.party-rank-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  width: 22px;
+  flex-shrink: 0;
+  text-align: center;
+}
+
+.party-rank-badge.top-rank {
+  color: var(--color-primary);
+  font-weight: 800;
 }
 
 .party-logo-wrapper {
-  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.08);
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  overflow: visible;
+  padding: 4px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px -1px rgba(0, 0, 0, 0.06);
   transition: transform 0.2s var(--ease-spring);
 }
 
-.party-affinity-card:hover .party-logo-wrapper {
-  transform: scale(1.08);
+.party-affinity-row:hover .party-logo-wrapper {
+  transform: scale(1.06);
 }
 
-.party-logo-badge {
-  width: 46px;
-  height: 46px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.12);
+.party-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
   display: block;
 }
 
-.party-info-box {
+.party-identity-col {
   display: flex;
   flex-direction: column;
   min-width: 0;
+  flex: 1;
+  overflow: hidden;
 }
 
 .party-name-row {
   display: flex;
   align-items: center;
-  gap: 0.45rem;
-  flex-wrap: wrap;
+  gap: 0.3rem;
+  flex-wrap: nowrap;
+  overflow: hidden;
 }
 
 .party-short-name {
-  font-size: 1.15rem;
+  font-size: 0.95rem;
   font-weight: 800;
   color: var(--text-primary);
+  line-height: 1.15;
+  white-space: nowrap;
 }
 
 .party-seats-pill {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   font-weight: 700;
-  padding: 2px 7px;
+  padding: 1px 6px;
   border-radius: 6px;
-  background: var(--bg-surface);
+  background: var(--bg-app-alt);
   border: 1px solid var(--border-subtle);
   color: var(--text-muted);
-}
-
-.winner-tag {
-  font-size: 0.72rem;
-  font-weight: 800;
-  color: #D97706;
-  background: #FEF3C7;
-  padding: 2px 8px;
-  border-radius: 999px;
-  border: 1px solid #FDE68A;
-}
-
-.party-full-name {
-  font-size: 0.76rem;
-  color: var(--text-muted);
-  margin-top: 0.1rem;
-}
-
-.party-stance-text {
-  font-size: 0.78rem;
-  color: var(--text-secondary);
-  margin-top: 0.35rem;
-  line-height: 1.4;
-  max-width: 440px;
-}
-
-.party-card-right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  min-width: 130px;
+  white-space: nowrap;
   flex-shrink: 0;
 }
 
-.party-affinity-value {
-  font-size: 1.6rem;
+.winner-tag {
+  font-size: 0.6rem;
+  font-weight: 800;
+  color: #D97706;
+  background: #FEF3C7;
+  padding: 1px 5px;
+  border-radius: 999px;
+  border: 1px solid #FDE68A;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.party-full-name-compact {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 1px;
+}
+
+.party-vote-micro-dots {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+  margin: 0 0.2rem;
+}
+
+.micro-dot {
+  width: 17px;
+  height: 17px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.62rem;
+  font-weight: 800;
+  font-family: monospace;
+}
+
+.micro-dot.match {
+  background: rgba(16, 185, 129, 0.12);
+  color: #059669;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.micro-dot.diff {
+  background: rgba(239, 68, 68, 0.08);
+  color: #DC2626;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.party-affinity-metric-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  min-width: 64px;
+  flex-shrink: 0;
+}
+
+.party-affinity-val-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+}
+
+.party-affinity-val {
+  font-size: 1.15rem;
   font-weight: 900;
   line-height: 1;
 }
 
-.party-affinity-track {
-  width: 100%;
-  height: 8px;
+.party-affinity-mini-track {
+  width: 58px;
+  height: 5px;
   background: var(--border-card);
-  border-radius: 4px;
-  margin: 0.4rem 0 0.2rem;
+  border-radius: 999px;
+  margin-top: 3px;
   overflow: hidden;
 }
 
-.party-affinity-fill {
+.party-affinity-mini-fill {
   height: 100%;
-  border-radius: 4px;
-  transition: width 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 999px;
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.party-affinity-caption {
-  font-size: 0.68rem;
+.party-expand-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
   color: var(--text-muted);
+  flex-shrink: 0;
+  transition: transform 0.2s var(--ease-spring);
+}
+
+.party-affinity-row.expanded .expand-chevron {
+  display: inline-block;
+  transform: rotate(180deg);
+}
+
+/* Acordeón de desglose parlamentario */
+.party-row-accordion {
+  border-top: 1px solid var(--border-subtle);
+  background: var(--bg-app-alt);
+  padding: 0.75rem 0.95rem;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.party-stance-banner {
+  margin-bottom: 0.55rem;
+}
+
+.stance-badge {
+  font-size: 0.66rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.party-stance-full {
+  font-size: 0.77rem;
+  line-height: 1.45;
+  color: var(--text-secondary);
+  margin-top: 0.2rem;
+}
+
+.party-articles-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.article-match-pill {
+  padding: 0.42rem 0.65rem;
+  border-radius: 8px;
+  border: 1px solid;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.article-match-pill.match-pill {
+  background: rgba(16, 185, 129, 0.06);
+  border-color: rgba(16, 185, 129, 0.22);
+}
+
+.article-match-pill.diff-pill {
+  background: rgba(239, 68, 68, 0.04);
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+.match-pill-left {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.art-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-card);
+  padding: 1px 5px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.match-pill-topic {
+  font-size: 0.73rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.match-pill-right {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-shrink: 0;
+}
+
+.match-pill-votes {
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.match-pill-votes .vote-sep {
+  color: var(--text-muted);
+}
+
+.match-status-tag {
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.match-status-tag.tag-coincide {
+  color: #047857;
+  background: rgba(16, 185, 129, 0.14);
+}
+
+.match-status-tag.tag-discrepa {
+  color: #B91C1C;
+  background: rgba(239, 68, 68, 0.12);
 }
 
 .parties-methodology-note {
   font-size: 0.74rem;
   color: var(--text-muted);
-  margin-top: 1rem;
+  margin-top: 0.85rem;
   text-align: center;
 }
 
@@ -2636,99 +2876,67 @@
     white-space: nowrap !important;
   }
 
-  /* Tarjetas de Afinidad de Partidos en Móvil */
+  /* Filas Compactas de Afinidad de Partidos en Móvil */
   .parties-affinity-grid {
     grid-template-columns: 1fr !important;
-    gap: 0.75rem !important;
+    gap: 0.5rem !important;
   }
 
-  .party-affinity-card {
-    flex-direction: column !important;
-    align-items: stretch !important;
-    gap: 0.65rem !important;
-    padding: 0.85rem 0.95rem !important;
-    border-radius: 16px !important;
+  .party-row-header {
+    padding: 0.45rem 0.65rem !important;
+    gap: 0.35rem !important;
   }
 
-  .party-card-left {
-    align-items: flex-start !important;
-    gap: 0.75rem !important;
-    width: 100% !important;
+  .party-row-left-cluster {
+    gap: 0.4rem !important;
   }
 
   .party-logo-wrapper {
-    width: 42px !important;
-    height: 42px !important;
-    min-width: 42px !important;
-  }
-
-  .party-logo-badge {
-    width: 40px !important;
-    height: 40px !important;
-  }
-
-  .party-name-row {
-    display: flex !important;
-    align-items: center !important;
-    gap: 0.35rem !important;
-    flex-wrap: wrap !important;
+    width: 30px !important;
+    height: 30px !important;
+    padding: 2.5px !important;
   }
 
   .party-short-name {
-    font-size: 1.05rem !important;
+    font-size: 0.9rem !important;
   }
 
-  .party-seats-pill {
-    font-size: 0.65rem !important;
-    padding: 1px 6px !important;
+  .party-full-name-compact {
+    display: none !important;
   }
 
   .winner-tag {
-    font-size: 0.65rem !important;
-    padding: 1px 7px !important;
+    font-size: 0.58rem !important;
+    padding: 1px 4px !important;
   }
 
-  .party-full-name {
-    font-size: 0.74rem !important;
+  .party-vote-micro-dots {
+    margin: 0 !important;
+    gap: 2px !important;
   }
 
-  .party-stance-text {
-    font-size: 0.76rem !important;
-    line-height: 1.35 !important;
-    margin-top: 0.25rem !important;
-    max-width: 100% !important;
+  .micro-dot {
+    width: 15px !important;
+    height: 15px !important;
+    font-size: 0.58rem !important;
   }
 
-  .party-card-right {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: stretch !important;
-    width: 100% !important;
-    min-width: 0 !important;
-    padding-top: 0.45rem !important;
-    border-top: 1px solid var(--border-subtle) !important;
+  .article-match-pill {
+    padding: 0.35rem 0.5rem !important;
   }
 
-  .party-affinity-stat-row {
-    display: flex !important;
-    align-items: baseline !important;
-    justify-content: space-between !important;
-    width: 100% !important;
-  }
-
-  .party-affinity-value {
-    font-size: 1.25rem !important;
-    text-align: right !important;
-  }
-
-  .party-affinity-track {
-    width: 100% !important;
-    height: 6px !important;
-    margin: 0.25rem 0 0 !important;
-  }
-
-  .party-affinity-caption {
+  .match-pill-topic {
     font-size: 0.68rem !important;
+    max-width: 120px !important;
+  }
+
+  .match-pill-votes {
+    font-size: 0.62rem !important;
+  }
+
+  .match-status-tag {
+    font-size: 0.58rem !important;
+    padding: 1px 5px !important;
   }
 
   /* Certificado ZK Limpio en Móvil */

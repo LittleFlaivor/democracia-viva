@@ -53,23 +53,51 @@ export function renderConsensusEureka(
   const activeCitizen = civicStore.getActiveCitizen();
 
   // 1. Calcular Afinidades Políticas Matemáticas para los 12 Partidos
+  const ARTICLE_SHORT_TITLES: Record<string, { badge: string; title: string }> = {
+    'CARD-01': { badge: 'Art. 1', title: 'Tope alquiler 2.5%' },
+    'CARD-02': { badge: 'Art. 2', title: 'Incentivos 70% IRPF' },
+    'CARD-03': { badge: 'Art. 3', title: 'Recargo 150% IBI' },
+  };
+
+  const formatVoteLabel = (vote: string): string => {
+    if (vote === 'YES') return 'SÍ';
+    if (vote === 'NO') return 'NO';
+    return 'NS/NC';
+  };
+
   const partyRankings = CONGRESS_PARTIES.map((party) => {
     let score = 0;
     const cardKeys = ['CARD-01', 'CARD-02', 'CARD-03'];
-    cardKeys.forEach((key) => {
+    const articleMatches = cardKeys.map((key) => {
       const userVote = decisions[key] || 'YES';
-      const partyVote = party.votes[key];
-      if (userVote === partyVote) {
+      const partyVote = party.votes[key] || 'DELEGATE';
+      const isMatch = userVote === partyVote;
+      const isHalf = (userVote === 'DELEGATE' || partyVote === 'DELEGATE') && !isMatch;
+      if (isMatch) {
         score += 1;
-      } else if (userVote === 'DELEGATE' || partyVote === 'DELEGATE') {
+      } else if (isHalf) {
         score += 0.5;
       }
+
+      return {
+        cardId: key,
+        badge: ARTICLE_SHORT_TITLES[key]?.badge || key,
+        shortTitle: ARTICLE_SHORT_TITLES[key]?.title || key,
+        userVote,
+        partyVote,
+        userLabel: formatVoteLabel(userVote),
+        partyLabel: formatVoteLabel(partyVote),
+        isMatch,
+      };
     });
+
     const affinityPercent = Math.round((score / cardKeys.length) * 100);
-    return { ...party, affinityPercent };
+    return { ...party, affinityPercent, articleMatches };
   }).sort((a, b) => b.affinityPercent - a.affinityPercent);
 
   const topParty = partyRankings[0];
+  const lowestParty = partyRankings[partyRankings.length - 1];
+  const highAffinityCount = partyRankings.filter((p) => p.affinityPercent >= 66).length;
 
   container.innerHTML = `
     <div class="eureka-stage-wrapper">
@@ -186,36 +214,99 @@ export function renderConsensusEureka(
             </div>
           </div>
 
+          <!-- Píldora Resumen Rápido -->
+          <div class="affinity-quick-summary-pill">
+            <div class="affinity-summary-item">
+              <span class="summary-dot high"></span>
+              <span>Mayor sintonía: <b>${topParty.shortName}</b> (${topParty.affinityPercent}%)</span>
+            </div>
+            <span class="affinity-summary-divider">·</span>
+            <div class="affinity-summary-item">
+              <span class="summary-dot low"></span>
+              <span>Menor sintonía: <b>${lowestParty.shortName}</b> (${lowestParty.affinityPercent}%)</span>
+            </div>
+            <span class="affinity-summary-divider">·</span>
+            <div class="affinity-summary-item">
+              <span>💡 <b>${highAffinityCount} de 12</b> fuerzas coinciden con la mayoría de tus votos</span>
+            </div>
+          </div>
+
+          <!-- Cuadrícula Compacta de Filas -->
           <div class="parties-affinity-grid" id="parties-grid">
             ${partyRankings.map((party, index) => {
               const isWinner = index === 0 && party.affinityPercent >= 50;
 
               return `
-                <div class="party-affinity-card ${isWinner ? 'party-affinity-winner' : ''}" data-party-id="${party.id}" data-major="${party.isMajor}" data-affinity="${party.affinityPercent}">
-                  <div class="party-card-left">
-                    <div class="party-logo-wrapper" title="${party.name}">
-                      ${party.badgeSvg}
-                    </div>
-                    <div class="party-info-box">
-                      <div class="party-name-row">
-                        <span class="party-short-name font-display">${party.shortName}</span>
-                        <span class="party-seats-pill">${party.seats} ${party.seats === 1 ? 'escaño' : 'escaños'}</span>
-                        ${isWinner ? '<span class="winner-tag">Mayor Sintonía ⭐</span>' : ''}
+                <div class="party-affinity-row ${isWinner ? 'party-row-winner' : ''}" data-party-id="${party.id}" data-major="${party.isMajor}" data-affinity="${party.affinityPercent}">
+                  <div class="party-row-header" role="button" tabindex="0" aria-expanded="false" title="Haz clic para ver el posicionamiento y los 3 votos">
+                    <div class="party-row-left-cluster">
+                      <span class="party-rank-badge ${index === 0 ? 'top-rank' : ''}">#${index + 1}</span>
+                      <div class="party-logo-wrapper" title="${party.name}">
+                        <img src="${party.logoUrl}" alt="${party.shortName}" class="party-logo-img" loading="lazy" />
                       </div>
-                      <div class="party-full-name">${party.name}</div>
-                      <div class="party-stance-text">${party.stanceSummary}</div>
+                      <div class="party-identity-col">
+                        <div class="party-name-row">
+                          <span class="party-short-name font-display">${party.shortName}</span>
+                          <span class="party-seats-pill">${party.seats} ${party.seats === 1 ? 'escaño' : 'escaños'}</span>
+                          ${isWinner ? '<span class="winner-tag">⭐ Top</span>' : ''}
+                        </div>
+                        <div class="party-full-name-compact" title="${party.name}">${party.name}${isWinner ? ' · Mayor sintonía' : ''}</div>
+                      </div>
+                    </div>
+
+                    <!-- Micro Indicadores de Coincidencia (3 artículos) -->
+                    <div class="party-vote-micro-dots" title="Coincidencias en los 3 artículos de la ley">
+                      ${party.articleMatches.map((m) => `
+                        <span class="micro-dot ${m.isMatch ? 'match' : 'diff'}" title="${m.shortTitle}: Tú votaste ${m.userLabel}, ${party.shortName} votó ${m.partyLabel}">
+                          ${m.isMatch ? '✓' : '✕'}
+                        </span>
+                      `).join('')}
+                    </div>
+
+                    <!-- Métrica de Afinidad y Mini Barra -->
+                    <div class="party-affinity-metric-col">
+                      <div class="party-affinity-val-wrap">
+                        <span class="party-affinity-val font-mono" style="color: ${party.color};">
+                          ${party.affinityPercent}%
+                        </span>
+                      </div>
+                      <div class="party-affinity-mini-track">
+                        <div class="party-affinity-mini-fill" style="width: ${party.affinityPercent}%; background: ${party.color};"></div>
+                      </div>
+                    </div>
+
+                    <!-- Chevron Desplegable -->
+                    <div class="party-expand-indicator" aria-hidden="true">
+                      <span class="expand-chevron">▾</span>
                     </div>
                   </div>
 
-                  <div class="party-card-right">
-                    <div class="party-affinity-stat-row">
-                      <span class="party-affinity-caption">coincidencia</span>
-                      <span class="party-affinity-value font-mono" style="color: ${party.color};">
-                        ${party.affinityPercent}%
-                      </span>
+                  <!-- Desplegable Acordeón -->
+                  <div class="party-row-accordion" style="display: none;">
+                    <div class="party-stance-banner">
+                      <span class="stance-badge">🏛️ Posición oficial en el Congreso:</span>
+                      <p class="party-stance-full">${party.stanceSummary}</p>
                     </div>
-                    <div class="party-affinity-track">
-                      <div class="party-affinity-fill" style="width: ${party.affinityPercent}%; background: ${party.color};"></div>
+
+                    <div class="party-articles-breakdown">
+                      ${party.articleMatches.map((m) => `
+                        <div class="article-match-pill ${m.isMatch ? 'match-pill' : 'diff-pill'}">
+                          <div class="match-pill-left">
+                            <span class="art-badge">${m.badge}</span>
+                            <span class="match-pill-topic">${m.shortTitle}</span>
+                          </div>
+                          <div class="match-pill-right">
+                            <div class="match-pill-votes">
+                              <span>Tú: <b>${m.userLabel}</b></span>
+                              <span class="vote-sep">·</span>
+                              <span>${party.shortName}: <b>${m.partyLabel}</b></span>
+                            </div>
+                            <span class="match-status-tag ${m.isMatch ? 'tag-coincide' : 'tag-discrepa'}">
+                              ${m.isMatch ? 'Coincides ✓' : 'Discrepas ✕'}
+                            </span>
+                          </div>
+                        </div>
+                      `).join('')}
                     </div>
                   </div>
                 </div>
@@ -281,9 +372,31 @@ export function renderConsensusEureka(
     gameStore.resetGame();
   });
 
+  // Listeners para acordeón interactivo en cada fila de partido
+  const partyRows = container.querySelectorAll<HTMLElement>('.party-affinity-row');
+  partyRows.forEach((row) => {
+    const header = row.querySelector<HTMLElement>('.party-row-header');
+    const accordion = row.querySelector<HTMLElement>('.party-row-accordion');
+    if (!header || !accordion) return;
+
+    const toggleAccordion = () => {
+      soundFx.playTap();
+      const isExpanded = row.classList.toggle('expanded');
+      header.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+      accordion.style.display = isExpanded ? 'block' : 'none';
+    };
+
+    header.addEventListener('click', toggleAccordion);
+    header.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleAccordion();
+      }
+    });
+  });
+
   // Listeners para los filtros de partidos
   const filterBtns = container.querySelectorAll<HTMLButtonElement>('.party-filter-btn');
-  const partyCards = container.querySelectorAll<HTMLElement>('.party-affinity-card');
 
   filterBtns.forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -293,16 +406,16 @@ export function renderConsensusEureka(
 
       const filterType = btn.getAttribute('data-filter') || 'all';
 
-      partyCards.forEach((card) => {
-        const isMajor = card.getAttribute('data-major') === 'true';
-        const affinity = parseInt(card.getAttribute('data-affinity') || '0', 10);
+      partyRows.forEach((row) => {
+        const isMajor = row.getAttribute('data-major') === 'true';
+        const affinity = parseInt(row.getAttribute('data-affinity') || '0', 10);
 
         if (filterType === 'all') {
-          card.style.display = 'flex';
+          row.style.display = '';
         } else if (filterType === 'major') {
-          card.style.display = isMajor ? 'flex' : 'none';
+          row.style.display = isMajor ? '' : 'none';
         } else if (filterType === 'high') {
-          card.style.display = affinity >= 66 ? 'flex' : 'none';
+          row.style.display = affinity >= 66 ? '' : 'none';
         }
       });
     });
