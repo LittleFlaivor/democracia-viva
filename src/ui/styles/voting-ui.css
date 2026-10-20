@@ -12,12 +12,8 @@
   --vote-yes-to: #059669;
   --vote-no-from: #fb6a7e;
   --vote-no-to: #dc2447;
-  --vote-ns-bg-from: #fffbeb;
-  --vote-ns-bg-to: #fdf0c6;
-  --vote-ns-border: rgba(217, 119, 6, 0.45);
-  --vote-ns-ink: #8a3b0a;
-  --vote-ns-badge: #f59e0b;
-  --vote-ns-badge-ink: #ffffff;
+  --vote-ns-from: #f59e0b;
+  --vote-ns-to: #d97706;
 }
 
 [data-theme='dark'] {
@@ -26,12 +22,8 @@
   --vote-yes-to: #047857;
   --vote-no-from: #f4476a;
   --vote-no-to: #be123c;
-  --vote-ns-bg-from: rgba(245, 158, 11, 0.16);
-  --vote-ns-bg-to: rgba(245, 158, 11, 0.09);
-  --vote-ns-border: rgba(245, 158, 11, 0.5);
-  --vote-ns-ink: #fcd34d;
-  --vote-ns-badge: #f59e0b;
-  --vote-ns-badge-ink: #1c1203;
+  --vote-ns-from: #d97706;
+  --vote-ns-to: #b45309;
 }
 
 /* ========================================================
@@ -267,23 +259,20 @@
     inset 0 -2px 0 rgba(0, 0, 0, 0.1) !important;
 }
 
-/* NS / NC · ámbar suave (opción neutra: menor peso visual, color propio) */
+/* NS / NC · ámbar dorado sólido (integrado 100% como homólogo de A Favor y En Contra) */
 .deck-controls-magnetic .btn-arcade-delegate {
-  background: linear-gradient(165deg, var(--vote-ns-bg-from) 0%, var(--vote-ns-bg-to) 100%) !important;
-  color: var(--vote-ns-ink) !important;
-  border: 1.5px solid var(--vote-ns-border) !important;
-  box-shadow: 0 8px 18px -10px rgba(217, 119, 6, 0.55), 0 1px 3px rgba(217, 119, 6, 0.14) !important;
+  background: linear-gradient(165deg, var(--vote-ns-from) 0%, var(--vote-ns-to) 100%) !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+  box-shadow: 0 10px 20px -8px rgba(217, 119, 6, 0.6), 0 2px 5px rgba(217, 119, 6, 0.28),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.1) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.16);
 }
-.deck-controls-magnetic .btn-arcade-delegate::after {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
-}
-[data-theme='dark'] .deck-controls-magnetic .btn-arcade-delegate::after {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0));
-}
+
 .deck-controls-magnetic .btn-arcade-delegate .arcade-btn-icon {
-  background: var(--vote-ns-badge);
-  color: var(--vote-ns-badge-ink);
-  box-shadow: none;
+  background: rgba(255, 255, 255, 0.22) !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28) !important;
+  color: #ffffff !important;
 }
 
 /* Estados: hover / pulsado / foco */
@@ -300,7 +289,7 @@
   box-shadow: 0 16px 26px -8px rgba(220, 36, 71, 0.65), 0 2px 6px rgba(220, 36, 71, 0.3) !important;
 }
 .deck-controls-magnetic .btn-arcade-delegate:hover {
-  box-shadow: 0 14px 24px -10px rgba(217, 119, 6, 0.6), 0 1px 4px rgba(217, 119, 6, 0.2) !important;
+  box-shadow: 0 16px 26px -8px rgba(217, 119, 6, 0.65), 0 2px 6px rgba(217, 119, 6, 0.3) !important;
 }
 .deck-controls-magnetic .arcade-push-btn:hover .arcade-btn-icon {
   transform: scale(1.12) !important;
