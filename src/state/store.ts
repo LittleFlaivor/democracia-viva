@@ -21,6 +21,21 @@ import type { ArticleVoteAggregation, CitizenProfile, VoteChoice, VoteReceipt } 
 
 const STORAGE_KEY = 'DEMOCRACIA_VIVA_STATE_V3';
 
+/**
+ * MODO PRUEBAS (solo navegador): todos los votos emitidos se contabilizan,
+ * aunque los repita la misma persona, para poder probar las distintas opciones
+ * y comprobar el escrutinio. En Node (tests/backend) se mantiene el blindaje
+ * estricto de 1 ciudadano = 1 voto por artículo.
+ */
+export const TEST_COUNT_ALL_VOTES = typeof window !== 'undefined';
+const TEST_VOTE_SEPARATOR = '#test-';
+
+/** Devuelve el id real del ciudadano a partir del id (posiblemente sufijado) de un voto de prueba. */
+function baseCitizenId(recordCitizenId: string): string {
+  const idx = recordCitizenId.indexOf(TEST_VOTE_SEPARATOR);
+  return idx === -1 ? recordCitizenId : recordCitizenId.slice(0, idx);
+}
+
 export type ViewMode = 'POCKET' | 'BOE'; // 'POCKET' = Cómo afecta a tu vida | 'BOE' = Qué dice el BOE
 
 export interface AppState {
@@ -217,11 +232,14 @@ export class CivicAppStore {
   }
 
   public getActiveCitizenDirectVoteForArticle(articleId: string): RawVoteRecord | null {
-    return (
-      this.directVotes.find(
-        (v) => v.citizenId === this.activeCitizenId && v.articleId === articleId
-      ) || null
-    );
+    // Devuelve el voto MÁS RECIENTE del ciudadano activo (en pruebas puede haber repeticiones)
+    for (let i = this.directVotes.length - 1; i >= 0; i--) {
+      const v = this.directVotes[i];
+      if (v.articleId === articleId && baseCitizenId(v.citizenId) === this.activeCitizenId) {
+        return v;
+      }
+    }
+    return null;
   }
 
   public getViewMode(articleId: string): ViewMode {
@@ -346,14 +364,27 @@ export class CivicAppStore {
   ): Promise<{ success: boolean; receipt?: VoteReceipt; error?: string }> {
     const activeCitizen = this.getActiveCitizen();
     const scopeHash = computeScopeHash(DECREE_VIVIENDA.id, articleId);
-    const nullifierHash = generateNullifierHash(activeCitizen.identitySecret, scopeHash);
+    let nullifierHash = generateNullifierHash(activeCitizen.identitySecret, scopeHash);
+    let recordCitizenId = activeCitizen.id;
 
     // 1. REGLA DE ORO DE INTEGRIDAD: Anti-doble voto criptográfico
     if (this.spentNullifiers.has(nullifierHash)) {
-      return {
-        success: false,
-        error: `ERROR_NULLIFIER_ALREADY_SPENT: Ya existe un voto formal registrado con este nullifier para el ${articleId}. Incoercibilidad garantizada: 1 ciudadano = 1 voto.`
-      };
+      if (!TEST_COUNT_ALL_VOTES) {
+        return {
+          success: false,
+          error: `ERROR_NULLIFIER_ALREADY_SPENT: Ya existe un voto formal registrado con este nullifier para el ${articleId}. Incoercibilidad garantizada: 1 ciudadano = 1 voto.`
+        };
+      }
+      // MODO PRUEBAS WEB: cada repetición se contabiliza como sufragio independiente
+      // con su propio nullifier de prueba (nunca colisiona con el voto oficial).
+      let seq = this.directVotes.filter(
+        (v) => v.articleId === articleId && baseCitizenId(v.citizenId) === activeCitizen.id
+      ).length;
+      do {
+        nullifierHash = generateNullifierHash(`${activeCitizen.identitySecret}#test-${seq}`, scopeHash);
+        recordCitizenId = `${activeCitizen.id}${TEST_VOTE_SEPARATOR}${seq}`;
+        seq += 1;
+      } while (this.spentNullifiers.has(nullifierHash));
     }
 
     try {
@@ -405,7 +436,7 @@ export class CivicAppStore {
       this.receipts.push(receipt);
       this.directVotes.push({
         nullifierHash,
-        citizenId: activeCitizen.id,
+        citizenId: recordCitizenId,
         articleId,
         choice,
         timestamp
@@ -424,9 +455,15 @@ export class CivicAppStore {
    */
   public undoVote(articleId: string): boolean {
     const activeCitizen = this.getActiveCitizen();
-    const voteIdx = this.directVotes.findIndex(
-      (v) => v.articleId === articleId && v.citizenId === activeCitizen.id
-    );
+    // Se revierte siempre el voto MÁS RECIENTE del ciudadano en ese artículo
+    let voteIdx = -1;
+    for (let i = this.directVotes.length - 1; i >= 0; i--) {
+      const v = this.directVotes[i];
+      if (v.articleId === articleId && baseCitizenId(v.citizenId) === activeCitizen.id) {
+        voteIdx = i;
+        break;
+      }
+    }
     if (voteIdx === -1) return false;
 
     const [removedVote] = this.directVotes.splice(voteIdx, 1);

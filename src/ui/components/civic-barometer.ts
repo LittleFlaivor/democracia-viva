@@ -87,8 +87,8 @@ export function renderCivicBarometer(
                   </div>
                   <div>
                     <span style="color: var(--text-muted);">Ciudadanía: </span>
-                    <span style="font-weight: 700; color: ${hasVotes ? (agg.citizensApproved ? '#79D1AB' : '#E8837D') : 'var(--text-muted)'};">
-                      ${hasVotes ? (agg.citizensApproved ? 'APRUEBA' : 'RECHAZA') : 'Sin votos'}
+                    <span style="font-weight: 700; color: ${hasVotes ? (agg.totalYes === agg.totalNo ? 'var(--text-secondary)' : agg.citizensApproved ? '#79D1AB' : '#E8837D') : 'var(--text-muted)'};">
+                      ${hasVotes ? (agg.totalYes === agg.totalNo ? 'EMPATE' : agg.citizensApproved ? 'APRUEBA' : 'RECHAZA') : 'Sin votos'}
                     </span>
                   </div>
                 </div>

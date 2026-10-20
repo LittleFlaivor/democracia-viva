@@ -125,7 +125,7 @@ function getLiveArticleStats(
     statusLabel = noPercent === 100 ? 'Rechazo Unánime (100%)' : 'Rechazo Rotundo';
   } else if (noPercent > 50) {
     statusLabel = 'Mayoría de Rechazo';
-  } else if (nsncPercent >= 50) {
+  } else if (nsncPercent > 50) {
     statusLabel = 'Mayoría en Delegación';
   } else {
     statusLabel = 'Votación Dividida';
@@ -150,17 +150,29 @@ function getSmartUserSubline(userVote: GameDecision, stats: ArticleStats): strin
   if (stats.totalVotes === 1) {
     return 'Tu voto inaugura el escrutinio oficial de la urna activa.';
   }
-  if (userVote === 'YES') {
-    if (stats.yesPercent > 50) return 'En sintonía con la mayoría ciudadana a favor';
-    if (stats.yesPercent === 50 && stats.noPercent === 50) return 'Posición en empate técnico con el censo';
-    return 'Postura de contrapeso frente al rechazo mayoritario';
+
+  const mine =
+    userVote === 'YES' ? stats.yesVotes : userVote === 'NO' ? stats.noVotes : stats.nsncVotes;
+  const others =
+    userVote === 'YES'
+      ? [stats.noVotes, stats.nsncVotes]
+      : userVote === 'NO'
+        ? [stats.yesVotes, stats.nsncVotes]
+        : [stats.yesVotes, stats.noVotes];
+  const maxOther = Math.max(...others);
+
+  if (mine * 2 > stats.totalVotes) {
+    return 'En sintonía con la mayoría absoluta de la urna';
   }
-  if (userVote === 'NO') {
-    if (stats.noPercent > 50) return 'En sintonía con la mayoría ciudadana en contra';
-    if (stats.yesPercent === 50 && stats.noPercent === 50) return 'Posición en empate técnico con el censo';
-    return 'Postura de contrapeso frente a la aprobación mayoritaria';
+  if (mine > maxOther) {
+    return 'Tu opción es la más votada, aunque sin mayoría absoluta';
   }
-  return 'Abstención cívica deliberada sin posicionamiento partidista';
+  if (mine === maxOther && mine > 0) {
+    return 'Tu opción empata en cabeza con otra postura';
+  }
+  return userVote === 'DELEGATE'
+    ? 'Abstención cívica deliberada, sin posicionamiento partidista'
+    : 'Postura de contrapeso frente a la opción más votada';
 }
 
 export function renderConsensusEureka(
@@ -353,19 +365,15 @@ export function renderConsensusEureka(
               let donutBigVal = '0%';
               let donutSubLabel = 'SIN VOTOS';
               if (stats.totalVotes > 0) {
-                if (stats.yesPercent > stats.noPercent && stats.yesPercent >= stats.nsncPercent) {
-                  donutBigVal = `${stats.yesPercent}%`;
-                  donutSubLabel = 'A FAVOR';
-                } else if (stats.noPercent > stats.yesPercent && stats.noPercent >= stats.nsncPercent) {
-                  donutBigVal = `${stats.noPercent}%`;
-                  donutSubLabel = 'EN CONTRA';
-                } else if (stats.nsncPercent > stats.yesPercent && stats.nsncPercent > stats.noPercent) {
-                  donutBigVal = `${stats.nsncPercent}%`;
-                  donutSubLabel = 'NS / NC';
-                } else if (stats.yesPercent === stats.noPercent) {
-                  donutBigVal = `${stats.yesPercent}%`;
-                  donutSubLabel = 'EMPATE';
-                }
+                const options = [
+                  { pct: stats.yesPercent, votes: stats.yesVotes, label: 'A FAVOR' },
+                  { pct: stats.noPercent, votes: stats.noVotes, label: 'EN CONTRA' },
+                  { pct: stats.nsncPercent, votes: stats.nsncVotes, label: 'NS / NC' },
+                ];
+                const maxVotes = Math.max(...options.map((o) => o.votes));
+                const leaders = options.filter((o) => o.votes === maxVotes);
+                donutBigVal = `${leaders.length > 1 ? Math.min(...leaders.map((l) => l.pct)) : leaders[0].pct}%`;
+                donutSubLabel = leaders.length > 1 ? 'EMPATE' : leaders[0].label;
               }
 
               return `
@@ -434,7 +442,7 @@ export function renderConsensusEureka(
 
           <!-- Nota al pie de Transparencia Censal -->
           <div class="census-transparency-footnote">
-            <span>ℹ️ <b>Transparencia y Censo:</b> Los votos se contabilizan en tiempo real desde 0 mediante firmas WebAuthn y árbol de Merkle inmutable. Cada decisión se sella sin intermediarios en la urna descentralizada de pruebas.</span>
+            <span>ℹ️ <b>Fase de pruebas:</b> cada voto emitido se contabiliza en la urna, aunque lo repita la misma persona, para poder comprobar el escrutinio. El recuento arranca desde 0 y se sella con firmas WebAuthn y árbol de Merkle inmutable.</span>
           </div>
         </div>
 
@@ -639,8 +647,11 @@ export function renderConsensusEureka(
           <button class="btn-secondary" id="btn-eureka-undo" title="Modificar tu último voto o repasar las rondas anteriores">
             ↶ Modificar Votos
           </button>
-          <button class="btn-secondary" id="btn-replay-deck">
-            ↺ Reiniciar Mazo
+          <button class="btn-secondary" id="btn-replay-deck" title="Volver al primer artículo conservando todos los votos ya contabilizados">
+            ↺ Votar de Nuevo
+          </button>
+          <button class="btn-secondary btn-empty-urn" id="btn-empty-urn" title="Vaciar la urna de pruebas y empezar de nuevo desde 0 votos">
+            🗑 Vaciar Urna (0 votos)
           </button>
           <button class="btn-primary btn-primary-prominent" id="btn-open-acta-final">
             🏛️ Ver Dictamen y Acta Parlamentaria
@@ -666,6 +677,11 @@ export function renderConsensusEureka(
 
   container.querySelector('#btn-replay-deck')?.addEventListener('click', () => {
     soundFx.playTap();
+    gameStore.replayDeck();
+  });
+
+  container.querySelector('#btn-empty-urn')?.addEventListener('click', () => {
+    soundFx.playUndo();
     gameStore.resetGame();
   });
 

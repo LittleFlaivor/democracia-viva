@@ -349,6 +349,24 @@ export class GameStore {
     return true;
   }
 
+  /**
+   * Vuelve a la primera carta para seguir probando, CONSERVANDO todos los votos
+   * ya contabilizados en la urna (modo pruebas: los votos se acumulan).
+   */
+  public replayDeck() {
+    this.currentCardIndex = 0;
+    this.decisions = {};
+    this.isEurekaRevealed = false;
+    this.activeDilemmaCard = null;
+    this.activeBoeCard = null;
+    this.activeMonographCard = null;
+    this.syncWithProfile();
+    this.notify();
+  }
+
+  /**
+   * Reinicio total: vacía la urna y vuelve a 0 votos.
+   */
   public resetGame() {
     this.currentCardIndex = 0;
     this.decisions = {};

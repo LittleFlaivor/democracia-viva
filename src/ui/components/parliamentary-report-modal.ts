@@ -111,8 +111,8 @@ export function renderParliamentaryReportModal(
                       ${agg.directWeightYes + agg.directWeightNo + agg.directWeightAbstain} dir / ${agg.delegatedWeightYes + agg.delegatedWeightNo + agg.delegatedWeightAbstain} del
                     </td>
                     <td style="padding: 0.85rem 0.5rem;">
-                      <span style="color: ${hasVotes ? (agg.citizensApproved ? '#79D1AB' : '#E8837D') : 'var(--text-muted)'}; font-weight: 700;">
-                        ${hasVotes ? `${agg.citizensApproved ? 'APRUEBA' : 'RECHAZA'} (${agg.pctYes}% SÍ)` : 'Pendiente (0 votos)'}
+                      <span style="color: ${hasVotes ? (agg.totalYes === agg.totalNo ? 'var(--text-secondary)' : agg.citizensApproved ? '#79D1AB' : '#E8837D') : 'var(--text-muted)'}; font-weight: 700;">
+                        ${hasVotes ? `${agg.totalYes === agg.totalNo ? 'EMPATE' : agg.citizensApproved ? 'APRUEBA' : 'RECHAZA'} (${agg.pctYes}% SÍ)` : 'Pendiente (0 votos)'}
                       </span>
                     </td>
                     <td style="padding: 0.85rem 0.5rem;">

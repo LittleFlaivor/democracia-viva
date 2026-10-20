@@ -204,9 +204,9 @@ class PwaService {
       console.warn('[PWA] Aviso durante la purga de caché:', err);
     }
 
-    // 3. Reiniciar la partida a la carta 1
+    // 3. Reiniciar la partida a la carta 1 (conservando los votos acumulados de la urna)
     try {
-      GameStore.getInstance().resetGame();
+      GameStore.getInstance().replayDeck();
     } catch (_) {}
 
     // 4. Pausa de 300ms para permitir al usuario ver la confirmación táctil y animación
