@@ -238,6 +238,25 @@ export function isTestBypassEnabled(): boolean {
 }
 
 /**
+ * Estado en memoria de la Sesión de Votación Activa.
+ * Permite que una única autenticación biométrica autorice todos los votos
+ * del decreto actual (las 3 cartas) sin obligar a repetir la biometría en cada carta.
+ */
+let activeVotingSessionCredential: CitizenPasskeyCredential | null = null;
+
+export function getActiveVotingSession(): CitizenPasskeyCredential | null {
+  return activeVotingSessionCredential;
+}
+
+export function setActiveVotingSession(cred: CitizenPasskeyCredential | null): void {
+  activeVotingSessionCredential = cred;
+}
+
+export function clearActiveVotingSession(): void {
+  activeVotingSessionCredential = null;
+}
+
+/**
  * Activa o desactiva la omisión de biometría para pruebas ágiles.
  */
 export function setTestBypassEnabled(enabled: boolean): void {

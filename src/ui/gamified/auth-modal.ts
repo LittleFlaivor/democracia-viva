@@ -73,8 +73,8 @@ export function promptJustInTimePasskey(
         <p style="font-size: 0.88rem; color: var(--text-secondary, #64748b); margin-bottom: 18px; line-height: 1.45;">
           ${
             isNew
-              ? 'Activa tu credencial ciudadana vinculando tu sensor biométrico (Huella, FaceID o PIN de hardware). Cero contraseñas, cero wallets.'
-              : 'Confirma la emisión física de tu voto con tu enclave seguro. La acción será definitiva e irreversible.'
+              ? 'Activa tu credencial ciudadana vinculando tu sensor biométrico (Huella, FaceID o PIN de hardware). Servirá para autorizar tu sesión de votación en este decreto.'
+              : 'Confirma con tu huella, Face ID o PIN para autorizar tu sesión de voto. Esta única confirmación servirá para los 3 artículos del decreto.'
           }
         </p>
 

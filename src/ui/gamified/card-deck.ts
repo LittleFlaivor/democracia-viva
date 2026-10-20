@@ -9,8 +9,13 @@
 import { GameStore, GameDecision } from '../../state/game-store.ts';
 import { soundFx } from './sound-fx.ts';
 import { promptJustInTimePasskey } from './auth-modal.ts';
-import { triggerReceiptDownload } from '../../services/firestore-voting.ts';
-import { CitizenPasskeyCredential, isTestBypassEnabled, createOrGetSimulatedTestCredential } from '../../services/auth.ts';
+import { 
+  CitizenPasskeyCredential, 
+  isTestBypassEnabled, 
+  createOrGetSimulatedTestCredential,
+  getActiveVotingSession,
+  setActiveVotingSession
+} from '../../services/auth.ts';
 
 export function renderCardDeck(container: HTMLElement) {
   const gameStore = GameStore.getInstance();
@@ -198,20 +203,28 @@ export function renderCardDeck(container: HTMLElement) {
   (window as any)._cardKeyHandler = null;
 
   /**
-   * FLUJO JUST-IN-TIME WEBAUTHN PASSKEYS
+   * FLUJO JUST-IN-TIME WEBAUTHN PASSKEYS CON SESIÓN UNIFICADA
+   * Una única confirmación biométrica autoriza la sesión completa de los 3 artículos.
    */
   async function initiateVoteFlow(decision: GameDecision) {
     if (!currentCard) return;
 
-    // Si el usuario ha activado el Modo Prueba Rápido (sin biometría), sellar voto directamente
+    // 1. Si el usuario ha activado el Modo Prueba Rápido (sin biometría), sellar voto directamente
     if (isTestBypassEnabled()) {
       const testCred = createOrGetSimulatedTestCredential();
       triggerFlyOff(decision, testCred);
       return;
     }
 
+    // 2. Si la sesión ya fue autenticada con biometría en el primer artículo, sellar directamente
+    const activeSession = getActiveVotingSession();
+    if (activeSession) {
+      triggerFlyOff(decision, activeSession);
+      return;
+    }
+
     try {
-      // 1. Solicitar autenticación biométrica Just-in-Time
+      // 3. Primera autenticación biométrica de la sesión Just-in-Time
       const authRes = await promptJustInTimePasskey({
         proposalTitle: currentCard.headlineQuestion,
         articleId: currentCard.articleId,
@@ -220,6 +233,8 @@ export function renderCardDeck(container: HTMLElement) {
       });
 
       if (authRes.success) {
+        // Almacenar la credencial para los artículos restantes de este decreto
+        setActiveVotingSession(authRes.credential);
         triggerFlyOff(decision, authRes.credential);
       }
     } catch (err: any) {
