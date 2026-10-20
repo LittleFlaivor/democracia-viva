@@ -154,35 +154,49 @@ export function renderConsensusEureka(
               const userVoteClass = userVote === 'YES' ? 'vote-tag-yes' : userVote === 'NO' ? 'vote-tag-no' : 'vote-tag-nsnc';
               const isWithMajority = (userVote === 'YES' && stats.yesPercent >= 50) || (userVote === 'NO' && stats.noPercent >= 50);
 
+              const shortTitle = ARTICLE_SHORT_TITLES[card.id]?.title || card.badge;
+              const shortBadge = ARTICLE_SHORT_TITLES[card.id]?.badge || card.articleId;
+
+              const stop1 = stats.yesPercent;
+              const stop2 = stats.yesPercent + stats.nsncPercent;
+
               return `
-                <div class="article-result-card">
-                  <div class="article-result-top">
-                    <div>
-                      <span class="badge-mono" style="font-size: 0.72rem;">${card.articleId}</span>
-                      <h4 class="article-result-title font-display">${card.headlineQuestion}</h4>
-                    </div>
-                    <span class="status-approved-badge">${stats.statusLabel}</span>
+                <div class="national-result-card" data-card-id="${card.id}">
+                  <div class="national-card-header">
+                    <span class="art-badge">${shortBadge}</span>
+                    <span class="status-approved-badge">${stats.yesPercent}% Apoyo</span>
                   </div>
 
-                  <!-- Barra de Votación Segmentada Tricolor -->
-                  <div class="vote-segmented-bar" title="A Favor: ${stats.yesPercent}% | NS/NC: ${stats.nsncPercent}% | En Contra: ${stats.noPercent}%">
-                    <div class="bar-segment bar-yes" style="width: ${stats.yesPercent}%;">
-                      <span>${stats.yesPercent}% SÍ</span>
+                  <h4 class="national-card-title font-display">${shortTitle}</h4>
+                  <p class="national-card-desc" title="${card.headlineQuestion}">${card.headlineQuestion}</p>
+
+                  <!-- Donut de Consenso Tricolor -->
+                  <div class="national-donut-wrapper">
+                    <div class="consensus-donut" style="background: conic-gradient(#10B981 0% ${stop1}%, #F59E0B ${stop1}% ${stop2}%, #EF4444 ${stop2}% 100%);" title="Votación Nacional: ${stats.yesPercent}% SÍ, ${stats.nsncPercent}% NS/NC, ${stats.noPercent}% NO">
+                      <div class="consensus-donut-inner">
+                        <span class="donut-big-val font-mono">${stats.yesPercent}%</span>
+                        <span class="donut-sub-label">A FAVOR</span>
+                      </div>
                     </div>
-                    <div class="bar-segment bar-nsnc" style="width: ${stats.nsncPercent}%;">
-                      <span>${stats.nsncPercent}%</span>
-                    </div>
-                    <div class="bar-segment bar-no" style="width: ${stats.noPercent}%;">
-                      <span>${stats.noPercent}% NO</span>
+
+                    <div class="donut-legend-row">
+                      <span class="legend-dot dot-yes"></span><span>${stats.yesPercent}% SÍ</span>
+                      <span class="legend-sep">·</span>
+                      <span class="legend-dot dot-nsnc"></span><span>${stats.nsncPercent}%</span>
+                      <span class="legend-sep">·</span>
+                      <span class="legend-dot dot-no"></span><span>${stats.noPercent}% NO</span>
                     </div>
                   </div>
 
-                  <!-- Puntero Personal: Dónde cayó tu voto -->
-                  <div class="user-vote-callout ${userVoteClass}">
-                    <span class="callout-pill-icon">${userVote === 'YES' ? '✓' : userVote === 'NO' ? '✕' : '?'}</span>
-                    <span class="callout-text">
-                      Tu voto: <b>${userVoteText}</b> · ${isWithMajority ? 'Coincides con la mayoría social.' : userVote === 'DELEGATE' ? 'Optaste por no posicionarte en este dilema.' : 'Te sitúas en la minoría discrepante.'}
-                    </span>
+                  <!-- Pie de Tarjeta: Dónde cayó tu voto -->
+                  <div class="national-card-user-vote ${userVoteClass}">
+                    <div class="user-vote-pill-header">
+                      <span class="user-vote-main-text">Tu voto: <b>${userVoteText}</b></span>
+                      <span class="user-vote-badge">${userVote === 'YES' ? 'SÍ ✓' : userVote === 'NO' ? 'NO ✕' : '–'}</span>
+                    </div>
+                    <div class="user-vote-alignment">
+                      ${isWithMajority ? 'Coincides con la mayoría social' : userVote === 'DELEGATE' ? 'Abstención cívica' : 'Te sitúas en la minoría'}
+                    </div>
                   </div>
                 </div>
               `;
@@ -210,7 +224,7 @@ export function renderConsensusEureka(
                 <!-- Marca / Logo oficial + Nombres + Escaños -->
                 <div class="top-card-identity">
                   <div class="party-logo-wrapper" title="${party.name}">
-                    <img src="${party.logoUrl}" alt="${party.shortName}" class="party-logo-img" loading="lazy" />
+                    <img src="${party.logoUrl}" alt="${party.shortName}" class="party-logo-img" />
                   </div>
                   <div class="top-card-names">
                     <div class="top-card-name-row">
