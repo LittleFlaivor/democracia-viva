@@ -130,6 +130,10 @@ export function renderConsensusEureka(
   }).sort((a, b) => b.affinityPercent - a.affinityPercent);
 
   const top3Parties = partyRankings.slice(0, 3);
+  // Se considera ganador claro solo si el 1º puesto supera estrictamente en porcentaje al 2º (sin empates en cabeza)
+  const hasClearWinner = top3Parties.length > 1 
+    ? top3Parties[0].affinityPercent > top3Parties[1].affinityPercent 
+    : (top3Parties.length === 1 && top3Parties[0].affinityPercent > 0);
 
   container.innerHTML = `
     <div class="eureka-stage-wrapper">
@@ -298,8 +302,10 @@ export function renderConsensusEureka(
 
           <!-- Cuadrícula de 3 Columnas para el Podio de Mayor Sintonía -->
           <div class="top3-affinity-grid">
-            ${top3Parties.map((party) => `
-              <div class="top-affinity-card" data-party-id="${party.id}">
+            ${top3Parties.map((party, index) => {
+              const isWinner = index === 0 && hasClearWinner;
+              return `
+              <div class="top-affinity-card ${isWinner ? 'is-winner' : ''}" data-party-id="${party.id}">
                 <!-- Marca / Logo oficial + Nombres + Escaños -->
                 <div class="top-card-identity">
                   <div class="party-logo-wrapper" title="${party.name}">
@@ -347,7 +353,8 @@ export function renderConsensusEureka(
                   `).join('')}
                 </div>
               </div>
-            `).join('')}
+            `;
+            }).join('')}
           </div>
 
           <!-- Sección Desplegable para ver las 12 Fuerzas del Congreso -->
