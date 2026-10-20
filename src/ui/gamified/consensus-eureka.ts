@@ -95,9 +95,7 @@ export function renderConsensusEureka(
     return { ...party, affinityPercent, articleMatches };
   }).sort((a, b) => b.affinityPercent - a.affinityPercent);
 
-  const topParty = partyRankings[0];
-  const lowestParty = partyRankings[partyRankings.length - 1];
-  const highAffinityCount = partyRankings.filter((p) => p.affinityPercent >= 66).length;
+  const top3Parties = partyRankings.slice(0, 3);
 
   container.innerHTML = `
     <div class="eureka-stage-wrapper">
@@ -193,128 +191,174 @@ export function renderConsensusEureka(
         </div>
 
         <!-- ========================================================
-             SECCIÓN 2: AFINIDAD CON LOS PARTIDOS DEL CONGRESO (12 FUERZAS)
+             SECCIÓN 2: TOP 3 MAYOR SINTONÍA PARLAMENTARIA (3 COLUMNAS)
              ======================================================== -->
         <div class="results-card-section" style="margin-top: 2rem;">
-          <div class="results-section-header-row">
-            <div>
-              <h3 class="results-section-title font-display">
-                🏛️ Afinidad con los Partidos del Congreso de los Diputados
-              </h3>
-              <p class="results-section-subtitle">
-                Comparativa de tus 3 decisiones con las votaciones de las 12 formaciones con escaños:
-              </p>
-            </div>
-
-            <!-- Filtros de Partidos -->
-            <div class="party-filter-tabs" role="tablist">
-              <button class="party-filter-btn active" data-filter="all">Todos (${partyRankings.length})</button>
-              <button class="party-filter-btn" data-filter="major">Principales (4)</button>
-              <button class="party-filter-btn" data-filter="high">Sintonía ≥66%</button>
-            </div>
+          <div class="results-section-header">
+            <h3 class="results-section-title font-display">
+              🏛️ Formaciones con Mayor Sintonía Parlamentaria
+            </h3>
+            <p class="results-section-subtitle">
+              Los 3 grupos del Congreso de los Diputados que más coinciden con tus 3 votos:
+            </p>
           </div>
 
-          <!-- Píldora Resumen Rápido -->
-          <div class="affinity-quick-summary-pill">
-            <div class="affinity-summary-item">
-              <span class="summary-dot high"></span>
-              <span>Mayor sintonía: <b>${topParty.shortName}</b> (${topParty.affinityPercent}%)</span>
-            </div>
-            <span class="affinity-summary-divider">·</span>
-            <div class="affinity-summary-item">
-              <span class="summary-dot low"></span>
-              <span>Menor sintonía: <b>${lowestParty.shortName}</b> (${lowestParty.affinityPercent}%)</span>
-            </div>
-            <span class="affinity-summary-divider">·</span>
-            <div class="affinity-summary-item">
-              <span>💡 <b>${highAffinityCount} de 12</b> fuerzas coinciden con la mayoría de tus votos</span>
-            </div>
-          </div>
-
-          <!-- Cuadrícula Compacta de Filas -->
-          <div class="parties-affinity-grid" id="parties-grid">
-            ${partyRankings.map((party, index) => {
-              const isWinner = index === 0 && party.affinityPercent >= 50;
-
-              return `
-                <div class="party-affinity-row ${isWinner ? 'party-row-winner' : ''}" data-party-id="${party.id}" data-major="${party.isMajor}" data-affinity="${party.affinityPercent}">
-                  <div class="party-row-header" role="button" tabindex="0" aria-expanded="false" title="Haz clic para ver el posicionamiento y los 3 votos">
-                    <div class="party-row-left-cluster">
-                      <span class="party-rank-badge ${index === 0 ? 'top-rank' : ''}">#${index + 1}</span>
-                      <div class="party-logo-wrapper" title="${party.name}">
-                        <img src="${party.logoUrl}" alt="${party.shortName}" class="party-logo-img" loading="lazy" />
-                      </div>
-                      <div class="party-identity-col">
-                        <div class="party-name-row">
-                          <span class="party-short-name font-display">${party.shortName}</span>
-                          <span class="party-seats-pill">${party.seats} ${party.seats === 1 ? 'escaño' : 'escaños'}</span>
-                          ${isWinner ? '<span class="winner-tag">⭐ Top</span>' : ''}
-                        </div>
-                        <div class="party-full-name-compact" title="${party.name}">${party.name}${isWinner ? ' · Mayor sintonía' : ''}</div>
-                      </div>
-                    </div>
-
-                    <!-- Micro Indicadores de Coincidencia (3 artículos) -->
-                    <div class="party-vote-micro-dots" title="Coincidencias en los 3 artículos de la ley">
-                      ${party.articleMatches.map((m) => `
-                        <span class="micro-dot ${m.isMatch ? 'match' : 'diff'}" title="${m.shortTitle}: Tú votaste ${m.userLabel}, ${party.shortName} votó ${m.partyLabel}">
-                          ${m.isMatch ? '✓' : '✕'}
-                        </span>
-                      `).join('')}
-                    </div>
-
-                    <!-- Métrica de Afinidad y Mini Barra -->
-                    <div class="party-affinity-metric-col">
-                      <div class="party-affinity-val-wrap">
-                        <span class="party-affinity-val font-mono" style="color: ${party.color};">
-                          ${party.affinityPercent}%
-                        </span>
-                      </div>
-                      <div class="party-affinity-mini-track">
-                        <div class="party-affinity-mini-fill" style="width: ${party.affinityPercent}%; background: ${party.color};"></div>
-                      </div>
-                    </div>
-
-                    <!-- Chevron Desplegable -->
-                    <div class="party-expand-indicator" aria-hidden="true">
-                      <span class="expand-chevron">▾</span>
-                    </div>
+          <!-- Cuadrícula de 3 Columnas para el Podio de Mayor Sintonía -->
+          <div class="top3-affinity-grid">
+            ${top3Parties.map((party, index) => `
+              <div class="top-affinity-card podium-${index + 1}" data-party-id="${party.id}">
+                <!-- Encabezado de la tarjeta: Medalla y Escaños -->
+                <div class="top-card-header">
+                  <div class="podium-badge podium-${index + 1}">
+                    <span>${index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉'}</span>
+                    <span>${index === 0 ? '1º Mayor Sintonía' : index === 1 ? '2º Puesto' : '3º Puesto'}</span>
                   </div>
+                  <span class="party-seats-pill">${party.seats} ${party.seats === 1 ? 'escaño' : 'escaños'}</span>
+                </div>
 
-                  <!-- Desplegable Acordeón -->
-                  <div class="party-row-accordion" style="display: none;">
-                    <div class="party-stance-banner">
-                      <span class="stance-badge">🏛️ Posición oficial en el Congreso:</span>
-                      <p class="party-stance-full">${party.stanceSummary}</p>
-                    </div>
-
-                    <div class="party-articles-breakdown">
-                      ${party.articleMatches.map((m) => `
-                        <div class="article-match-pill ${m.isMatch ? 'match-pill' : 'diff-pill'}">
-                          <div class="match-pill-left">
-                            <span class="art-badge">${m.badge}</span>
-                            <span class="match-pill-topic">${m.shortTitle}</span>
-                          </div>
-                          <div class="match-pill-right">
-                            <div class="match-pill-votes">
-                              <span>Tú: <b>${m.userLabel}</b></span>
-                              <span class="vote-sep">·</span>
-                              <span>${party.shortName}: <b>${m.partyLabel}</b></span>
-                            </div>
-                            <span class="match-status-tag ${m.isMatch ? 'tag-coincide' : 'tag-discrepa'}">
-                              ${m.isMatch ? 'Coincides ✓' : 'Discrepas ✕'}
-                            </span>
-                          </div>
-                        </div>
-                      `).join('')}
-                    </div>
+                <!-- Marca / Logo oficial + Nombres -->
+                <div class="top-card-identity">
+                  <div class="party-logo-wrapper" title="${party.name}">
+                    <img src="${party.logoUrl}" alt="${party.shortName}" class="party-logo-img" loading="lazy" />
+                  </div>
+                  <div class="top-card-names">
+                    <span class="top-card-short-name font-display">${party.shortName}</span>
+                    <span class="top-card-full-name" title="${party.name}">${party.name}</span>
                   </div>
                 </div>
-              `;
-            }).join('')}
+
+                <!-- Métrica de Coincidencia -->
+                <div class="top-card-metric-block">
+                  <div class="top-card-stat-row">
+                    <span class="top-card-metric-label">coincidencia</span>
+                    <span class="top-card-percent font-mono" style="color: ${party.color};">
+                      ${party.affinityPercent}%
+                    </span>
+                  </div>
+                  <div class="party-affinity-track">
+                    <div class="party-affinity-fill" style="width: ${party.affinityPercent}%; background: ${party.color};"></div>
+                  </div>
+                </div>
+
+                <!-- Posicionamiento Oficial del Partido -->
+                <p class="top-card-stance">
+                  ${party.stanceSummary}
+                </p>
+
+                <!-- Desglose de los 3 Artículos -->
+                <div class="top-card-articles">
+                  ${party.articleMatches.map((m) => `
+                    <div class="top-article-row ${m.isMatch ? 'match' : 'diff'}">
+                      <div class="top-article-top">
+                        <span class="art-badge">${m.badge}</span>
+                        <span class="top-art-topic" title="${m.shortTitle}">${m.shortTitle}</span>
+                      </div>
+                      <div class="top-article-sub">
+                        <span class="top-art-votes">Tú: <b>${m.userLabel}</b> <span class="vote-sep">·</span> ${party.shortName}: <b>${m.partyLabel}</b></span>
+                        <span class="match-status-tag ${m.isMatch ? 'tag-coincide' : 'tag-discrepa'}">
+                          ${m.isMatch ? 'Coincides ✓' : 'Discrepas ✕'}
+                        </span>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            `).join('')}
           </div>
 
-          <div class="parties-methodology-note">
+          <!-- Sección Desplegable para ver las 12 Fuerzas del Congreso -->
+          <div class="all-parties-collapse-section">
+            <button type="button" class="btn-toggle-all-parties" id="btn-toggle-all-parties" aria-expanded="false" title="Mostrar la lista completa con los 12 partidos">
+              <span>🏛️ Ver las 12 fuerzas del Congreso</span>
+              <span class="toggle-chevron">▾</span>
+            </button>
+
+            <div class="all-parties-dropdown-content" id="all-parties-dropdown" style="display: none;">
+              <!-- Filtros de Partidos -->
+              <div class="party-filter-tabs" role="tablist" style="margin-bottom: 0.85rem;">
+                <button class="party-filter-btn active" data-filter="all">Todos (${partyRankings.length})</button>
+                <button class="party-filter-btn" data-filter="major">Principales (4)</button>
+                <button class="party-filter-btn" data-filter="high">Sintonía ≥66%</button>
+              </div>
+
+              <!-- Filas compactas -->
+              <div class="parties-affinity-grid" id="parties-grid">
+                ${partyRankings.map((party, index) => `
+                  <div class="party-affinity-row" data-party-id="${party.id}" data-major="${party.isMajor}" data-affinity="${party.affinityPercent}">
+                    <div class="party-row-header" role="button" tabindex="0" aria-expanded="false" title="Haz clic para ver el posicionamiento y los 3 votos">
+                      <div class="party-row-left-cluster">
+                        <span class="party-rank-badge ${index === 0 ? 'top-rank' : ''}">#${index + 1}</span>
+                        <div class="party-logo-wrapper" title="${party.name}">
+                          <img src="${party.logoUrl}" alt="${party.shortName}" class="party-logo-img" loading="lazy" />
+                        </div>
+                        <div class="party-identity-col">
+                          <div class="party-name-row">
+                            <span class="party-short-name font-display">${party.shortName}</span>
+                            <span class="party-seats-pill">${party.seats} ${party.seats === 1 ? 'escaño' : 'escaños'}</span>
+                            ${index === 0 ? '<span class="winner-tag">⭐ Top</span>' : ''}
+                          </div>
+                          <div class="party-full-name-compact" title="${party.name}">${party.name}</div>
+                        </div>
+                      </div>
+
+                      <div class="party-vote-micro-dots" title="Coincidencias en los 3 artículos">
+                        ${party.articleMatches.map((m) => `
+                          <span class="micro-dot ${m.isMatch ? 'match' : 'diff'}" title="${m.shortTitle}: Tú ${m.userLabel}, ${party.shortName} ${m.partyLabel}">
+                            ${m.isMatch ? '✓' : '✕'}
+                          </span>
+                        `).join('')}
+                      </div>
+
+                      <div class="party-affinity-metric-col">
+                        <div class="party-affinity-val-wrap">
+                          <span class="party-affinity-val font-mono" style="color: ${party.color};">
+                            ${party.affinityPercent}%
+                          </span>
+                        </div>
+                        <div class="party-affinity-mini-track">
+                          <div class="party-affinity-mini-fill" style="width: ${party.affinityPercent}%; background: ${party.color};"></div>
+                        </div>
+                      </div>
+
+                      <div class="party-expand-indicator" aria-hidden="true">
+                        <span class="expand-chevron">▾</span>
+                      </div>
+                    </div>
+
+                    <div class="party-row-accordion" style="display: none;">
+                      <div class="party-stance-banner">
+                        <span class="stance-badge">🏛️ Posición oficial en el Congreso:</span>
+                        <p class="party-stance-full">${party.stanceSummary}</p>
+                      </div>
+
+                      <div class="party-articles-breakdown">
+                        ${party.articleMatches.map((m) => `
+                          <div class="article-match-pill ${m.isMatch ? 'match-pill' : 'diff-pill'}">
+                            <div class="match-pill-left">
+                              <span class="art-badge">${m.badge}</span>
+                              <span class="match-pill-topic">${m.shortTitle}</span>
+                            </div>
+                            <div class="match-pill-right">
+                              <div class="match-pill-votes">
+                                <span>Tú: <b>${m.userLabel}</b></span>
+                                <span class="vote-sep">·</span>
+                                <span>${party.shortName}: <b>${m.partyLabel}</b></span>
+                              </div>
+                              <span class="match-status-tag ${m.isMatch ? 'tag-coincide' : 'tag-discrepa'}">
+                                ${m.isMatch ? 'Coincides ✓' : 'Discrepas ✕'}
+                              </span>
+                            </div>
+                          </div>
+                        `).join('')}
+                      </div>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          </div>
+
+          <div class="parties-methodology-note" style="margin-top: 1.25rem;">
             ℹ️ <b>Metodología parlamentaria oficial:</b> Coincidencia matemática directa sobre el sentido del voto de los 350 diputados del Congreso durante la tramitación del RDL 6/2026 de Vivienda.
           </div>
         </div>
@@ -420,6 +464,22 @@ export function renderConsensusEureka(
       });
     });
   });
+
+  // Listener para desplegable de las 12 fuerzas del Congreso
+  const btnToggleAll = container.querySelector<HTMLButtonElement>('#btn-toggle-all-parties');
+  const dropdownAll = container.querySelector<HTMLElement>('#all-parties-dropdown');
+  if (btnToggleAll && dropdownAll) {
+    btnToggleAll.addEventListener('click', () => {
+      soundFx.playTap();
+      const isOpen = btnToggleAll.classList.toggle('is-open');
+      btnToggleAll.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      dropdownAll.style.display = isOpen ? 'block' : 'none';
+      const chevron = btnToggleAll.querySelector('.toggle-chevron');
+      if (chevron) {
+        chevron.textContent = isOpen ? '▴' : '▾';
+      }
+    });
+  }
 
   container.querySelector('#btn-open-acta-final')?.addEventListener('click', () => {
     soundFx.playTap();
