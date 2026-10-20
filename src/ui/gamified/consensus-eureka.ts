@@ -11,6 +11,10 @@ import { CivicAppStore } from '../../state/store.ts';
 import { GAMIFIED_DECK } from '../../domain/data/gamified-deck.ts';
 import { CONGRESS_PARTIES } from '../../domain/data/party-badges.ts';
 import { soundFx } from './sound-fx.ts';
+import { 
+  getConsultationDeadlineConfig, 
+  calculateTimeRemaining 
+} from '../../services/consultation-deadline.ts';
 
 // Estadísticas Dinámicas de Voto Social por Artículo
 interface ArticleStats {
@@ -286,6 +290,9 @@ export function renderConsensusEureka(
     ? top3Parties[0].affinityPercent > top3Parties[1].affinityPercent 
     : (top3Parties.length === 1 && top3Parties[0].affinityPercent > 0);
 
+  const deadlineCfg = getConsultationDeadlineConfig();
+  const deadlineRemaining = calculateTimeRemaining(deadlineCfg.targetIso);
+
   container.innerHTML = `
     <div class="eureka-stage-wrapper">
       <!-- Canvas de Partículas Celebratorias de Alta Frecuencia -->
@@ -336,6 +343,12 @@ export function renderConsensusEureka(
                 <span class="census-pill-text font-mono"><b>${totalAuditedVotes.toLocaleString('es-ES')}</b> ${totalAuditedVotes === 1 ? 'voto auditado' : 'votos auditados'}</span>
                 <span class="census-pill-tag">Cómputo en Tiempo Real</span>
               </div>
+              ${deadlineCfg.enabled ? `
+                <div class="deadline-status-pill" title="Plazo de votación abierto hasta ${deadlineCfg.label} (${new Date(deadlineCfg.targetIso).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })})">
+                  <span class="deadline-pulse-dot"></span>
+                  <span>Cierre: <b>${deadlineRemaining.formattedCompact}</b> (${deadlineCfg.label})</span>
+                </div>
+              ` : ''}
             </div>
             <h3 class="results-section-title font-display">
               ¿Cómo ha votado la ciudadanía? Tu elección frente al total

@@ -14,6 +14,14 @@ import { extract, extractDeterministic, SAMPLE_BOE } from './boe.ts';
 import type { BoeExtraction, ExtractionSource } from './boe.ts';
 import { renderBrandLogo } from '../ui/gamified/brand-logo.ts';
 import { isReflectionTimerEnabled, toggleReflectionTimer } from '../services/deliberation-timer.ts';
+import { 
+  getConsultationDeadlineConfig, 
+  setConsultationDeadlineConfig, 
+  toggleConsultationDeadline, 
+  calculateTimeRemaining,
+  DEFAULT_DEADLINE_ISO,
+  DEFAULT_DEADLINE_LABEL 
+} from '../services/consultation-deadline.ts';
 
 type View = 'census' | 'boe' | 'urna' | 'dag' | 'lab';
 
@@ -529,6 +537,36 @@ function urnaView(v: ViewMeta) {
         </div>
       </div>
 
+      <!-- Control de Vigencia y Cuenta Atrás (Elecciones Generales) -->
+      ${(() => {
+        const dCfg = getConsultationDeadlineConfig();
+        const dRem = calculateTimeRemaining(dCfg.targetIso);
+        return `
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;padding:12px 14px;background:var(--bg-app);border-radius:var(--radius-md);border:1px solid var(--border-card);flex-wrap:wrap;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:34px;height:34px;border-radius:50%;background:rgba(245, 158, 11, 0.12);display:flex;align-items:center;justify-content:center;color:#b45309;flex-shrink:0;">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+              <div>
+                <div style="font-weight:700;font-size:0.88rem;">Vigencia de la Consulta y Cuenta Atrás (${esc(dCfg.label)})</div>
+                <div style="font-size:0.78rem;color:var(--text-secondary);">
+                  Tiempo restante: <b style="color:#b45309;font-family:var(--font-mono);">${dRem.formattedFull}</b> (Cierre: ${new Date(dCfg.targetIso).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })})
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+              <span class="status-badge ${dCfg.enabled ? 'ok' : 'amber'}">${dCfg.enabled ? 'Cuenta Atrás Activa' : 'Oculta'}</span>
+              <button class="btn sm ${dCfg.enabled ? '' : 'primary'}" data-act="toggle-deadline" title="Activar u ocultar la cuenta atrás en la app ciudadana">
+                ${dCfg.enabled ? 'Ocultar cuenta atrás' : 'Activar cuenta atrás'}
+              </button>
+              <button class="btn sm" data-act="reset-deadline" title="Restablecer plazo a Elecciones Generales de España">
+                Restablecer a Elecciones
+              </button>
+            </div>
+          </div>
+        `;
+      })()}
+
       ${S.auditReport ? `
         <div style="margin-top:18px;padding:16px;background:var(--bg-app);border-radius:var(--radius-md);border:1px solid var(--border-card);">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
@@ -1008,6 +1046,28 @@ const actions: Record<string, (el: HTMLElement) => void | Promise<void>> = {
   search: () => { S.search = ($('#receipt-q') as HTMLInputElement).value; paint(); },
   'use-receipt': (el) => { S.search = el.dataset.h!; paint(); },
   cat: (el) => { S.category = el.dataset.c!; paint(); },
+  'toggle-deadline': () => {
+    const next = toggleConsultationDeadline();
+    S.adminNotice = {
+      type: next ? 'good' : 'amber',
+      text: next
+        ? '✓ Cuenta atrás de vigencia ACTIVADA. En la app ciudadana se muestra el plazo restante hasta las Elecciones Generales.'
+        : '✓ Cuenta atrás de vigencia OCULTADA en la app ciudadana.',
+    };
+    paint();
+  },
+  'reset-deadline': () => {
+    setConsultationDeadlineConfig({
+      targetIso: DEFAULT_DEADLINE_ISO,
+      label: DEFAULT_DEADLINE_LABEL,
+      enabled: true,
+    });
+    S.adminNotice = {
+      type: 'good',
+      text: '✓ Plazo restablecido a la fecha de las Elecciones Generales (25 de julio de 2027 a las 20:00h).',
+    };
+    paint();
+  },
   reset: async () => {
     await actions['reset-app-votes'](document.body);
   },

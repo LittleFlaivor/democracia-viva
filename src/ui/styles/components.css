@@ -5377,6 +5377,90 @@
   box-shadow: 0 0 6px rgba(37, 99, 235, 0.6);
 }
 
+/* Píldora de Cuenta Atrás hasta las Elecciones Generales */
+.hud-countdown-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: var(--bg-surface);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  padding: 0.35rem 0.8rem;
+  border-radius: var(--radius-full);
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #b45309;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  transition: all 0.2s ease;
+}
+
+[data-theme="dark"] .hud-countdown-pill {
+  border-color: rgba(245, 158, 11, 0.4);
+  color: #fbbf24;
+  background: rgba(245, 158, 11, 0.08);
+}
+
+.countdown-svg-clock {
+  color: #d97706;
+  flex-shrink: 0;
+  animation: clockTickPulse 2s ease-in-out infinite;
+}
+
+@keyframes clockTickPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.12); opacity: 0.75; }
+}
+
+.countdown-target-label {
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.countdown-digits {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #b45309;
+}
+
+[data-theme="dark"] .countdown-digits {
+  color: #fef3c7;
+}
+
+/* Píldora de cuenta atrás en la Pantalla Eureka de Resultados */
+.deadline-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  color: #b45309;
+  font-weight: 600;
+}
+
+[data-theme="dark"] .deadline-status-pill {
+  color: #fde68a;
+  background: rgba(245, 158, 11, 0.12);
+  border-color: rgba(245, 158, 11, 0.35);
+}
+
+.deadline-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #f59e0b;
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.8);
+  animation: pulseDot 1.8s ease-in-out infinite;
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
 /* ========================================================
    SISTEMA DE INSTALACIÓN PWA (NO INVASIVO)
    ======================================================== */

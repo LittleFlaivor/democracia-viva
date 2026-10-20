@@ -62,6 +62,14 @@ import {
   toggleReflectionTimer,
   DEFAULT_REFLECTION_SECONDS
 } from '../src/services/deliberation-timer.ts';
+import {
+  getConsultationDeadlineConfig,
+  setConsultationDeadlineConfig,
+  toggleConsultationDeadline,
+  calculateTimeRemaining,
+  DEFAULT_DEADLINE_ISO,
+  DEFAULT_DEADLINE_LABEL
+} from '../src/services/consultation-deadline.ts';
 
 import fs from 'node:fs';
 import path from 'node:path';
@@ -398,6 +406,32 @@ test('RONDA 8 [2/2]: Función toggleReflectionTimer conmuta el estado en un solo
   const toggled = toggleReflectionTimer();
   assert.equal(toggled, !stateBefore, 'Debe invertir el estado actual');
   toggleReflectionTimer(); // Revertir
+});
+
+/* ───────────────────────────────────────────────────────────────────
+   CUENTA ATRÁS Y VIGENCIA: ELECCIONES GENERALES DE ESPAÑA
+   ─────────────────────────────────────────────────────────────────── */
+test('CUENTA ATRÁS [1/2]: La fecha objetivo por defecto apunta a las Elecciones Generales', () => {
+  assert.equal(DEFAULT_DEADLINE_ISO, '2027-07-25T20:00:00+02:00', 'Debe apuntar a las Elecciones Generales 2027');
+  assert.ok(DEFAULT_DEADLINE_LABEL.includes('Elecciones Generales'), 'La etiqueta debe ser Elecciones Generales');
+
+  const remaining = calculateTimeRemaining(DEFAULT_DEADLINE_ISO);
+  assert.equal(remaining.isExpired, false, 'No debe estar expirada');
+  assert.ok(remaining.days > 0, 'Deben quedar más de 0 días');
+  assert.ok(remaining.formattedCompact.includes('d'), 'Debe contener formato de días');
+});
+
+test('CUENTA ATRÁS [2/2]: Detección de expiración y conmutador de visibilidad', () => {
+  // Fecha en el pasado
+  const pastRemaining = calculateTimeRemaining('2020-01-01T00:00:00Z');
+  assert.equal(pastRemaining.isExpired, true, 'Una fecha pasada debe marcar isExpired true');
+  assert.equal(pastRemaining.formattedCompact, 'Consulta Cerrada');
+
+  // Conmutador
+  const cfgBefore = getConsultationDeadlineConfig();
+  const next = toggleConsultationDeadline();
+  assert.equal(next, !cfgBefore.enabled, 'Debe alternar el estado habilitado');
+  toggleConsultationDeadline(); // Restaurar
 });
 
 /* ───────────────────────────────────────────────────────────────────
