@@ -16,16 +16,53 @@ import {
   getActiveVotingSession,
   setActiveVotingSession
 } from '../../services/auth.ts';
+import { 
+  isReflectionTimerEnabled, 
+  DEFAULT_REFLECTION_SECONDS, 
+  REFLECTION_STORAGE_KEY, 
+  REFLECTION_TIMER_EVENT 
+} from '../../services/deliberation-timer.ts';
+
+// Almacén en memoria de tarjetas cuya reflexión ya ha sido completada
+const completedReflections: Set<string> = new Set();
+let activeCountdownInterval: ReturnType<typeof setInterval> | null = null;
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('DEMOCRACIA_VIVA_RESET_TRIGGER', () => {
+    completedReflections.clear();
+    if (activeCountdownInterval) {
+      clearInterval(activeCountdownInterval);
+      activeCountdownInterval = null;
+    }
+  });
+
+  // Re-evaluar estado si el administrador cambia la configuración en vivo
+  window.addEventListener(REFLECTION_TIMER_EVENT, () => {
+    // Al cambiar la configuración se sincroniza el estado
+  });
+  window.addEventListener('storage', (e) => {
+    if (e.key === REFLECTION_STORAGE_KEY) {
+      // Sincronización entre pestañas
+    }
+  });
+}
 
 export function renderCardDeck(container: HTMLElement) {
   const gameStore = GameStore.getInstance();
   const currentCard = gameStore.getCurrentCard();
   const nextCards = gameStore.getNextCards();
 
+  if (activeCountdownInterval) {
+    clearInterval(activeCountdownInterval);
+    activeCountdownInterval = null;
+  }
+
   if (!currentCard) {
     container.innerHTML = '';
     return;
   }
+
+  const isTimerActive = isReflectionTimerEnabled() && !completedReflections.has(currentCard.id);
 
   container.innerHTML = `
     <div class="deck-stage-wrapper">
@@ -122,13 +159,34 @@ export function renderCardDeck(container: HTMLElement) {
         </div>
       </div>
 
+      <!-- BANDA DELIBERATIVA (PAUSA DE REFLEXIÓN 20S) -->
+      ${isTimerActive ? `
+        <div class="deliberation-timer-strip" id="deliberation-banner">
+          <div class="deliberation-timer-header">
+            <div class="deliberation-timer-badge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              <span id="deliberation-timer-text">Pausa de reflexión: <b id="timer-sec-count">${DEFAULT_REFLECTION_SECONDS}s</b></span>
+            </div>
+            <button class="btn-skip-reflection" id="btn-skip-reflection" title="Omitir espera deliberativa (Modo Pruebas)">Omitir espera</button>
+          </div>
+          <div class="deliberation-progress-track">
+            <div class="deliberation-progress-bar" id="deliberation-progress-bar" style="width: 100%;"></div>
+          </div>
+          <p class="deliberation-hint">Tiempo para la reflexión: consulta los datos clave y argumentos antes de votar.</p>
+        </div>
+      ` : ''}
+
       <!-- BOTONES DE VOTACIÓN ERGONÓMICOS (AL ALCANCE DEL PULGAR) -->
       <div class="deck-controls-magnetic arcade-controls-grid">
         <!-- 1. Botón A Favor (IZQUIERDA) -->
         <button 
-          class="arcade-push-btn btn-arcade-yes" 
+          class="arcade-push-btn btn-arcade-yes ${isTimerActive ? 'is-locked' : ''}" 
           id="btn-swipe-yes" 
-          title="Votar A Favor"
+          title="${isTimerActive ? 'Pausa deliberativa activa (espera unos segundos)' : 'Votar A Favor'}"
+          ${isTimerActive ? 'disabled' : ''}
           aria-label="Votar A Favor"
         >
           <span class="arcade-btn-icon" aria-hidden="true">
@@ -140,9 +198,10 @@ export function renderCardDeck(container: HTMLElement) {
 
         <!-- 2. Botón NS / NC (CENTRO) -->
         <button 
-          class="arcade-push-btn btn-arcade-delegate" 
+          class="arcade-push-btn btn-arcade-delegate ${isTimerActive ? 'is-locked' : ''}" 
           id="btn-swipe-delegate" 
-          title="Delegar en expertos o abstenerse"
+          title="${isTimerActive ? 'Pausa deliberativa activa (espera unos segundos)' : 'Delegar en expertos o abstenerse'}"
+          ${isTimerActive ? 'disabled' : ''}
           aria-label="No sabe / No contesta o delegar"
         >
           <span class="arcade-btn-icon" aria-hidden="true">
@@ -154,9 +213,10 @@ export function renderCardDeck(container: HTMLElement) {
 
         <!-- 3. Botón En Contra (DERECHA) -->
         <button 
-          class="arcade-push-btn btn-arcade-no" 
+          class="arcade-push-btn btn-arcade-no ${isTimerActive ? 'is-locked' : ''}" 
           id="btn-swipe-no" 
-          title="Votar En Contra"
+          title="${isTimerActive ? 'Pausa deliberativa activa (espera unos segundos)' : 'Votar En Contra'}"
+          ${isTimerActive ? 'disabled' : ''}
           aria-label="Votar En Contra"
         >
           <span class="arcade-btn-icon" aria-hidden="true">
@@ -168,6 +228,71 @@ export function renderCardDeck(container: HTMLElement) {
       </div>
     </div>
   `;
+
+  // Desbloqueo tras cuenta atrás de 20s o salto voluntario
+  function unlockVotingControls() {
+    if (!currentCard) return;
+    completedReflections.add(currentCard.id);
+    if (activeCountdownInterval) {
+      clearInterval(activeCountdownInterval);
+      activeCountdownInterval = null;
+    }
+    const yesBtn = container.querySelector('#btn-swipe-yes') as HTMLButtonElement | null;
+    const delBtn = container.querySelector('#btn-swipe-delegate') as HTMLButtonElement | null;
+    const noBtn = container.querySelector('#btn-swipe-no') as HTMLButtonElement | null;
+    const banner = container.querySelector('#deliberation-banner') as HTMLElement | null;
+
+    if (yesBtn) { yesBtn.classList.remove('is-locked'); yesBtn.removeAttribute('disabled'); yesBtn.title = 'Votar A Favor'; }
+    if (delBtn) { delBtn.classList.remove('is-locked'); delBtn.removeAttribute('disabled'); delBtn.title = 'Delegar en expertos o abstenerse'; }
+    if (noBtn) { noBtn.classList.remove('is-locked'); noBtn.removeAttribute('disabled'); noBtn.title = 'Votar En Contra'; }
+
+    if (banner) {
+      banner.innerHTML = `
+        <div class="deliberation-timer-header" style="justify-content:center;">
+          <div class="deliberation-timer-badge" style="color:var(--vote-yes);">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            <span>Reflexión completada · Votación consciente habilitada</span>
+          </div>
+        </div>
+      `;
+      setTimeout(() => {
+        if (banner) {
+          banner.style.transition = 'opacity 0.3s ease, height 0.3s ease, margin 0.3s ease, padding 0.3s ease';
+          banner.style.opacity = '0';
+          banner.style.height = '0';
+          banner.style.margin = '0';
+          banner.style.padding = '0';
+          banner.style.overflow = 'hidden';
+        }
+      }, 2000);
+    }
+    soundFx.playTap();
+  }
+
+  if (isTimerActive) {
+    let remainingSec = DEFAULT_REFLECTION_SECONDS;
+    const totalSec = DEFAULT_REFLECTION_SECONDS;
+    const secDisplay = container.querySelector('#timer-sec-count');
+    const progressBar = container.querySelector('#deliberation-progress-bar') as HTMLElement | null;
+    const skipBtn = container.querySelector('#btn-skip-reflection');
+
+    skipBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      unlockVotingControls();
+    });
+
+    activeCountdownInterval = setInterval(() => {
+      remainingSec -= 1;
+      if (secDisplay) secDisplay.textContent = `${remainingSec}s`;
+      if (progressBar) {
+        const pct = Math.max(0, (remainingSec / totalSec) * 100);
+        progressBar.style.width = `${pct}%`;
+      }
+      if (remainingSec <= 0) {
+        unlockVotingControls();
+      }
+    }, 1000);
+  }
 
   // Botones de votación interactivos siempre activos
   container.querySelector('#btn-swipe-yes')?.addEventListener('click', () => {
@@ -208,6 +333,11 @@ export function renderCardDeck(container: HTMLElement) {
    */
   async function initiateVoteFlow(decision: GameDecision) {
     if (!currentCard) return;
+
+    // 0. Si la pausa deliberativa está activa y no se ha cumplido el tiempo, bloquear acción
+    if (isReflectionTimerEnabled() && !completedReflections.has(currentCard.id)) {
+      return;
+    }
 
     // 1. Si el usuario ha activado el Modo Prueba Rápido (sin biometría), sellar voto directamente
     if (isTestBypassEnabled()) {

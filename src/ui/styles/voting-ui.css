@@ -400,3 +400,103 @@
     transition: none !important;
   }
 }
+
+/* ========================================================
+   4. BANDA DELIBERATIVA (PAUSA DE REFLEXIÓN 20S)
+   ======================================================== */
+.deliberation-timer-strip {
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto 10px;
+  padding: 8px 12px;
+  background: var(--bg-card-glass);
+  backdrop-filter: var(--bg-glass-blur);
+  -webkit-backdrop-filter: var(--bg-glass-blur);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md, 14px);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  animation: fadeInDelib 0.25s ease-out;
+}
+
+@keyframes fadeInDelib {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.deliberation-timer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.deliberation-timer-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.deliberation-timer-badge svg {
+  color: var(--color-primary);
+  animation: timerSpinPulse 2s ease-in-out infinite;
+}
+
+@keyframes timerSpinPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.15); opacity: 0.8; }
+}
+
+.deliberation-timer-badge b {
+  font-family: var(--font-mono, monospace);
+  color: var(--color-primary);
+  font-size: 0.88rem;
+  display: inline-block;
+  min-width: 28px;
+}
+
+.btn-skip-reflection {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.74rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.15s ease;
+}
+
+.btn-skip-reflection:hover {
+  color: var(--text-secondary);
+}
+
+.deliberation-progress-track {
+  width: 100%;
+  height: 4px;
+  background: var(--border-subtle, rgba(0, 0, 0, 0.08));
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.deliberation-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary), #10b981);
+  border-radius: 9999px;
+  transition: width 0.2s linear;
+}
+
+.deliberation-hint {
+  margin: 0;
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  line-height: 1.3;
+}
+

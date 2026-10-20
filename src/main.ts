@@ -267,6 +267,17 @@ function initApp() {
     renderAll();
   });
 
+  // Escuchar cambios en la pausa deliberativa (20s) desde el panel de administración
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'DEMOCRACIA_VIVA_REFLECTION_TIMER_ENABLED') {
+      renderAll();
+    }
+  });
+
+  window.addEventListener('DEMOCRACIA_VIVA_REFLECTION_TIMER_CHANGE', () => {
+    renderAll();
+  });
+
   // Render inicial
   renderAll();
 }

@@ -13,6 +13,7 @@ import type { PasskeySigner } from '../domain/civic/passkey.ts';
 import { extract, extractDeterministic, SAMPLE_BOE } from './boe.ts';
 import type { BoeExtraction, ExtractionSource } from './boe.ts';
 import { renderBrandLogo } from '../ui/gamified/brand-logo.ts';
+import { isReflectionTimerEnabled, toggleReflectionTimer } from '../services/deliberation-timer.ts';
 
 type View = 'census' | 'boe' | 'urna' | 'dag' | 'lab';
 
@@ -507,6 +508,25 @@ function urnaView(v: ViewMeta) {
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
           ${S.isAuditing ? 'Auditando...' : 'Ejecutar Ronda de Auditoría Cívica (Agente IA)'}
         </button>
+      </div>
+
+      <!-- Control de Pausa Deliberativa Ciudadana (20s) -->
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;padding:12px 14px;background:var(--bg-app);border-radius:var(--radius-md);border:1px solid var(--border-card);flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:34px;height:34px;border-radius:50%;background:var(--color-primary-subtle);display:flex;align-items:center;justify-content:center;color:var(--color-primary);flex-shrink:0;">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div>
+            <div style="font-weight:700;font-size:0.88rem;">Pausa de Reflexión Ciudadana (20 Segundos)</div>
+            <div style="font-size:0.78rem;color:var(--text-secondary);">Fuerza 20s de lectura meditada antes de desbloquear los botones de voto en cada artículo.</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="status-badge ${isReflectionTimerEnabled() ? 'ok' : 'amber'}">${isReflectionTimerEnabled() ? 'Activa (20s)' : 'Desactivada'}</span>
+          <button class="btn sm ${isReflectionTimerEnabled() ? '' : 'primary'}" data-act="toggle-reflection" title="Activar o desactivar la espera deliberativa">
+            ${isReflectionTimerEnabled() ? 'Desactivar pausa' : 'Activar pausa de 20s'}
+          </button>
+        </div>
       </div>
 
       ${S.auditReport ? `
@@ -1116,6 +1136,16 @@ const actions: Record<string, (el: HTMLElement) => void | Promise<void>> = {
     S.adminNotice = null;
     paint();
   },
+  'toggle-reflection': () => {
+    const next = toggleReflectionTimer();
+    S.adminNotice = {
+      type: next ? 'good' : 'amber',
+      text: next
+        ? '✓ Pausa deliberativa de 20 segundos ACTIVADA. En cada artículo el ciudadano esperará 20s para reflexionar antes de desbloquear el voto.'
+        : '✓ Pausa deliberativa DESACTIVADA. Los votos pueden emitirse de inmediato sin tiempo de espera.',
+    };
+    paint();
+  },
   nfc: (el) => withBusy(async () => {
     const w = S.world!, sc = el.dataset.s as DnieScenario;
     let reuse: VirtualCitizen | undefined;
@@ -1278,6 +1308,9 @@ SandboxWorld.create({
     },
     resetAppVotes: async () => {
       await actions['reset-app-votes'](document.body);
+    },
+    toggleReflection: () => {
+      actions['toggle-reflection'](document.body);
     }
   };
 });
