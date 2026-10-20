@@ -332,20 +332,17 @@ export function renderConsensusEureka(
                   ${party.stanceSummary}
                 </p>
 
-                <!-- Desglose de los 3 Artículos -->
+                <!-- Desglose Compacto de los 3 Artículos (1 línea por artículo) -->
                 <div class="top-card-articles">
                   ${party.articleMatches.map((m) => `
-                    <div class="top-article-row ${m.isMatch ? 'match' : 'diff'}">
-                      <div class="top-article-top">
-                        <span class="art-badge">${m.badge}</span>
-                        <span class="top-art-topic" title="${m.shortTitle}">${m.shortTitle}</span>
+                    <div class="top-article-row ${m.isMatch ? 'match' : 'diff'}" title="${m.shortTitle} — Tú: ${m.userLabel} · ${party.shortName}: ${m.partyLabel}">
+                      <div class="top-article-left">
+                        <span class="art-badge-mini">${m.badge}</span>
+                        <span class="top-art-topic">${m.shortTitle}</span>
                       </div>
-                      <div class="top-article-sub">
-                        <span class="top-art-votes">Tú: <b>${m.userLabel}</b> <span class="vote-sep">·</span> ${party.shortName}: <b>${m.partyLabel}</b></span>
-                        <span class="match-status-tag ${m.isMatch ? 'tag-coincide' : 'tag-discrepa'}">
-                          ${m.isMatch ? 'Coincides ✓' : 'Discrepas ✕'}
-                        </span>
-                      </div>
+                      <span class="match-status-tag ${m.isMatch ? 'tag-coincide' : 'tag-discrepa'}">
+                        ${m.isMatch ? `${m.userLabel} ✓` : `${m.userLabel} ≠ ${m.partyLabel} ✕`}
+                      </span>
                     </div>
                   `).join('')}
                 </div>
