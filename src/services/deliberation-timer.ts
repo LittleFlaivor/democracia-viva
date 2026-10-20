@@ -10,6 +10,8 @@ export const REFLECTION_STORAGE_KEY = 'DEMOCRACIA_VIVA_REFLECTION_TIMER_ENABLED'
 export const REFLECTION_TIMER_EVENT = 'DEMOCRACIA_VIVA_REFLECTION_TIMER_CHANGE';
 export const DEFAULT_REFLECTION_SECONDS = 20;
 
+let memoryReflectionTimerEnabled = false;
+
 /**
  * Comprueba si la pausa deliberativa está activa en el sistema.
  */
@@ -20,13 +22,14 @@ export function isReflectionTimerEnabled(): boolean {
       if (val !== null) return val === 'true';
     }
   } catch {}
-  return false;
+  return memoryReflectionTimerEnabled;
 }
 
 /**
  * Activa o desactiva la pausa deliberativa y notifica a las pestañas y componentes.
  */
 export function setReflectionTimerEnabled(enabled: boolean): void {
+  memoryReflectionTimerEnabled = enabled;
   try {
     if (typeof window !== 'undefined' && window.localStorage) {
       window.localStorage.setItem(REFLECTION_STORAGE_KEY, enabled ? 'true' : 'false');
