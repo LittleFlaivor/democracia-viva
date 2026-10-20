@@ -264,7 +264,7 @@ export function renderConsensusEureka(
                         Tu voto: <b>${userVoteText}</b>
                       </div>
                       <div class="user-vote-subline">
-                        ${isWithMajority ? `Coincides con la mayoría social (${stats.yesPercent}%)` : userVote === 'DELEGATE' ? 'Abstención cívica sin posicionar' : 'Postura de contrapeso crítico'}
+                        ${isWithMajority ? 'Coincides con la mayoría social' : userVote === 'DELEGATE' ? 'Abstención cívica sin posicionar' : 'Postura de contrapeso crítico'}
                       </div>
                     </div>
                   </div>
