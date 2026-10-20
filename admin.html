@@ -2,24 +2,34 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<meta name="color-scheme" content="dark">
-<title>Zero-Trust Command Center · Democracia Viva</title>
-<meta name="description" content="Panel de administración Zero-Trust de Democracia Viva: censo, ingesta BOE, urna criptográfica, delegación líquida y laboratorio Sandbox.">
+<title>Centro de Mando & Sandbox · Democracia Viva</title>
+<meta name="description" content="Panel de administración y laboratorio criptográfico de Democracia Viva: censo, ingesta BOE, urna verificable y simulación.">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="alternate icon" href="/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- Estilos del Sistema de Diseño Compartido con la App -->
+<link rel="stylesheet" href="./src/ui/styles/tokens.css">
+<link rel="stylesheet" href="./src/ui/styles/typography.css">
+<link rel="stylesheet" href="./src/ui/styles/components.css">
 <link rel="stylesheet" href="./src/admin/admin.css">
+<script>
+  (function() {
+    try {
+      const saved = localStorage.getItem('DEMOCRACIA_VIVA_THEME');
+      const theme = (saved === 'dark' || saved === 'light') ? saved : 'light';
+      document.documentElement.setAttribute('data-theme', theme);
+    } catch (e) {}
+  })();
+</script>
 </head>
 <body>
-<div class="shell">
-  <nav class="rail" aria-label="Secciones del panel" id="rail"></nav>
-  <div class="main">
-    <header class="topbar" id="topbar"></header>
-    <main class="page" id="view" tabindex="-1"></main>
-  </div>
+<div class="admin-shell">
+  <header class="admin-navbar" id="topbar"></header>
+  <main class="admin-main-stage" id="view" tabindex="-1"></main>
 </div>
 <script type="module" src="./src/admin/main.ts"></script>
 </body>
