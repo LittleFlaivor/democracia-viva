@@ -25,19 +25,19 @@ const ARTICLE_NATIONAL_STATS: Record<string, ArticleStats> = {
     yesPercent: 66,
     nsncPercent: 12,
     noPercent: 22,
-    statusLabel: 'Aprobado Socialmente (66%)'
+    statusLabel: 'Mayoría Social'
   },
   'CARD-02': {
     yesPercent: 78,
     nsncPercent: 8,
     noPercent: 14,
-    statusLabel: 'Punto de Gran Consenso (78%)'
+    statusLabel: 'Gran Consenso'
   },
   'CARD-03': {
     yesPercent: 86,
     nsncPercent: 6,
     noPercent: 8,
-    statusLabel: 'Aprobado por Mayoría Rotunda (86%)'
+    statusLabel: 'Mayoría Rotunda'
   }
 };
 
@@ -57,6 +57,24 @@ export function renderConsensusEureka(
     'CARD-01': { badge: 'Art. 1', title: 'Tope alquiler 2.5%' },
     'CARD-02': { badge: 'Art. 2', title: 'Incentivos 70% IRPF' },
     'CARD-03': { badge: 'Art. 3', title: 'Recargo 150% IBI' },
+  };
+
+  const ARTICLE_EXECUTIVE_DETAILS: Record<string, { badge: string; title: string; summary: string }> = {
+    'CARD-01': {
+      badge: 'Art. 1',
+      title: 'Tope alquiler 2.5%',
+      summary: 'Límite obligatorio a subidas de alquiler en municipios tensionados.'
+    },
+    'CARD-02': {
+      badge: 'Art. 2',
+      title: 'Incentivos 70% IRPF',
+      summary: 'Bonificación fiscal a caseros que reduzcan voluntariamente la renta.'
+    },
+    'CARD-03': {
+      badge: 'Art. 3',
+      title: 'Recargo 150% IBI',
+      summary: 'Penalización fiscal a bancos y fondos con pisos vacíos más de 2 años.'
+    },
   };
 
   const formatVoteLabel = (vote: string): string => {
@@ -136,11 +154,15 @@ export function renderConsensusEureka(
              ======================================================== -->
         <div class="results-card-section">
           <div class="results-section-header">
+            <div class="results-header-eyebrow">
+              <span>📊</span>
+              <span>AUDITORÍA DEL VOTO NACIONAL</span>
+            </div>
             <h3 class="results-section-title font-display">
-              📊 Radiografía de Voto: Tu Elección frente al País
+              Radiografía de Voto: Tu Elección frente al País
             </h3>
             <p class="results-section-subtitle">
-              Distribución de los votos registrados en España frente a tu postura individual:
+              Comparativa matemática directa entre el veredicto de la sociedad española y tus 3 decisiones registradas:
             </p>
           </div>
 
@@ -154,48 +176,63 @@ export function renderConsensusEureka(
               const userVoteClass = userVote === 'YES' ? 'vote-tag-yes' : userVote === 'NO' ? 'vote-tag-no' : 'vote-tag-nsnc';
               const isWithMajority = (userVote === 'YES' && stats.yesPercent >= 50) || (userVote === 'NO' && stats.noPercent >= 50);
 
-              const shortTitle = ARTICLE_SHORT_TITLES[card.id]?.title || card.badge;
-              const shortBadge = ARTICLE_SHORT_TITLES[card.id]?.badge || card.articleId;
+              const detail = ARTICLE_EXECUTIVE_DETAILS[card.id] || {
+                badge: card.articleId,
+                title: card.badge,
+                summary: card.headlineQuestion
+              };
 
-              const stop1 = stats.yesPercent;
-              const stop2 = stats.yesPercent + stats.nsncPercent;
+              const degYes = Math.round((stats.yesPercent / 100) * 360);
+              const degNsnc = Math.round(((stats.yesPercent + stats.nsncPercent) / 100) * 360);
 
               return `
                 <div class="national-result-card" data-card-id="${card.id}">
+                  <!-- Cabecera: Insignia de Artículo y Estado de Consenso -->
                   <div class="national-card-header">
-                    <span class="art-badge">${shortBadge}</span>
-                    <span class="status-approved-badge">${stats.yesPercent}% Apoyo</span>
+                    <span class="art-badge">${detail.badge}</span>
+                    <span class="national-status-pill">${stats.statusLabel}</span>
                   </div>
 
-                  <h4 class="national-card-title font-display">${shortTitle}</h4>
-                  <p class="national-card-desc" title="${card.headlineQuestion}">${card.headlineQuestion}</p>
+                  <!-- Título y Resumen Ejecutivo sin truncar con ... -->
+                  <h4 class="national-card-title font-display">${detail.title}</h4>
+                  <p class="national-card-desc">${detail.summary}</p>
 
-                  <!-- Donut de Consenso Tricolor -->
-                  <div class="national-donut-wrapper">
-                    <div class="consensus-donut" style="background: conic-gradient(#10B981 0% ${stop1}%, #F59E0B ${stop1}% ${stop2}%, #EF4444 ${stop2}% 100%);" title="Votación Nacional: ${stats.yesPercent}% SÍ, ${stats.nsncPercent}% NS/NC, ${stats.noPercent}% NO">
-                      <div class="consensus-donut-inner">
+                  <!-- Escenario Central: Dial Donut Segmentado con Gaps -->
+                  <div class="national-donut-stage">
+                    <div class="consensus-donut-dial" style="background: conic-gradient(#10B981 0deg ${degYes}deg, #FFFFFF ${degYes}deg ${degYes + 2}deg, #F59E0B ${degYes + 2}deg ${degNsnc}deg, #FFFFFF ${degNsnc}deg ${degNsnc + 2}deg, #F43F5E ${degNsnc + 2}deg 358deg, #FFFFFF 358deg 360deg);" title="Votación Nacional: ${stats.yesPercent}% SÍ · ${stats.nsncPercent}% NS/NC · ${stats.noPercent}% NO">
+                      <div class="donut-center-info">
                         <span class="donut-big-val font-mono">${stats.yesPercent}%</span>
                         <span class="donut-sub-label">A FAVOR</span>
                       </div>
                     </div>
 
-                    <div class="donut-legend-row">
-                      <span class="legend-dot dot-yes"></span><span>${stats.yesPercent}% SÍ</span>
-                      <span class="legend-sep">·</span>
-                      <span class="legend-dot dot-nsnc"></span><span>${stats.nsncPercent}%</span>
-                      <span class="legend-sep">·</span>
-                      <span class="legend-dot dot-no"></span><span>${stats.noPercent}% NO</span>
+                    <!-- Micro-Barra Segmentada de Distribución -->
+                    <div class="distribution-mini-bar" title="SÍ: ${stats.yesPercent}% | NS/NC: ${stats.nsncPercent}% | NO: ${stats.noPercent}%">
+                      <div class="dist-seg dist-yes" style="width: ${stats.yesPercent}%;"></div>
+                      <div class="dist-seg dist-nsnc" style="width: ${stats.nsncPercent}%;"></div>
+                      <div class="dist-seg dist-no" style="width: ${stats.noPercent}%;"></div>
+                    </div>
+
+                    <!-- Leyenda Táctil con Píldoras -->
+                    <div class="donut-stats-legend">
+                      <span class="stat-pill pill-yes"><span class="pill-dot"></span><b>${stats.yesPercent}%</b> SÍ</span>
+                      <span class="stat-pill pill-nsnc"><span class="pill-dot"></span><b>${stats.nsncPercent}%</b> NS</span>
+                      <span class="stat-pill pill-no"><span class="pill-dot"></span><b>${stats.noPercent}%</b> NO</span>
                     </div>
                   </div>
 
-                  <!-- Pie de Tarjeta: Dónde cayó tu voto -->
+                  <!-- Pie de Tarjeta: Credencial de Voto Personal Verificado -->
                   <div class="national-card-user-vote ${userVoteClass}">
-                    <div class="user-vote-pill-header">
-                      <span class="user-vote-main-text">Tu voto: <b>${userVoteText}</b></span>
-                      <span class="user-vote-badge">${userVote === 'YES' ? 'SÍ ✓' : userVote === 'NO' ? 'NO ✕' : '–'}</span>
+                    <div class="user-vote-emblem-wrap">
+                      <span>${userVote === 'YES' ? '✓' : userVote === 'NO' ? '✕' : '–'}</span>
                     </div>
-                    <div class="user-vote-alignment">
-                      ${isWithMajority ? 'Coincides con la mayoría social' : userVote === 'DELEGATE' ? 'Abstención cívica' : 'Te sitúas en la minoría'}
+                    <div class="user-vote-details">
+                      <div class="user-vote-headline">
+                        Tu voto: <b>${userVoteText}</b>
+                      </div>
+                      <div class="user-vote-subline">
+                        ${isWithMajority ? `Coincides con la mayoría social (${stats.yesPercent}%)` : userVote === 'DELEGATE' ? 'Abstención cívica sin posicionar' : 'Postura de contrapeso crítico'}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -209,8 +246,12 @@ export function renderConsensusEureka(
              ======================================================== -->
         <div class="results-card-section" style="margin-top: 2rem;">
           <div class="results-section-header">
+            <div class="results-header-eyebrow" style="color: #6366F1; background: rgba(99, 102, 241, 0.08); border-color: rgba(99, 102, 241, 0.2);">
+              <span>🏛️</span>
+              <span>CONGRESO DE LOS DIPUTADOS</span>
+            </div>
             <h3 class="results-section-title font-display">
-              🏛️ Formaciones con Mayor Sintonía Parlamentaria
+              Formaciones con Mayor Sintonía Parlamentaria
             </h3>
             <p class="results-section-subtitle">
               Los 3 grupos del Congreso de los Diputados que más coinciden con tus 3 votos:
