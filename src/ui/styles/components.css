@@ -2169,7 +2169,7 @@
 
 /* Tarjeta Editorial Nacional */
 .national-result-card {
-  background: linear-gradient(180deg, #FFFFFF 0%, #FAFBFC 100%);
+  background: linear-gradient(180deg, var(--bg-surface) 0%, var(--bg-app-alt) 100%);
   border: 1.5px solid var(--border-card);
   border-radius: 22px;
   padding: 1.35rem 1.15rem;
@@ -2274,7 +2274,7 @@
   position: absolute;
   inset: 12px;
   border-radius: 50%;
-  background: #FFFFFF;
+  background: var(--bg-surface);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), inset 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
@@ -3194,7 +3194,7 @@
 
 /* 4. Certificado Criptográfico ZK Compacto (Security Strip) */
 .compact-zk-strip {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.95) 100%);
+  background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-app-alt) 100%);
   border: 1px solid rgba(16, 185, 129, 0.25);
   border-radius: 16px;
   padding: 0.85rem 1.25rem;
@@ -3283,7 +3283,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  background: #FFFFFF;
+  background: var(--bg-surface);
   border: 1px solid var(--border-medium);
   border-radius: var(--radius-full);
   padding: 7px 15px;
@@ -5544,6 +5544,204 @@
   background: rgba(16, 185, 129, 0.08);
   padding: 4px 10px;
   border-radius: 9999px;
+}
+
+/* ========================================================
+   SOPORTE COMPLETO DE MODO OSCURO PARA RESULTADOS Y CONSENSO
+   ======================================================== */
+[data-theme='dark'] .results-card-section {
+  background: rgba(18, 20, 29, 0.75);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 12px 36px -4px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme='dark'] .national-result-card {
+  background: linear-gradient(180deg, #131622 0%, #0E1017 100%);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 6px 20px -2px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+[data-theme='dark'] .national-result-card:hover {
+  border-color: rgba(59, 130, 246, 0.5);
+  box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(59, 130, 246, 0.25);
+}
+
+[data-theme='dark'] .national-card-title {
+  color: #F8FAFC !important;
+}
+
+[data-theme='dark'] .national-card-desc {
+  color: #94A3B8 !important;
+}
+
+[data-theme='dark'] .national-donut-stage {
+  background: radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.1) 0%, transparent 70%);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme='dark'] .consensus-donut-dial {
+  box-shadow: 0 8px 24px -4px rgba(16, 185, 129, 0.35), inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+[data-theme='dark'] .consensus-donut-dial::before {
+  background: #131622;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), inset 0 1px 3px rgba(255, 255, 255, 0.05);
+}
+
+[data-theme='dark'] .donut-big-val {
+  color: #34D399;
+  text-shadow: 0 0 14px rgba(16, 185, 129, 0.4);
+}
+
+[data-theme='dark'] .donut-sub-label {
+  color: #64748B;
+}
+
+[data-theme='dark'] .distribution-mini-bar {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme='dark'] .national-status-pill {
+  background: rgba(16, 185, 129, 0.18);
+  color: #34D399;
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+[data-theme='dark'] .stat-pill.pill-yes {
+  background: rgba(16, 185, 129, 0.16);
+  color: #34D399;
+  border-color: rgba(16, 185, 129, 0.35);
+}
+
+[data-theme='dark'] .stat-pill.pill-nsnc {
+  background: rgba(245, 158, 11, 0.16);
+  color: #FBBF24;
+  border-color: rgba(245, 158, 11, 0.35);
+}
+
+[data-theme='dark'] .stat-pill.pill-no {
+  background: rgba(244, 63, 94, 0.16);
+  color: #FB7185;
+  border-color: rgba(244, 63, 94, 0.35);
+}
+
+[data-theme='dark'] .donut-votes-breakdown {
+  color: #64748B;
+}
+
+[data-theme='dark'] .national-card-user-vote.vote-tag-yes {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(16, 185, 129, 0.06) 100%);
+  border-color: rgba(16, 185, 129, 0.35);
+}
+
+[data-theme='dark'] .national-card-user-vote.vote-tag-no {
+  background: linear-gradient(135deg, rgba(244, 63, 94, 0.18) 0%, rgba(244, 63, 94, 0.06) 100%);
+  border-color: rgba(244, 63, 94, 0.35);
+}
+
+[data-theme='dark'] .national-card-user-vote.vote-tag-nsnc {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.18) 0%, rgba(245, 158, 11, 0.06) 100%);
+  border-color: rgba(245, 158, 11, 0.35);
+}
+
+[data-theme='dark'] .user-vote-headline {
+  color: #F8FAFC !important;
+}
+
+[data-theme='dark'] .user-vote-subline {
+  color: #94A3B8 !important;
+}
+
+[data-theme='dark'] .census-transparency-pill {
+  background: rgba(59, 130, 246, 0.12);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+[data-theme='dark'] .census-transparency-pill .census-pill-text {
+  color: #F8FAFC;
+}
+
+[data-theme='dark'] .census-transparency-footnote {
+  background: rgba(59, 130, 246, 0.08);
+  border-color: rgba(59, 130, 246, 0.25);
+  color: #94A3B8;
+}
+
+[data-theme='dark'] .compact-zk-strip {
+  background: linear-gradient(135deg, #131622 0%, #10121A 100%);
+  border-color: rgba(16, 185, 129, 0.35);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(16, 185, 129, 0.15);
+}
+
+[data-theme='dark'] .zk-strip-title {
+  color: #F8FAFC !important;
+}
+
+[data-theme='dark'] .zk-strip-sub {
+  color: #94A3B8 !important;
+}
+
+[data-theme='dark'] .btn-zk-inspect-compact {
+  background: #181B26;
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #60A5FA;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme='dark'] .btn-zk-inspect-compact:hover {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: #3B82F6;
+  color: #93C5FD;
+}
+
+[data-theme='dark'] .top-affinity-card {
+  background: #12141D;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme='dark'] .top-affinity-card.podium-1 {
+  background: linear-gradient(180deg, rgba(59, 130, 246, 0.1) 0%, #12141D 100%);
+  border-color: #3B82F6;
+  box-shadow: 0 4px 20px -2px rgba(59, 130, 246, 0.25);
+}
+
+[data-theme='dark'] .top-article-row {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme='dark'] .top-article-row.match {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.28);
+}
+
+[data-theme='dark'] .top-article-row.diff {
+  background: rgba(244, 63, 94, 0.08);
+  border-color: rgba(244, 63, 94, 0.25);
+}
+
+[data-theme='dark'] .art-badge-mini {
+  background: rgba(255, 255, 255, 0.08);
+  color: #CBD5E1;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+[data-theme='dark'] .art-badge {
+  background: rgba(255, 255, 255, 0.08);
+  color: #CBD5E1;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+[data-theme='dark'] .match-status-tag.tag-coincide {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34D399;
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+[data-theme='dark'] .match-status-tag.tag-discrepa {
+  background: rgba(244, 63, 94, 0.2);
+  color: #FB7185;
+  border-color: rgba(244, 63, 94, 0.4);
 }
 
 

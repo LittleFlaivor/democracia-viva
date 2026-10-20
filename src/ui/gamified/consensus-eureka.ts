@@ -223,7 +223,7 @@ export function renderConsensusEureka(
 
                   <!-- Escenario Central: Dial Donut Segmentado con Gaps -->
                   <div class="national-donut-stage">
-                    <div class="consensus-donut-dial" style="background: conic-gradient(#10B981 0deg ${degYes}deg, #FFFFFF ${degYes}deg ${degYes + 2}deg, #F59E0B ${degYes + 2}deg ${degNsnc}deg, #FFFFFF ${degNsnc}deg ${degNsnc + 2}deg, #F43F5E ${degNsnc + 2}deg 358deg, #FFFFFF 358deg 360deg);" title="Votación Nacional: ${stats.yesPercent}% SÍ (${stats.yesVotes.toLocaleString('es-ES')}) · ${stats.nsncPercent}% NS/NC · ${stats.noPercent}% NO">
+                    <div class="consensus-donut-dial" style="background: conic-gradient(#10B981 0deg ${degYes}deg, var(--bg-surface) ${degYes}deg ${degYes + 2}deg, #F59E0B ${degYes + 2}deg ${degNsnc}deg, var(--bg-surface) ${degNsnc}deg ${degNsnc + 2}deg, #F43F5E ${degNsnc + 2}deg 358deg, var(--bg-surface) 358deg 360deg);" title="Votación Nacional: ${stats.yesPercent}% SÍ (${stats.yesVotes.toLocaleString('es-ES')}) · ${stats.nsncPercent}% NS/NC · ${stats.noPercent}% NO">
                       <div class="donut-center-info">
                         <span class="donut-big-val font-mono">${stats.yesPercent}%</span>
                         <span class="donut-sub-label">A FAVOR</span>
