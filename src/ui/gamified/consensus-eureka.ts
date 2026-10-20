@@ -14,6 +14,10 @@ import { soundFx } from './sound-fx.ts';
 
 // Estadísticas de Voto Social Nacional por Artículo (Resultados Agregados de la Ciudadanía)
 interface ArticleStats {
+  totalVotes: number;
+  yesVotes: number;
+  nsncVotes: number;
+  noVotes: number;
   yesPercent: number;
   nsncPercent: number;
   noPercent: number;
@@ -22,18 +26,30 @@ interface ArticleStats {
 
 const ARTICLE_NATIONAL_STATS: Record<string, ArticleStats> = {
   'CARD-01': {
+    totalVotes: 128306,
+    yesVotes: 84682,
+    nsncVotes: 15397,
+    noVotes: 28227,
     yesPercent: 66,
     nsncPercent: 12,
     noPercent: 22,
     statusLabel: 'Mayoría Social'
   },
   'CARD-02': {
+    totalVotes: 128306,
+    yesVotes: 100078,
+    nsncVotes: 10265,
+    noVotes: 17963,
     yesPercent: 78,
     nsncPercent: 8,
     noPercent: 14,
     statusLabel: 'Gran Consenso'
   },
   'CARD-03': {
+    totalVotes: 128306,
+    yesVotes: 110343,
+    nsncVotes: 7698,
+    noVotes: 10265,
     yesPercent: 86,
     nsncPercent: 6,
     noPercent: 8,
@@ -154,21 +170,29 @@ export function renderConsensusEureka(
              ======================================================== -->
         <div class="results-card-section">
           <div class="results-section-header">
-            <div class="results-header-eyebrow">
-              <span>📊</span>
-              <span>AUDITORÍA DEL VOTO NACIONAL</span>
+            <div class="results-header-top-meta">
+              <div class="results-header-eyebrow">
+                <span>📊</span>
+                <span>AUDITORÍA DEL VOTO NACIONAL</span>
+              </div>
+              <div class="census-transparency-pill" title="Datos de muestra cívica en red de pruebas de Democracia Viva">
+                <span class="census-pulse-dot"></span>
+                <span class="census-pill-text font-mono"><b>128.306</b> votos auditados</span>
+                <span class="census-pill-tag">Simulación / Testnet</span>
+              </div>
             </div>
             <h3 class="results-section-title font-display">
               Radiografía de Voto: Tu Elección frente al País
             </h3>
             <p class="results-section-subtitle">
-              Comparativa matemática directa entre el veredicto de la sociedad española y tus 3 decisiones registradas:
+              Comparativa directa entre el veredicto de 128.306 votos registrados en España (muestra simulada) y tus 3 decisiones registradas:
             </p>
           </div>
 
           <div class="articles-breakdown-list">
             ${GAMIFIED_DECK.map((card) => {
               const stats = ARTICLE_NATIONAL_STATS[card.id] || {
+                totalVotes: 128306, yesVotes: 84682, nsncVotes: 15397, noVotes: 28227,
                 yesPercent: 70, nsncPercent: 10, noPercent: 20, statusLabel: 'Aprobado'
               };
               const userVote = decisions[card.id] || 'YES';
@@ -187,9 +211,10 @@ export function renderConsensusEureka(
 
               return `
                 <div class="national-result-card" data-card-id="${card.id}">
-                  <!-- Cabecera: Insignia de Artículo y Estado de Consenso -->
+                  <!-- Cabecera: Insignia de Artículo, Censo y Estado de Consenso -->
                   <div class="national-card-header">
                     <span class="art-badge">${detail.badge}</span>
+                    <span class="national-card-census font-mono" title="Muestra censal simulada">${stats.totalVotes.toLocaleString('es-ES')} votos</span>
                     <span class="national-status-pill">${stats.statusLabel}</span>
                   </div>
 
@@ -199,7 +224,7 @@ export function renderConsensusEureka(
 
                   <!-- Escenario Central: Dial Donut Segmentado con Gaps -->
                   <div class="national-donut-stage">
-                    <div class="consensus-donut-dial" style="background: conic-gradient(#10B981 0deg ${degYes}deg, #FFFFFF ${degYes}deg ${degYes + 2}deg, #F59E0B ${degYes + 2}deg ${degNsnc}deg, #FFFFFF ${degNsnc}deg ${degNsnc + 2}deg, #F43F5E ${degNsnc + 2}deg 358deg, #FFFFFF 358deg 360deg);" title="Votación Nacional: ${stats.yesPercent}% SÍ · ${stats.nsncPercent}% NS/NC · ${stats.noPercent}% NO">
+                    <div class="consensus-donut-dial" style="background: conic-gradient(#10B981 0deg ${degYes}deg, #FFFFFF ${degYes}deg ${degYes + 2}deg, #F59E0B ${degYes + 2}deg ${degNsnc}deg, #FFFFFF ${degNsnc}deg ${degNsnc + 2}deg, #F43F5E ${degNsnc + 2}deg 358deg, #FFFFFF 358deg 360deg);" title="Votación Nacional: ${stats.yesPercent}% SÍ (${stats.yesVotes.toLocaleString('es-ES')}) · ${stats.nsncPercent}% NS/NC · ${stats.noPercent}% NO">
                       <div class="donut-center-info">
                         <span class="donut-big-val font-mono">${stats.yesPercent}%</span>
                         <span class="donut-sub-label">A FAVOR</span>
@@ -207,7 +232,7 @@ export function renderConsensusEureka(
                     </div>
 
                     <!-- Micro-Barra Segmentada de Distribución -->
-                    <div class="distribution-mini-bar" title="SÍ: ${stats.yesPercent}% | NS/NC: ${stats.nsncPercent}% | NO: ${stats.noPercent}%">
+                    <div class="distribution-mini-bar" title="SÍ: ${stats.yesVotes.toLocaleString('es-ES')} (${stats.yesPercent}%) | NS/NC: ${stats.nsncVotes.toLocaleString('es-ES')} (${stats.nsncPercent}%) | NO: ${stats.noVotes.toLocaleString('es-ES')} (${stats.noPercent}%)">
                       <div class="dist-seg dist-yes" style="width: ${stats.yesPercent}%;"></div>
                       <div class="dist-seg dist-nsnc" style="width: ${stats.nsncPercent}%;"></div>
                       <div class="dist-seg dist-no" style="width: ${stats.noPercent}%;"></div>
@@ -218,6 +243,15 @@ export function renderConsensusEureka(
                       <span class="stat-pill pill-yes"><span class="pill-dot"></span><b>${stats.yesPercent}%</b> SÍ</span>
                       <span class="stat-pill pill-nsnc"><span class="pill-dot"></span><b>${stats.nsncPercent}%</b> NS</span>
                       <span class="stat-pill pill-no"><span class="pill-dot"></span><b>${stats.noPercent}%</b> NO</span>
+                    </div>
+
+                    <!-- Recuento Exacto de Votos en Micro-Tipografía -->
+                    <div class="donut-votes-breakdown font-mono" title="Recuento desglosado de votos en este artículo">
+                      <span>${stats.yesVotes.toLocaleString('es-ES')} SÍ</span>
+                      <span class="breakdown-sep">·</span>
+                      <span>${stats.nsncVotes.toLocaleString('es-ES')} NS</span>
+                      <span class="breakdown-sep">·</span>
+                      <span>${stats.noVotes.toLocaleString('es-ES')} NO</span>
                     </div>
                   </div>
 
@@ -238,6 +272,11 @@ export function renderConsensusEureka(
                 </div>
               `;
             }).join('')}
+          </div>
+
+          <!-- Nota al pie de Transparencia Censal -->
+          <div class="census-transparency-footnote">
+            <span>ℹ️ <b>Transparencia y Censo:</b> Los 128.306 votos computados corresponden a una muestra de simulación cívica para validar la resistencia matemática del protocolo antes de la apertura del censo oficial.</span>
           </div>
         </div>
 
@@ -413,18 +452,25 @@ export function renderConsensusEureka(
         </div>
 
         <!-- ========================================================
-             SECCIÓN 4: CERTIFICADO CRIPTOGRÁFICO ZK LIMPIO
+             SECCIÓN 4: CERTIFICADO CRIPTOGRÁFICO ZK COMPACTO
              ======================================================== -->
-        <div class="clean-zk-certificate-card" style="margin-top: 2rem;">
-          <div class="zk-cert-badge">🛡️ VOTO ANÓNIMO SELLADO EN BLOCKCHAIN</div>
-          <h4 class="font-display zk-cert-title">Certificado Soberano Cívico</h4>
-          <p class="zk-cert-desc">
-            Titular: <b>${activeCitizen.name}</b> · Protocolo Semaphore ZK-SNARK Zero-Identity Leakage.
-            Tus decisiones están registradas anónimamente en el árbol de Merkle sin vincular tu identidad real.
-          </p>
+        <div class="compact-zk-strip" style="margin-top: 2rem;">
+          <div class="zk-strip-left">
+            <div class="zk-shield-badge">🛡️</div>
+            <div class="zk-strip-text">
+              <div class="zk-strip-heading">
+                <span class="zk-strip-title font-display">Certificado Soberano Cívico</span>
+                <span class="zk-pill-tag">ZK-SNARK</span>
+                <span class="zk-pill-tag tag-verified">Cero Fuga</span>
+              </div>
+              <div class="zk-strip-sub">
+                Titular: <b>${activeCitizen.name}</b> · Decisión sellada anónimamente en el Árbol de Merkle
+              </div>
+            </div>
+          </div>
 
-          <button class="btn-zk-inspect" id="btn-open-zk-receipt" title="Ver el recibo criptográfico con prueba de inclusión y nullifier">
-            <span>🔍 Inspeccionar Recibo Criptográfico y Prueba Merkle</span>
+          <button class="btn-zk-inspect-compact" id="btn-open-zk-receipt" title="Ver el recibo criptográfico con prueba de inclusión y nullifier">
+            <span>🔍 Recibo Criptográfico</span>
           </button>
         </div>
 
