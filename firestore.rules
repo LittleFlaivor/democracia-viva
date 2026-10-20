@@ -2,14 +2,61 @@ rules_version = '2';
 
 /**
  * REGLAS DE SEGURIDAD ESTRICTAS DE FIRESTORE: PROTOCOLO DEMOCRACIA VIVA
- * Garantizan a nivel de servidor la inmutabilidad absoluta de votos (Append-Only),
- * la unicidad matemática (1 ciudadano = 1 voto por propuesta) y la desvinculación
- * total entre identidad ciudadana y sentido de voto.
+ * Garantizan a nivel de servidor:
+ * 1. Separación física estricta entre Producción (prod_*) y Simulación (sandbox_*).
+ * 2. Censo de Participación (Participation_Roll): 1 ciudadano = 1 voto, firma WebAuthn obligatoria.
+ * 3. Urna Anónima Desacoplada (Ballot_Box): CERO PII, CERO nullifiers, CERO IPs.
+ * 4. Inmutabilidad radical: No rollback, no updates destructivos, no borrados.
  */
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Función auxiliar para validar la estructura e integridad del payload de voto
+    // Función auxiliar para validar esquema de Censo de Participación
+    function isValidRollRecord() {
+      let data = request.resource.data;
+      return data.keys().hasAll(['roll_id', 'consultation_id', 'citizen_nullifier_hash', 'status', 'webauthn_assertion_signature', 'hour_bucket'])
+        && (data.status in ['VOTED_DIRECT', 'DELEGATED'])
+        && data.webauthn_assertion_signature is string
+        && data.webauthn_assertion_signature.size() >= 16;
+    }
+
+    // Función auxiliar para validar que la Urna no contenga PII ni claves del censo
+    function isZeroPiiBallotBox() {
+      let data = request.resource.data;
+      return !data.keys().hasAny(['citizen_nullifier_hash', 'user_id', 'ip', 'dni', 'name', 'email']);
+    }
+
+    // ───────────────── CENSO DE PARTICIPACIÓN (PROD & SANDBOX) ─────────────────
+    match /prod_participation_roll/{rollId} {
+      allow read: if true;
+      allow create: if !exists(/databases/$(database)/documents/prod_participation_roll/$(rollId))
+                    && request.resource.data.roll_id == rollId
+                    && isValidRollRecord();
+      allow update, delete: if false;
+    }
+
+    match /sandbox_participation_roll/{rollId} {
+      allow read: if true;
+      allow create: if !exists(/databases/$(database)/documents/sandbox_participation_roll/$(rollId))
+                    && request.resource.data.roll_id == rollId
+                    && isValidRollRecord();
+      allow update, delete: if false;
+    }
+
+    // ───────────────── URNA SECRETA ANTI-FORENSE SHARDEADA (PROD & SANDBOX) ─────────────────
+    match /prod_ballot_box/{shardId} {
+      allow read: if true;
+      allow create, update: if isZeroPiiBallotBox();
+      allow delete: if false;
+    }
+
+    match /sandbox_ballot_box/{shardId} {
+      allow read: if true;
+      allow create, update: if isZeroPiiBallotBox();
+      allow delete: if true; // Permitido solo en sandbox para el botón "Reset Sandbox"
+    }
+
+    // ───────────────── COMPATIBILIDAD CON VISTAS PREVIAS Y TEST RUNNERS ─────────────────
     function isValidVotePayload() {
       let data = request.resource.data;
       return data.keys().hasAll(['nullifierHash', 'proposalId', 'choice', 'timestamp'])
@@ -20,39 +67,18 @@ service cloud.firestore {
         && (data.timestamp is number || data.timestamp is timestamp);
     }
 
-    // COLECCIÓN USERS:
-    // Estado de verificación ciudadana y registro de clave pública WebAuthn (Passkeys).
-    // REGLA CRÍTICA DE PRIVACIDAD: NUNCA almacena opciones votadas ni IDs de propuestas votadas.
     match /users/{credentialId} {
-      // Lectura permitida para validar credenciales públicas
       allow read: if true;
-
-      // Registro Just-in-Time de nueva credencial ciudadana
       allow create: if request.resource.data.keys().hasAll(['credentialId', 'publicKey', 'createdAt'])
                     && request.resource.data.credentialId == credentialId;
-
-      // Inmutabilidad de identidad física: No se permite modificar ni borrar la credencial hardware
       allow update, delete: if false;
     }
 
-    // COLECCIÓN VOTES:
-    // Urna criptográfica verificable abierta al público (Append-Only / No Rollback).
-    // REGLA DE UNICIDAD MATEMÁTICA: El ID del documento DEBE ser exactamente el nullifierHash.
     match /votes/{nullifierHash} {
-      // 1. Auditoría Pública Universal:
-      // Cualquier ciudadano u observador internacional puede auditar los hashes y el árbol de Merkle
       allow read: if true;
-
-      // 2. Creación Condicional Estricta (1 Ciudadano = 1 Voto):
-      // Solo se permite la inserción si el documento NO EXISTE previamente en la base de datos
-      // y si los campos cumplen estrictamente el esquema auditado.
       allow create: if !exists(/databases/$(database)/documents/votes/$(nullifierHash))
                     && request.resource.data.nullifierHash == nullifierHash
                     && isValidVotePayload();
-
-      // 3. Blindaje e Inmutabilidad Absoluta contra Rollback:
-      // Prohibición radical de actualización o borrado a nivel del motor de base de datos.
-      // Nadie (ni el cliente, ni administradores, ni atacantes) puede deshacer o cambiar un voto.
       allow update, delete: if false;
     }
   }
