@@ -1,5 +1,5 @@
 // Service Worker: Democracia Viva PWA
-const CACHE_NAME = 'democracia-viva-v1.7.1';
+const CACHE_NAME = 'democracia-viva-v1.8.0';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -43,6 +43,9 @@ self.addEventListener('fetch', (event) => {
   // Only handle GET requests and skip firebase firestore/auth requests
   if (event.request.method !== 'GET') return;
   const url = new URL(event.request.url);
+
+  // /admin es una página independiente: nunca debe cachearse como /index.html
+  if (url.pathname === '/admin' || url.pathname === '/admin.html') return;
 
   // Let Firestore & Firebase Auth go network-direct
   if (url.origin.includes('firestore') || url.origin.includes('firebase') || url.origin.includes('identitytoolkit')) {

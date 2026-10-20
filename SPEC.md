@@ -1,276 +1,179 @@
 # ESPECIFICACIÓN TÉCNICA FORMAL: PROTOCOLO DEMOCRACIA VIVA
-**Versión:** 1.0.0-PROD  
+**Versión:** 2.0.0-PROD (Zero-Trust Cryptographic Civic Platform)  
 **Dominio:** `democraciaviva.es`  
-**Ámbito de Referencia:** Sistema de Deliberación, Voto Criptográfico Verificable y Democracia Líquida  
-**Caso de Uso Base:** Real Decreto-ley 6/2026 en materia de Vivienda y Acceso Digno al Alquiler  
+**Arquitectura:** Capa de Dominio Criptográfico Puro (Funciones Deterministas sin Estado UI) ↔ Capa de Estado e Interfaz Reactiva  
+**Estándar de Verificabilidad:** Censo Desacoplado de la Urna mediante Firmas Ciegas (RSA-FDH / Chaum) + Árbol de Merkle SHA-256 + Sellado de Tiempo RFC 3161 (Sin Blockchain / Sin Web3)
 
 ---
 
-## 1. INTRODUCCIÓN Y ARQUITECTURA LÚDICA (AWWWARDS SOTD STANDARD)
+## 1. PRINCIPIO ARQUITECTÓNICO: SEPARACIÓN DE CAPAS
 
-Democracia Viva implementa un estándar de diseño galardonado (Awwwards Site of the Day / estética moderna sencilla, amigable y sofisticada):
-1. **Tipografía Geométrica Moderna (Estilo Product Sans):** Adopción de la familia tipográfica **Outfit** (titulares, preguntas de tarjetas y sellos reactivos) combinada con **Plus Jakarta Sans** (interfaz y cuerpo) y **JetBrains Mono** (hashes y auditoría criptográfica). Cero serifas, ofreciendo una lectura clara, amigable y abierta.
-2. **Fondo Dinámico con Movimiento Orgánico Flotante:** Lienzo principal enriquecido con una malla ambiental de orbes de gradiente suave (`.ambient-mesh-background`) que flotan a 60fps en bucles orgánicos y responden con micro-paralaje al movimiento del cursor, introduciendo vida y dinamismo sutil sin distraer.
-3. **Estética Light Editorial First (Por Defecto):** Lienzo principal en tonos marfil perla ultra-limpios (`#F8F9FA` / `#F1F5F9`), superficies en blanco puro con sombras físicas suaves y multicapa, y bordes milimétricos (`1px solid #E2E8F0`).
-4. **Dualidad de Tema (Claro / Oscuro):** Interruptor fluido en cabecera con persistencia local (`data-theme="light"` / `data-theme="dark"`), transitando sin parpadeos hacia un modo oscuro de alta precisión (`#090A0F`).
-5. **Mazo Semanal Cívico Enriquecido con Micro-Ilustraciones Vectoriales:** Cada una de las 3 tarjetas axiales del Real Decreto-ley 6/2026 incorpora arte vectorial SVG integrado (arquitectura cívica, desbloqueos fiscales, recargos a fondos), eliminando tarjetas de texto plano.
-6. **Cinemática Táctil y Botones Magnéticos:** Gestos táctiles de arrastre con física spring (`cubic-bezier(0.22, 1, 0.36, 1)`) y sellos reactivos dinámicos:
-   * **Deslizar a la DERECHA (`Swipe Right`):** Voto soberano **A FAVOR** (Esmeralda `#059669`).
-   * **Deslizar a la IZQUIERDA (`Swipe Left`):** Voto soberano **EN CONTRA** (Carmesí `#DC2626`).
-   * **Deslizar hacia ARRIBA (`Swipe Up`):** **DELEGAR** el artículo en un especialista verificado (Azul/Ámbar institucional `#1D4ED8` / `#D97706`).
-7. **Barómetros de Impacto en Vivo (HUD Reactivo):** Tres anillos dinámicos con deltas instantáneos (+Alivio Inquilino, Seguridad Propietario, Consenso Cívico).
-8. **El Puente de Consenso ("Efecto ¡Eureka!"):** Tras la tercera decisión, revelación de la convergencia social mayoritaria (84% de consenso), Medalla Soberana 3D con tilt holográfico interactivo y emisión del Acta Cívica Parlamentaria.
-9. **Divulgación Progresiva (3 Capas de Profundidad):**
-   * *Capa 1 (Acción Inmediata):* Disyuntiva directa con ilustración en <3s de comprensión.
-   * *Capa 2 ("El Dilema - Novela Gráfica"):* Modal estilo cómic con avatares enfrentados y puente de mediación.
-   * *Capa 3 ("Modo Auditor ZK"):* Texto oficial del BOE, cómputo del Congreso y recibo ZK con hermanos de Merkle.
+El sistema separa estrictamente dos capas impermeables:
+1. **Capa de Dominio Criptográfico (`src/domain/civic/`):**
+   - Funciones puras, deterministas y libres de efectos secundarios del DOM o APIs propietarias de interfaz.
+   - Total compatibilidad isomórfica (Node.js 22+ y navegadores modernos mediante Web Standards y `@noble/hashes`).
+   - Gestión estricta de memoria efímera: destrucción de PII en RAM en $< 50\text{ ms}$.
+2. **Capa de Estado e Interfaz Reactiva (`src/ui/`, `src/state/`, `src/admin/`):**
+   - Interfaz táctil reactiva con diseño editorial suizo (Linear / Stripe / Awwwards Standard).
+   - Panel de administración Zero-Trust con vistas basadas en modelos de solo lectura agregados (`AdminReadModel`).
 
 ```
-┌────────────────────────────────────────────────────────────────────────┐
-│                   CAPA DE IDENTIDAD ANÓNIMA (ZK-SNARK)                 │
-│  DNIe / EUDI Wallet ──> IdentitySecret ──> IdentityCommitment (Público) │
-│                                  │                                     │
-│                     Decreto/Artículo Scope Hash                        │
-│                                  │                                     │
-│                                  ▼                                     │
-│                     NullifierHash = H(Secret, Scope)                   │
-│                (Garantiza 1 ciudadano = 1 voto por ámbito)              │
-└──────────────────────────────────┬─────────────────────────────────────┘
-                                   │
-                                   ▼
-┌────────────────────────────────────────────────────────────────────────┐
-│               CAPA DE FIRMA ERC-4337 (ACCOUNT ABSTRACTION)             │
-│        Passkey / WebAuthn ──> Paymaster L2 EVM (Gasless, 0 tx fee)     │
-└──────────────────────────────────┬─────────────────────────────────────┘
-                                   │
-                                   ▼
-┌────────────────────────────────────────────────────────────────────────┐
-│              MOTOR DETERMINISTA DE DEMOCRACIA LÍQUIDA (DAG)            │
-│  Resolución temática: Vivienda | Economía | Sanidad                     │
-│  Anti-Ciclo: Detección y poda automática de bucles circulares          │
-│  Revocación en caliente: Voto Directo > Delegación Activa              │
-└──────────────────────────────────┬─────────────────────────────────────┘
-                                   │
-                                   ▼
-┌────────────────────────────────────────────────────────────────────────┐
-│               ÁRBOL DE MERKLE Y ANCLAJE DE INTEGRIDAD                  │
-│       Leaf = H(NullifierHash || Choice || Scope || Timestamp)          │
-│       Merkle Root en vivo + Recibo Criptográfico con Prueba de Inclusión│
-└──────────────────────────────────┬─────────────────────────────────────┘
-                                   │
-                                   ▼
-┌────────────────────────────────────────────────────────────────────────┐
-│                    ACTA CÍVICA Y BARÓMETRO PARLAMENTARIO               │
-│        Contraste en vivo: Congreso de los Diputados vs. Ciudadanía     │
-└────────────────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                        CAPA 1: CENSO Y ELEGIBILIDAD EFÍMERA (+18)                      │
+│   Lectura DNIe NFC (ICAO 9303 / PACE CAN) ──> RAM Servidor (Cero PII en disco)         │
+│   a) Verificación CSCA Policía sobre EF.SOD y DG1 (edad >= 18, vigencia doc)           │
+│   b) Autenticación Activa DG15: firma chip de SHA-256(Nonce || PasskeyPub || Ts)       │
+│   c) Cotejo biométrico DG2 local en cliente (atestación de presencia humana)           │
+│   d) Nullifier_ID = Argon2id(DNI, KMS_Pepper_256) ──> Purga PII en < 50ms             │
+│   e) Regla de Unicidad: 1 Nullifier = 1 Passkey activa (nuevo registro revoca previa) │
+└───────────────────────────────────────────┬────────────────────────────────────────────┘
+                                            │
+               Petición de Token Ciego      │  Token Cegado m·r^e mod n
+               firmada con WebAuthn         ▼  firmado por el Censo sin ver el contenido
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                 CAPA 2: DESACOPLAMIENTO CENSO ↔ URNA (FIRMAS CIEGAS)                  │
+│   Cliente solicita firma ciega al Censo: Estado AVAILABLE ──> BLIND_TOKEN_ISSUED       │
+│   Cliente desenmascara firma: s = s' · r^-1 mod n                                     │
+│   Depósito en Urna con Jitter Temporal Aleatorio (Cero logs de IP, Cero metadatos)    │
+└─────────────────────┬───────────────────────────────────────────────────┬──────────────┘
+                      │                                                   │
+     Si no vota directo: delega por tema                                  │ Papeleta anónima
+     en especialista verificado                                           │ (Serial, Firma,
+                      ▼                                                   │  Salt, Choice)
+┌────────────────────────────────────────────────┐                        │
+│   CAPA 3: GRAFO DE DEMOCRACIA LÍQUIDA (DAG)    │                        │
+│   - Delegación por categoría (Vivienda, etc.)  │                        ▼
+│   - Prevención estricta de bucles (DFS)        │ ┌─────────────────────────────────────┐
+│   - Hot-Override: Voto directo anula delegación│ │    CAPA 4: URNA CRIPTOGRÁFICA Y     │
+│   - Especialistas votan en público (peso aud.) │ │         AUDITORÍA DE MERKLE         │
+│   - Suma total de pesos siempre <= Censo       │ │ - Verificación firma ciega y serial │
+└────────────────────────────────────────────────┘ │ - Árbol de Merkle SHA-256 binario   │
+                                                   │ - Hoja = H(Leaf-v1 || H(salt||voto))│
+                                                   │ - Recibo público #Receipt_Hash      │
+                                                   │ - Cierre anclado con RFC 3161 TSA   │
+                                                   └─────────────────────────────────────┘
 ```
 
 ---
 
-## 2. ESPECIFICACIÓN DEL MOTOR CRIPTOGRÁFICO Y WEB3 INVISIBLE
+## 2. ESPECIFICACIÓN DETALLADA DEL PROTOCOLO
 
-### 2.1 Identidad Anónima (Semaphore V4 Pattern)
-El protocolo simula una prueba ZK-SNARK basada en el circuito canónico Semaphore v4:
-* **Generación de Credenciales:**
-  $$\text{IdentitySecret} = H(\text{CitizenSeed} \parallel \text{Entropy})$$
-  $$\text{IdentityCommitment} = H(\text{IdentitySecret})$$
-* **Generación de Nullifier Unívoco por Ámbito:**
-  Para cada artículo $A_i$ de un decreto legislativo:
-  $$\text{ScopeHash} = H(\text{DecreeID} \parallel A_i)$$
-  $$\text{NullifierHash} = H(\text{IdentitySecret} \parallel \text{ScopeHash})$$
-* **Invariante Criptográfico Fundamental:**
-  * Si un votante emite dos votos para el mismo $A_i$, ambos generan **exactamente el mismo** `NullifierHash`.
-  * La base de datos / smart contract rechaza cualquier entrada cuyo `NullifierHash` ya figure en el conjunto de nulos registrados para ese `ScopeHash` (`ERROR_NULLIFIER_ALREADY_SPENT`).
-  * Es computacionalmente inviable reconstruir `IdentitySecret` o el DNI a partir de `NullifierHash` y `ScopeHash` (propiedad de preimagen de función hash criptográfica SHA-256 / Poseidon).
-  * **Zero Identity Leakage:** El objeto de voto (`BallotProof`) contiene únicamente `{ nullifierHash, scopeHash, choice, zkProof, merkleRoot, timestamp, txHash }`. En ningún momento se serializan ni transmiten nombres, apellidos, DNI ni claves maestras.
+### A. Pipeline de Elegibilidad (+18) y Cero Fricción (Módulo Censo)
 
-### 2.2 Account Abstraction (ERC-4337 Gasless)
-* **UserOperation Flow:** El ciudadano firma mediante el enclave seguro de su dispositivo (FaceID / TouchID / Windows Hello) a través de WebAuthn / Passkeys.
-* **Paymaster L2 Sponsorship:** Un contrato Paymaster en Arbitrum One / Base cubre el 100% de la tasa de gas (`SponsoredUserOp`).
-* **Experiencia de Usuario:** Latencia percibida $< 800\text{ ms}$, sin necesidad de extensiones de billetera (Metamask), ni custodia de palabras semilla (*seed phrases*).
+1. **Lectura NFC de DNIe (ICAO 9303 / PACE):**
+   - El alta se inicia mediante lectura NFC (`ISO-DEP`) utilizando el código CAN de 6 dígitos impreso en el anverso del documento.
+   - El canal seguro PACE deriva claves de sesión efímeras para extraer los Data Groups (`DG1`, `DG2`, `DG15`) y el fichero de seguridad `EF.SOD`.
 
-### 2.3 Estructura del Árbol de Merkle y Recibo Verificable
-* Las hojas del árbol de Merkle representan los votos válidos aceptados:
-  $$\text{Leaf}_k = H(\text{NullifierHash}_k \parallel \text{Choice}_k \parallel \text{ScopeHash} \parallel \text{Timestamp}_k)$$
-* **Árbol Binario Criptográfico:** A medida que entran votos, el árbol se actualiza recalculando los hashes intermedios hasta la raíz ($\text{MerkleRoot}$).
-* **Recibo Cívico Verificable:** Cada ciudadano recibe un objeto JSON exportable con:
-  1. `receiptId`: Identificador único de transacción.
-  2. `txHash`: Identificador de transacción L2 simulado.
-  3. `nullifierHash`: Código único del voto (no vinculable a su persona).
-  4. `merkleRoot`: Raíz de Merkle en el momento de emisión.
-  5. `merkleProof`: Camino de hashes hermanos $(\text{sibling}_0, \text{sibling}_1, \dots)$ y direcciones para reconstruir la raíz de forma independiente en local.
-  6. `verificationUrl`: Enlace para auditar el recibo contra el estado del árbol.
+2. **Validación en RAM del Servidor (Zero-Storage PII):**
+   - **Cadena de Confianza CSCA:** El servidor comprueba la firma de la Autoridad de Certificación Raíz de la Policía Nacional sobre el Document Signer (DS) y la firma del DS sobre los hashes SHA-256 de `DG1`, `DG2` y `DG15` contenidos en `EF.SOD`.
+   - **Comprobación de Mayoría de Edad y Vigencia:** Del MRZ TD1 (`DG1`) se extraen exclusivamente las fechas de nacimiento y caducidad validadas por los dígitos de control 7-3-1 de la OACI. Se exige:
+     $$\text{edad}(\text{birthDate}, \text{now}) \ge 18 \quad \land \quad \text{expiryDate} > \text{now}$$
+   - **Autenticación Activa (DG15) con Channel Binding Criptográfico:** El chip físico firma con su clave privada en hardware (cuya clave pública reside en `DG15`) un reto con enlace de canal:
+     $$\text{Challenge} = \text{SHA-256}(\text{Server\_Nonce} \parallel \text{Client\_WebAuthn\_PubKey} \parallel \text{Timestamp})$$
+     Esto impide cualquier ataque de retransmisión (replay) o intermediario (MITM), ya que el chip liga su presencia física directamente a la passkey generada en el dispositivo móvil del ciudadano.
+   - **Cotejo Biométrico Local (`DG2`):** La cámara del dispositivo compara la biometría facial del ciudadano contra la foto certificada del chip (`DG2`) mediante enclave local efímero. El servidor solo recibe la confirmación booleana de coincidencia.
+
+3. **Derivación de Nullifier Antimultidispositivo y Destrucción Inmediata de PII:**
+   - En memoria volátil, se calcula el identificador pseudoanónimo del ciudadano:
+     $$\text{Nullifier\_ID} = \text{Argon2id}(\text{DNI\_Number}, \text{KMS\_Secret\_Pepper\_256bit}, \text{params})$$
+   - **Invariante de Privacidad:** En $< 50\text{ ms}$, los búferes que contienen `DG1`, `DG2`, `DG15`, nombre y número de DNI son sobreescritos con ceros (`.fill(0)`) y liberados para el recolector de basura.
+   - **Regla Antimultidispositivo (1 Nullifier = 1 Passkey Activa):**
+     * Si un `Nullifier_ID` se registra por primera vez, se asocia a su `Credential_ID` de WebAuthn.
+     * Si el mismo `Nullifier_ID` se registra desde un nuevo dispositivo, se revoca atómicamente la passkey previa en el índice del censo y se registra el evento en el log de auditoría. La passkey anterior no podrá firmar tokens ni delegar.
+
+4. **Autenticación Cotidiana (WebAuthn / Passkeys ES256):**
+   - El ciudadano no usa contraseñas ni semillas. Cada acción (solicitud de token ciego, delegación o voto público) requiere una firma biométrica en hardware mediante WebAuthn con verificación de usuario (`UV = required`).
 
 ---
 
-## 3. ESPECIFICACIÓN DEL MOTOR DE DEMOCRACIA LÍQUIDA (GRAFO DAG)
+### B. Protocolo de Voto Secreto, Delegación Líquida y Verificabilidad
 
-### 3.1 Modelo Matemático de Grafo y Delegación Temática
-Sea $G = (V, E, W)$ un grafo dirigido donde:
-* $V$ es el conjunto de ciudadanos y delegados reconocidos.
-* $E \subseteq V \times V$ es el conjunto de aristas de delegación dirigida $(u, v)$ donde el ciudadano $u$ delega su voto en $v$ para un ámbito temático $T$ (ej: `VIVIENDA_Y_URBANISMO`).
-* Cada ciudadano $u$ posee una capacidad de voto base $w_0(u) = 1$.
+1. **Desacoplamiento Censo ↔ Urna mediante Firmas Ciegas (RSA-FDH / Chaum):**
+   - Para cada consulta (`consultation_id`), el ciudadano tiene en el Censo exactamente uno de los siguientes estados:
+     * `AVAILABLE`: Con derecho a participar.
+     * `BLIND_TOKEN_ISSUED`: Ha solicitado un token de voto secreto.
+     * `DELEGATED`: Ha delegado en un especialista de la categoría temática.
+     * `PUBLIC_VOTED`: Ha emitido un voto público como especialista verificado.
+   - **Protocolo de Cegado:**
+     1. El cliente genera un número de serie secreto aleatorio de 256 bits (`serial`).
+     2. Calcula el hash de dominio completo: $m = \text{FDH}(\text{consultation\_id}, \text{serial})$.
+     3. Elige un factor de cegado aleatorio $r \in \mathbb{Z}_n^*$ y computa el mensaje cegado:
+        $$m' = m \cdot r^e \pmod n$$
+     4. Envía $m'$ al Censo junto con una aserción WebAuthn de su Passkey activa.
+     5. El Censo comprueba que el ciudadano está en estado `AVAILABLE` (o `DELEGATED`), marca atómicamente su estado a `BLIND_TOKEN_ISSUED`, y firma el mensaje cegado sin poder ver el número de serie:
+        $$s' = (m')^d \pmod n$$
+     6. El cliente desenmascara la firma multiplicando por el inverso modular:
+        $$s = s' \cdot r^{-1} \pmod n \quad \implies \quad s^e \equiv m \pmod n$$
+     7. **Depósito Anónimo:** El cliente envía a la Urna el paquete anónimo $( \text{serial}, s, \text{salt}, \text{choice} )$ a través de una conexión sin registro de IP y con un retardo aleatorio (*jitter*) para romper cualquier correlación temporal con el momento de emisión en el Censo.
 
-### 3.2 Detección y Ruptura de Ciclos (Anti-Cycle Engine)
-* **Teorema de No-Circularidad:** Antes de admitir una delegación $(u, v)$, se evalúa si existe un camino dirigido de $v$ a $u$ en $G_T$.
-* **Algoritmo de Detección:** Búsqueda en Profundidad (DFS) con marcado tricolor (*Blanco, Gris, Negro*). Si se detecta un nodo en estado *Gris* durante el recorrido desde $v$, existe un ciclo.
-* **Política de Ruptura Inmediata:** Si $u$ intenta delegar en $v$ y esto cerraría un ciclo ($A \to B \to C \to A$), el sistema **rechaza formalmente la arista**, notifica la causal con código `ERROR_CIRCULAR_DELEGATION` y mantiene la delegación en estado neutro (voto propio no delegado).
+2. **Grafo de Democracia Líquida (DAG):**
+   - Delegaciones temáticas independientes por categoría (Vivienda, Economía, Sanidad, etc.).
+   - **Prevención de Bucles:** Antes de registrar una delegación $A \to B$, se ejecuta un recorrido de Búsqueda en Profundidad (DFS). Si existe un camino $B \to \dots \to A$, la operación se rechaza con código `CYCLE_DETECTED` y el grafo permanece intacto.
+   - **Hot-Override (Revocación Instantánea por Voto Directo):** Si un ciudadano que delegó solicita un token ciego o emite un voto directo, la delegación queda revocada automáticamente para esa consulta. Su peso ya no computa en el delegado.
+   - **Invariante de Masa Electoral:** La suma de votos secretos, votos públicos ponderados, votos perdidos y votos pendientes es siempre menor o igual al censo total de nullifiers activos:
+     $$\text{VotosSecretos} + \sum \text{PesoEspecialistas} + \text{PesoPerdido} + \text{Pendiente} \le \text{Censo}$$
 
-### 3.3 Regla de Precedencia y Revocación en Caliente (Hot-Override)
-* **Invariante:** El voto directo de un ciudadano prevalece siempre sobre cualquier delegación pasiva.
-* **Cálculo Dinámico de Peso Transitivo:**
-  Para un artículo específico $A_i$:
-  1. Si el ciudadano $u$ emite un voto directo $C(u, A_i) \neq \emptyset$:
-     * El voto de $u$ computa como voto directo con peso 1.
-     * Si $u$ tenía delegado su voto en $v$, el peso transmitido de $u$ a $v$ para el artículo $A_i$ se reduce a 0.
-  2. Si el ciudadano $u$ no ha votado directamente y mantiene una delegación activa hacia $v$:
-     * El peso de $u$ se transfiere transitivamente a $v$.
-  3. Si un delegado $v$ vota un artículo, su voto se multiplica por:
-     $$\text{Weight}(v, A_i) = 1 + \sum_{k \in \text{Delegadores}(v) \setminus \text{VotantesDirectos}(A_i)} \text{WeightTransitivo}(k)$$
-  4. Los pesos se calculan estrictamente con aritmética entera (en puntos base / unidades discretas) para prevenir discrepancias de coma flotante IEEE 754.
-
----
-
-## 4. CASO DE USO PILOTO: REAL DECRETO-LEY 6/2026 DE VIVIENDA
-
-El decreto se somete a escrutinio cívico en 4 artículos fundamentales, con comparativa formal entre el texto oficial del BOE y su traducción al impacto real:
-
-| ID Artículo | Título en Plataforma | Impacto Práctico (Vida Real / Bolsillo) | Postura Oficial Congreso (2026) |
-|---|---|---|---|
-| `ART-01` | **Topes de alquiler en zonas tensionadas** | Límite legal del incremento del alquiler al IPC (máx. 2.5%) en áreas declaradas de alta demanda. Evita subidas unilaterales del 30%. | Aprobado ajustado (178 Sí / 172 No) |
-| `ART-02` | **Incentivos fiscales a propietarios justos** | Bonificación del 70% en IRPF a propietarios que mantengan precios un 10% por debajo del índice de referencia. | Rechazado (165 Sí / 185 No) |
-| `ART-03` | **Movilización forzosa de vivienda vacía de grandes tenedores** | Recargo del 150% en IBI a inmuebles desocupados más de 2 años propiedad de bancos o fondos. | Aprobado (176 Sí / 174 No) |
-| `ART-04` | **Protección anti-desahucios sin alternativa habitacional** | Suspensión obligatoria de lanzamientos a familias vulnerables hasta que los servicios sociales ofrezcan realojo digno. | Rechazado (169 Sí / 181 No) |
+3. **Escrutinio Auditable y Árbol de Merkle SHA-256:**
+   - **PROHIBIDO EL USO DE BLOCKCHAIN O WEB3:** Cero criptomonedas, cero gas, cero contratos inteligentes y cero especulación.
+   - Cada voto depositado genera una hoja en el árbol de Merkle:
+     $$\text{Leaf} = \text{SHA-256}(0\text{x}00 \parallel \text{consultation\_id} \parallel \text{SHA-256}(\text{salt} \parallel \text{choice}))$$
+   - El cliente almacena en su dispositivo el recibo cívico `#Receipt_Hash = SHA-256("DV-RECEIPT-v1" || consultation_id || Leaf)`.
+   - El árbol de Merkle se construye con ordenación canónica de hojas y separación de prefijos de dominio ($0\text{x}00$ para hojas, $0\text{x}01$ para nodos internos), previniendo vulnerabilidades de colisión por duplicación (CVE-2012-2459).
+   - **Sellado de Tiempo Criptográfico (RFC 3161):** Al cerrar la consulta, la raíz del árbol (`Merkle_Root`) se ancla mediante un sello de tiempo cualificado RFC 3161 emitido por una Autoridad de Sellado de Tiempo (TSA), garantizando que las papeletas no pueden ser añadidas ni alteradas retrospectivamente.
 
 ---
 
-## 5. ROLES DE CIUDADANÍA Y DELEGACIÓN PRECONFIGURADOS
+### C. Modo de Pruebas y Simulador Interactivo (Sandbox & Crypto Simulator)
 
-1. **Lucía Ramos (24 años) - Inquilina Joven:**
-   * Contexto: Contrato de alquiler que vence en 3 meses en Madrid. 60% de su salario destinado al arriendo.
-2. **Manuel Osorio (68 años) - Pequeño Propietario Jubilado:**
-   * Contexto: Posee un piso en alquiler como complemento de su pensión. Busca seguridad jurídica e incentivos frente a impagos.
-3. **Dra. Elena Miró (45 años) - Urbanista & Arquitecta (Delegada Verificada):**
-   * Contexto: Catedrática de Urbanismo Sostenible. Publica justificaciones técnicas exhaustivas de cada voto.
-4. **Asociación Vecinal "Vivienda Digna" (Colectivo Ciudadano Verificado):**
-   * Contexto: Agrupa a 12.000 asociados. Vota en bloque priorizando el parque público de alquiler y la función social de la vivienda.
-5. **Carlos Vega (38 años) - Ingeniero de Software:**
-   * Contexto: Escéptico con los partidos políticos, ferviente partidario de la verificación matemática de actas.
-
----
-
-## 6. PROTOCOLO DEL GAUNTLET LOOP (DOBLE ARBITRAJE CIEGO)
-
-El sistema debe superar 3 rondas sucesivas de auditoría cruzada independiente:
-* **Árbitro 1 (Red Team QA):** Ejecución automatizada de casos límite (doble voto, bucles cíclicos, revocación en caliente, escalabilidad y cero fugas).
-  * *Criterio de salida:* `QA_GAPS == 0`.
-* **Árbitro 2 (Jurado Awwwards / UX):** Auditoría sensorial, heurística de usabilidad (<10s para votar), claridad tipográfica y ausencia de patrones genéricos.
-  * *Criterio de salida:* Puntuación global $\ge 9.2 / 10$ y resolución exhaustiva de la `biggest_gap`.
+El entorno incluye un modo de simulación completamente funcional en el navegador:
+1. **Emulador de Chip DNIe NFC (Mock ICAO 9303):**
+   - 5 escenarios de prueba con verificación real en memoria:
+     a) *Ciudadano Adulto Válido (+18):* Genera un paquete auténtico firmado con la autoridad de pruebas `TEST_CSCA`. Supera los 8 pasos de validación.
+     b) *Menor de Edad (<18):* MRZ válido con fecha de nacimiento menor a 18 años. Bloqueado al 100% (`UNDER_18`).
+     c) *DNI Caducado:* Documento con fecha de caducidad pasada. Bloqueado al 100% (`DOCUMENT_EXPIRED`).
+     d) *Cambio de Dispositivo (Mismo DNI):* Simula el mismo chip físico en una segunda sesión. El `Nullifier_ID` es idéntico, revoca la passkey anterior y bloquea el doble voto.
+     e) *Ataque de Firma Falsa / Replay:* Inyección de DG1 alterado o firma de AA reutilizada. Bloqueado al 100% (`SOD_HASH_MISMATCH` / `ACTIVE_AUTH_FAILED`).
+2. **Emulador WebAuthn / Passkeys:**
+   - Alternancia instantánea entre `VirtualPasskey` (firma ES256 en memoria para pruebas automáticas) y `PlatformPasskey` (sensor biométrico real FaceID / TouchID / Windows Hello).
+3. **Simulador de Tráfico en Lotes (Batch Vote Simulator):**
+   - Simulación de 10, 50 o 200 ciudadanos virtuales concurrentes, con votos directos, cadenas de delegación líquida, anulaciones en caliente y ataques de bucle/doble voto bloqueados en vivo.
+   - Crecimiento dinámico del Árbol de Merkle y emisión de recibos `#Receipt_Hash` auditables.
+   - Botón **"Reset Sandbox State"** para reiniciar el censo y las urnas de prueba en cualquier momento.
+   - Etiquetado explícito de todos los objetos con `ENV: SANDBOX`.
 
 ---
 
-## 7. SISTEMA DE MONOGRÁFICOS CÍVICOS "SMART BREVITY" Y DIRECCIÓN DE ARTE
+### D. Panel de Administración "Zero-Trust Command Center" (`/admin`)
 
-### 7.1. Arquitectura de Monográficos Cívicos de Máximo Rigor
-Para garantizar un voto consciente, no polarizado, transparente y riguroso sin abrumar cognitivamente al ciudadano, cada tarjeta del mazo incorpora acceso directo a un **Dossier Monográfico de 2 minutos** (`CivicMonograph`):
-1. **Contexto Ciudadano Inicial (Lenguaje Cercano):** Explicación cotidiana y empática del dilema real sin tecnicismos ni jerga jurídica densa, conectando las realidades de inquilinos y pequeños propietarios.
-2. **Gráfica de Evidencia Empírica (Infografía SVG):** Visualización vectorial interactiva de la brecha histórica de precios del alquiler vs. salarios reales e inflación (2015-2025), o simulaciones de bolsillo netas.
-3. **Infografía de 3 Cifras Clave (KPIs):** Indicadores empíricos contrastados con fuentes de máxima autoridad (Banco de España, INE, AIReF, Ministerio de Vivienda).
-4. **Radiografía del Problema (3 Pilares):** Desglose conceptual paso a paso explicando cómo funciona el mecanismo y qué problemas pretende resolver.
-5. **Casos Comparados Internacionales (Benchmarks):** Lecciones aprendidas reales con efectos positivos vs. efectos colaterales no deseados (Berlín, Viena, París, Vancouver, País Vasco).
-6. **Balanza de Argumentos Equitativa (Pro / Con):** Mapeo simétrico de razones a favor (alivio social, contención) y objeciones de peso (contracción de oferta, incentivos de desinversión).
-7. **Dictamen de Expertos Independientes:** Síntesis del consenso técnico de organismos reguladores y consultivos (Banco de España, OCDE, CES).
-8. **Auditoría de Fuentes Oficiales y Metodología:** Desglose transparente de los informes oficiales públicos certificados (título de publicación, año, tabla/capítulo y código de referencia oficial).
-9. **Votación In-Situ:** Posibilidad de emitir el voto verificable (`✓ A Favor`, `✕ En Contra`, `↑ Delegar`) directamente desde el cierre del monográfico sin fricción.
-
-### 7.2. Dirección de Arte & HUD de Videojuego (Awwwards SOTD)
-- **Logotipo Oficial Vectorial:** Isotipo minimalista y depurado que fusiona el arco/portal del ágora cívica con el checkmark dinámico del voto (`dv-logo-grad` / `dv-pulse-grad`), tipografía nítida `Democracia Viva` con punto de estado en vivo (`#10B981`) y subtítulo de gobernanza verificable.
-- **Menú Superior HUD Integrado:** Eliminación del contenedor blanco divisor tradicional; los controles flotan como cápsulas de cristal desdibujado (`.hud-pill-capsule`) directamente sobre el lienzo escénico, logrando una integración 100% videojuego ("todo en uno").
-- **Tipografía Geométrica Amigable:** `Outfit` (titulares y números con geometría pura inspirada en Google Product Sans) y `Plus Jakarta Sans` (cuerpo editorial legible con kerning suizo refinado). Eliminación completa de serifs tradicionales.
-- **Fondo Dinámico Orgánico:** 4 orbes difuminados (`filter: blur(85-95px)`) con gradientes pasteles ultra-suaves en modo claro y auroras profundas en modo oscuro, animados a 60fps con micro-paralaje suave reactivo al cursor (`requestAnimationFrame`).
+El panel de administración cuenta con 5 consolas especializadas:
+1. **Censo & Sybil Defense Monitor:** KPIs de nullifiers activos, passkeys registradas y revocadas, gráfico SVG de intentos de alta rechazados por tipología y registro de seguridad sin PII.
+2. **BOE & LLM Ingestion Studio:** Ingesta de textos oficiales del BOE y extracción determinista forzada por JSON Schema (compatible con Ollama Qwen 2.5 local y extractor determinista de reserva). Editor visual con previsualización móvil de tarjeta y monográfico pedagógico.
+3. **Urna Criptográfica & Merkle Audit Hub:** Control de ciclo de vida de consultas (Borrador, Activa, Cerrada), barras de escrutinio en tiempo real, visor interactivo del árbol de Merkle, validador de recibos `#Receipt_Hash` y estado del sello RFC 3161.
+4. **Liquid Delegation Graph (DAG Explorer):** Visualización interactiva en SVG de los nodos y aristas de delegación por categoría temática, pesos de especialistas y demostrador de bloqueo de ciclos ($A \to B \to C \to A$).
+5. **Interactive Sandbox & Stress Lab:** Consola táctica para ejecutar los escenarios de DNIe NFC, lanzar simulaciones de tráfico masivo y ejecutar trazas paso a paso del cegado, firma y depósito.
 
 ---
 
-## 8. PROTOCOLO DE IDENTIDAD DIGITAL, WEBAUTHN PASSKEYS Y URNA INMUTABLE (FIRESTORE APPEND-ONLY)
+## 3. INVARIANTES DE SEGURIDAD ZERO-TRUST Y REGLAS ANTI-SLOP
 
-### 8.1. Autenticación Biométrica Nativa (W3C WebAuthn Level 3 / FIDO2)
-* **Cero Contraseñas / Cero Wallets:** Democracia Viva erradica la fricción de frases semilla (*seed phrases*), extensiones de billetera (Metamask) y contraseñas débiles. El ciudadano se autentica y firma soberanamente mediante el enclave de seguridad hardware de su dispositivo nativo (Windows Hello, Touch ID, Face ID o llave física FIDO2/YubiKey).
-* **Flujo Unificado Just-in-Time (JIT Auth):**
-  1. El ciudadano explora deliberaciones, dilemas y monográficos con navegación 100% libre sin barreras de entrada ni login previo forzoso.
-  2. En el instante exacto en que decide confirmar su voto (mediante swipe o botón arcade), el sistema detecta si el dispositivo posee una credencial cívica activa.
-  3. **Si es nuevo votante:** Se despliega el modal interactivo de enrolamiento biométrico, invocando `navigator.credentials.create()`, generando un par de claves asimétricas en hardware (curva elíptica NIST P-256 / COSE ES256), registrando la clave pública en Firestore `users/{credentialId}` y autenticando una sesión anónima en Firebase Auth.
-  4. **Si ya existe credencial:** Se solicita una afirmación biométrica instantánea (`navigator.credentials.get()`) sobre el hash de la acción cívica.
+1. **Invariantes Criptográficos Estrictos:**
+   - **I1:** $1\text{ Ciudadano (+18)} = 1\text{ Nullifier\_ID} = 1\text{ Passkey Activa}$.
+   - **I2:** El Censo conoce la identidad pero **NUNCA** ve la papeleta, el número de serie ni el sentido del voto.
+   - **I3:** La Urna conoce la validez matemática del voto y su número de serie gastado pero **NUNCA** conoce la identidad, dirección IP o timestamp del votante.
+   - **I4:** Ningún rol de administrador puede consultar qué votó un ciudadano ni alterar el conteo de votos (el modelo de lectura de administración `AdminReadModel` no expone ningún método de mutación ni de inspección individual).
+   - **I5:** El grafo de delegación temática es siempre un Grafo Acíclico Dirigido (DAG). Cualquier arista que cierre un ciclo es rechazada sin alterar el estado previo.
 
-### 8.2. Arquitectura de Identidad Desacoplada (Decoupled Identity)
-Para preservar de forma inviolable el secreto del voto estipulado en la Constitución Española y en la Carta de Derechos Digitales:
-* **Colección `users/{credentialId}` (Censo Cívico Verificado):**
-  Almacena exclusivamente el estado de verificación y la clave pública hardware:
-  ```json
-  {
-    "credentialId": "base64url_hardware_id",
-    "publicKey": "base64url_public_key",
-    "createdAt": 1776412800000,
-    "deviceType": "Biométrico Plataforma (FaceID / TouchID / Windows Hello)",
-    "dnieVerified": true
-  }
-  ```
-  **REGLA CRÍTICA DE PRIVACIDAD:** Esta colección jamás almacena, referencia ni enlaza qué propuesta ha votado el ciudadano, ni qué sentido de voto eligió.
-* **Colección `votes/{nullifierHash}` (Urna Criptográfica de Libre Auditoría):**
-  Cada voto es anónimo, autosuficiente e inmutable. El ID del documento es estrictamente el `nullifierHash`:
-  ```json
-  {
-    "nullifierHash": "0x7f4a8b...",
-    "proposalId": "RDL-06-2026-VIVIENDA::ART-01",
-    "choice": "YES",
-    "timestamp": 1776412815000,
-    "clientSignature": "0x39a1b...",
-    "merkleLeaf": "0x89c7d...",
-    "txHash": "0x4fe2a...",
-    "receiptId": "REC-7F4A8B",
-    "merkleRoot": "0x12b5c..."
-  }
-  ```
-  **AISLAMIENTO TOTAL:** Ningún campo de `votes` contiene `credentialId`, nombres, DNI, dirección IP ni identificación personal.
-
-### 8.3. Función Determinista de Nulificador Criptográfico
-Para hacer cumplir la regla democrática de oro (**1 Ciudadano = 1 Voto**) sin comprometer el anonimato:
-$$\text{nullifierHash} = \text{SHA256}(\text{credentialId} \parallel \text{proposalId} \parallel \text{secretSalt})$$
-* **Determinismo:** El mismo votante intentando votar en el mismo decreto generará siempre el mismo `nullifierHash`.
-* **Resistencia a Preimagen:** Dado un `nullifierHash`, es computacionalmente imposible derivar la identidad ni la credencial hardware del votante.
-* **Incorrelacionabilidad Cruzada:** Dado que `proposalId` forma parte de la preimagen del hash, los votos de un mismo ciudadano en dos artículos distintos generan nullifiers completamente dispares, imposibilitando trazados de perfilado político.
-
-### 8.4. Blindaje del Servidor de Base de Datos (`firestore.rules`)
-La inmutabilidad no depende de la buena fe del frontend ni del cliente; está garantizada en el núcleo del motor Cloud Firestore mediante reglas de seguridad formales:
-```rules
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /users/{credentialId} {
-      allow read: if true;
-      allow create: if request.resource.data.keys().hasAll(['credentialId', 'publicKey', 'createdAt'])
-                    && request.resource.data.credentialId == credentialId;
-      allow update, delete: if false;
-    }
-    match /votes/{nullifierHash} {
-      allow read: if true;
-      allow create: if !exists(/databases/$(database)/documents/votes/$(nullifierHash))
-                    && request.resource.data.nullifierHash == nullifierHash
-                    && isValidVotePayload();
-      allow update, delete: if false; // BLOQUEO TOTAL CONTRA ROLLBACK O ALTERACIÓN
-    }
-  }
-}
-```
-
-### 8.5. Estado de Interfaz Post-Voto (UI Sealed Lock & Recibo Verificable)
-Cuando el sistema detecta que el `nullifierHash` del usuario ya está registrado en la propuesta activa:
-1. La tarjeta transiciona automáticamente al estado **"Voto Sellado e Inmutable"** (`.card-sealed`).
-2. Se desactivan los controles de votación (botones arcade con candado y `.is-locked`), y se bloquean los gestos de deslizamiento (*swipe*).
-3. Se bloquea cualquier mecanismo de retroceso o deshacer (`undoDecision()` retorna `false` y oculta el atajo `[Z]`), consolidando la irreversibilidad absoluta.
-4. Se habilita el botón de descarga del **Recibo Criptográfico Oficial (`.json`)** para verificación ciudadana independiente.
+2. **Reglas de Diseño y Calidad Visual (Anti-Slop):**
+   - Prohibido el uso de degradados morados/azules genéricos o sombras difusas sin contraste.
+   - Paleta de diseño técnico inspirada en instrumentación suiza y herramientas de ingeniería (Linear / Stripe): grafito cálido (`#0C0D0B`), marfil perla (`#EFEEE6`), ámbar técnico (`#EBA43C`), esmeralda soberano (`#43C08F`) y carmesí institucional (`#EA5A43`).
+   - Vista móvil ciudadana confinada estrictamente a **100dvh Zero-Scroll** en viewports de $375\text{px}$, con botones de votación fijos y accesibilidad WCAG 2.1 AA.
+   - El Modo Sandbox se identifica mediante un distintivo técnico de advertencia (`SANDBOX SIMULATION ACTIVE`) sin alterar el flujo ergonómico del ciudadano.
 
 ---
 
-*Fin de la Especificación Formal.*
+## 4. LIMITACIONES TÉCNICAS DECLARADAS
 
-
+1. **Sellado de Tiempo (RFC 3161):** La clase `TimestampAuthoritySim` emula la estructura de un token RFC 3161 firmado con ECDSA P-256. En despliegue de producción se conecta con una Autoridad de Sellado de Tiempo cualificada según el reglamento eIDAS mediante la interfaz `TimestampAuthority`.
+2. **Cotejo Facial DG2:** En la prueba web, el cotejo biométrico se atestigua mediante bandera local de dispositivo; en la aplicación nativa final móvil, se ejecuta mediante el motor de reconocimiento biométrico local del enclave seguro (FaceID / Android Biometrics).
+3. **Parámetros Argon2id en Sandbox:** Para permitir simulaciones ágiles de cientos de votantes en el hilo principal del navegador sin congelar la UI, el modo Sandbox utiliza parámetros ligeros ($m = 1024\text{ KiB}, t = 1$), mientras que la especificación de producción define los parámetros OWASP ($m = 19456\text{ KiB}, t = 2, p = 1$).
+4. **Firma Ciega:** La implementación utiliza el esquema clásico de firma ciega RSA-FDH (Chaum, 1983) con claves RSA-2048. Para el despliegue final en producción a gran escala se contempla la evolución al estándar IETF RFC 9474 (RSABSSA-PSS).

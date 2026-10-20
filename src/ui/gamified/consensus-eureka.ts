@@ -364,16 +364,18 @@ export function renderConsensusEureka(
 
               let donutBigVal = '0%';
               let donutSubLabel = 'SIN VOTOS';
+              let donutWinnerKind: 'yes' | 'no' | 'nsnc' | 'neutral' = 'neutral';
               if (stats.totalVotes > 0) {
-                const options = [
-                  { pct: stats.yesPercent, votes: stats.yesVotes, label: 'A FAVOR' },
-                  { pct: stats.noPercent, votes: stats.noVotes, label: 'EN CONTRA' },
-                  { pct: stats.nsncPercent, votes: stats.nsncVotes, label: 'NS / NC' },
+                const options: { pct: number; votes: number; label: string; kind: 'yes' | 'no' | 'nsnc' }[] = [
+                  { pct: stats.yesPercent, votes: stats.yesVotes, label: 'A FAVOR', kind: 'yes' },
+                  { pct: stats.noPercent, votes: stats.noVotes, label: 'EN CONTRA', kind: 'no' },
+                  { pct: stats.nsncPercent, votes: stats.nsncVotes, label: 'NS / NC', kind: 'nsnc' },
                 ];
                 const maxVotes = Math.max(...options.map((o) => o.votes));
                 const leaders = options.filter((o) => o.votes === maxVotes);
                 donutBigVal = `${leaders.length > 1 ? Math.min(...leaders.map((l) => l.pct)) : leaders[0].pct}%`;
                 donutSubLabel = leaders.length > 1 ? 'EMPATE' : leaders[0].label;
+                donutWinnerKind = leaders.length > 1 ? 'neutral' : leaders[0].kind;
               }
 
               return `
@@ -381,7 +383,7 @@ export function renderConsensusEureka(
                   <!-- Cabecera: Insignia de Artículo y Estado de Consenso -->
                   <div class="national-card-header">
                     <span class="art-badge">${detail.badge}</span>
-                    <span class="national-status-pill">${stats.statusLabel}</span>
+                    <span class="national-status-pill status-pill-${donutWinnerKind}">${stats.statusLabel}</span>
                   </div>
 
                   <!-- Título y Resumen Ejecutivo sin truncar con ... -->
@@ -392,7 +394,7 @@ export function renderConsensusEureka(
                   <div class="national-donut-stage">
                     <div class="consensus-donut-dial" style="background: ${donutGradient};" title="${stats.totalVotes === 0 ? 'Sin votos registrados aún' : `Votación: ${stats.yesPercent}% SÍ (${stats.yesVotes.toLocaleString('es-ES')}) · ${stats.nsncPercent}% NS/NC (${stats.nsncVotes.toLocaleString('es-ES')}) · ${stats.noPercent}% NO (${stats.noVotes.toLocaleString('es-ES')})`}">
                       <div class="donut-center-info">
-                        <span class="donut-big-val font-mono">${donutBigVal}</span>
+                        <span class="donut-big-val font-mono donut-val-${donutWinnerKind}">${donutBigVal}</span>
                         <span class="donut-sub-label">${donutSubLabel}</span>
                       </div>
                     </div>

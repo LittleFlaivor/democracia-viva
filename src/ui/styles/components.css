@@ -2259,6 +2259,31 @@
   border: 1px solid rgba(16, 185, 129, 0.25);
   white-space: nowrap;
   letter-spacing: 0.01em;
+  transition: all 0.25s ease;
+}
+
+.national-status-pill.status-pill-yes {
+  background: rgba(16, 185, 129, 0.1);
+  color: #059669;
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+.national-status-pill.status-pill-no {
+  background: rgba(239, 68, 68, 0.1);
+  color: #DC2626;
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
+.national-status-pill.status-pill-nsnc {
+  background: rgba(245, 158, 11, 0.1);
+  color: #D97706;
+  border-color: rgba(245, 158, 11, 0.25);
+}
+
+.national-status-pill.status-pill-neutral {
+  background: rgba(100, 116, 139, 0.1);
+  color: #64748B;
+  border-color: rgba(100, 116, 139, 0.25);
 }
 
 .national-card-title {
@@ -2333,6 +2358,23 @@
   color: #059669;
   line-height: 1;
   letter-spacing: -0.03em;
+  transition: color 0.3s ease;
+}
+
+.donut-big-val.donut-val-yes {
+  color: #059669;
+}
+
+.donut-big-val.donut-val-no {
+  color: #DC2626;
+}
+
+.donut-big-val.donut-val-nsnc {
+  color: #D97706;
+}
+
+.donut-big-val.donut-val-neutral {
+  color: var(--text-muted, #64748B);
 }
 
 .donut-sub-label {
@@ -5259,10 +5301,23 @@
   color: #059669;
 }
 
+.dock-bypass-pill.is-sandbox-badge {
+  background: rgba(235, 164, 60, 0.12);
+  border-color: rgba(235, 164, 60, 0.4);
+  color: #D97706;
+  text-decoration: none;
+}
+
 [data-theme="dark"] .dock-bypass-pill.is-bypass-active {
   background: rgba(16, 185, 129, 0.2);
   border-color: rgba(52, 211, 153, 0.5);
   color: #34d399;
+}
+
+[data-theme="dark"] .dock-bypass-pill.is-sandbox-badge {
+  background: rgba(235, 164, 60, 0.2);
+  border-color: rgba(235, 164, 60, 0.5);
+  color: #FBBF24;
 }
 
 .dock-bypass-pill:hover {
@@ -5631,6 +5686,26 @@
   text-shadow: 0 0 14px rgba(16, 185, 129, 0.4);
 }
 
+[data-theme='dark'] .donut-big-val.donut-val-yes {
+  color: #34D399;
+  text-shadow: 0 0 14px rgba(16, 185, 129, 0.4);
+}
+
+[data-theme='dark'] .donut-big-val.donut-val-no {
+  color: #F87171;
+  text-shadow: 0 0 14px rgba(239, 68, 68, 0.4);
+}
+
+[data-theme='dark'] .donut-big-val.donut-val-nsnc {
+  color: #FBBF24;
+  text-shadow: 0 0 14px rgba(245, 158, 11, 0.4);
+}
+
+[data-theme='dark'] .donut-big-val.donut-val-neutral {
+  color: #94A3B8;
+  text-shadow: none;
+}
+
 [data-theme='dark'] .donut-sub-label {
   color: #64748B;
 }
@@ -5643,6 +5718,30 @@
   background: rgba(16, 185, 129, 0.18);
   color: #34D399;
   border-color: rgba(16, 185, 129, 0.4);
+}
+
+[data-theme='dark'] .national-status-pill.status-pill-yes {
+  background: rgba(16, 185, 129, 0.18);
+  color: #34D399;
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+[data-theme='dark'] .national-status-pill.status-pill-no {
+  background: rgba(239, 68, 68, 0.18);
+  color: #F87171;
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+[data-theme='dark'] .national-status-pill.status-pill-nsnc {
+  background: rgba(245, 158, 11, 0.18);
+  color: #FBBF24;
+  border-color: rgba(245, 158, 11, 0.4);
+}
+
+[data-theme='dark'] .national-status-pill.status-pill-neutral {
+  background: rgba(148, 163, 184, 0.18);
+  color: #94A3B8;
+  border-color: rgba(148, 163, 184, 0.4);
 }
 
 [data-theme='dark'] .stat-pill.pill-yes {
