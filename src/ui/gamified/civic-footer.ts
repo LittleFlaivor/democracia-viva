@@ -22,7 +22,7 @@ export function renderCivicFooter(container: HTMLElement, onOpenIosGuide?: () =>
       <div class="footer-bar-center">
         <span class="footer-meta-item highlight">RDL 2/2026 de Vivienda</span>
         <span class="footer-meta-sep" aria-hidden="true">·</span>
-        <span class="footer-meta-item">Voto Inmutable (ZK)</span>
+        <span class="footer-meta-item">Voto 100% Anónimo y Verificable</span>
       </div>
 
       <!-- Derecha: Código Abierto, Instalar App y Copyright -->
@@ -42,7 +42,7 @@ export function renderCivicFooter(container: HTMLElement, onOpenIosGuide?: () =>
           target="_blank" 
           rel="noopener noreferrer" 
           class="footer-github-link"
-          title="Repositorio auditado en GitHub (Código Abierto)"
+          title="Ver código fuente en GitHub (Proyecto Abierto y Transparente)"
         >
           <span>Código Abierto ↗</span>
         </a>

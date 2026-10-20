@@ -40,10 +40,10 @@ export function renderIdentityModal(container: HTMLElement, onClose: () => void,
             `}
           </div>
           <h2 class="font-display" style="font-size: 1.45rem; font-weight: 800; color: var(--text-primary); margin-bottom: 0.35rem;">
-            ${currentCred ? 'Tu Identidad Cívica Soberana' : 'Acceso Ciudadano con Passkey'}
+            ${currentCred ? 'Tu Identidad Digital: Segura y Privada' : 'Acceso Ciudadano Seguro'}
           </h2>
           <span style="font-size: 0.85rem; color: var(--text-secondary);">
-            Estándar W3C WebAuthn · Cero contraseñas · Privacidad Criptográfica
+            Firma biométrica en tu dispositivo · Sin contraseñas · Privacidad total
           </span>
         </div>
 
@@ -54,9 +54,9 @@ export function renderIdentityModal(container: HTMLElement, onClose: () => void,
               <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M11 2L4 11h5l-1 7 7-9h-5l1-7z" />
               </svg>
-              Modo Prueba Rápido (Omitir Biometría)
+              Modo Pruebas (Voto Inmediato)
             </strong>
-            <span style="font-size: 0.74rem; color: var(--text-secondary);">Permite emitir votos de prueba directamente sin pedir huella ni PIN en cada acción.</span>
+            <span style="font-size: 0.74rem; color: var(--text-secondary);">Permite emitir votos de prueba rápidamente sin solicitar huella ni PIN en cada acción.</span>
           </div>
           <input type="checkbox" id="chk-bypass-auth-modal" ${bypassActive ? 'checked' : ''} style="width: 20px; height: 20px; cursor: pointer; accent-color: #f59e0b;" />
         </div>
@@ -64,10 +64,10 @@ export function renderIdentityModal(container: HTMLElement, onClose: () => void,
         <!-- Explicación Didáctica -->
         <div style="background: var(--bg-app-alt); border: 1px solid var(--border-card); border-radius: 16px; padding: 1.15rem 1.35rem; margin-bottom: 1.5rem;">
           <h4 style="font-size: 0.88rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.5rem;">
-            <span>ℹ️</span> ¿Es necesario iniciar sesión antes de votar?
+            <span>ℹ️</span> ¿Necesitas registrarte o iniciar sesión para votar?
           </h4>
           <p style="font-size: 0.84rem; line-height: 1.5; color: var(--text-secondary); margin: 0;">
-            <strong>No es necesario.</strong> Democracia Viva opera bajo el principio de <em>fricción cero</em>: puedes explorar y deliberar libremente. En el momento en que pulses <em>A Favor</em>, <em>En Contra</em> o <em>NS/NC</em>, tu navegador solicitará tu huella, rostro o PIN para sellar tu voto de manera única e inmutable.
+            <strong>No es necesario registrarse con correo ni contraseñas.</strong> Puedes explorar libremente y deliberar. Al pulsar sobre cualquier opción de voto (<em>A Favor</em>, <em>NS/NC</em> o <em>En Contra</em>), tu dispositivo te solicitará tu huella, rostro o PIN para certificar tu voto de forma única, anónima e inalterable.
           </p>
         </div>
 
@@ -76,11 +76,11 @@ export function renderIdentityModal(container: HTMLElement, onClose: () => void,
           <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 16px; padding: 1.15rem 1.35rem; margin-bottom: 1.5rem;">
             <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.65rem;">
               <span style="width: 9px; height: 9px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
-              <strong style="font-size: 0.88rem; color: #065f46;">Passkey Activa en este Dispositivo</strong>
+              <strong style="font-size: 0.88rem; color: #065f46;">Identificación Activa en este Dispositivo</strong>
             </div>
             <div style="font-size: 0.8rem; color: var(--text-secondary); display: flex; flex-direction: column; gap: 0.35rem; font-family: 'JetBrains Mono', monospace;">
-              <div><strong>ID:</strong> ${currentCred.credentialId.slice(0, 22)}...</div>
-              <div><strong>Dispositivo:</strong> ${currentCred.deviceType || 'Autenticador de Plataforma'}</div>
+              <div><strong>Credencial:</strong> ${currentCred.credentialId.slice(0, 22)}...</div>
+              <div><strong>Dispositivo:</strong> ${currentCred.deviceType || 'Autenticador del Dispositivo'}</div>
               <div><strong>Fecha de Alta:</strong> ${new Date(currentCred.createdAt).toLocaleDateString()}</div>
             </div>
           </div>
@@ -107,14 +107,14 @@ export function renderIdentityModal(container: HTMLElement, onClose: () => void,
           <!-- Estado: Sin Passkey aún vinculada -->
           <div style="text-align: center; padding: 0.5rem 0 1rem;">
             <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.25rem;">
-              Si lo prefieres, puedes vincular tu huella o reconocimiento facial ahora mismo para dejar tu entorno listo:
+              Si lo prefieres, puedes activar tu huella o reconocimiento facial ahora mismo para dejar tu dispositivo preparado:
             </p>
             <button 
               type="button" 
               id="btn-create-passkey-now" 
               style="display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 12px; font-weight: 700; font-size: 0.9rem; cursor: pointer; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);"
             >
-              <span>👆 Vincular mi Passkey Biométrica Ahora</span>
+              <span>👆 Activar Identificación Biométrica Ahora</span>
             </button>
           </div>
         `}

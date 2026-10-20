@@ -31,19 +31,19 @@ export function renderParliamentaryReportModal(
           <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap;">
             <div>
               <div style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700; color: var(--accent-brass); margin-bottom: 0.4rem;">
-                REINO DE ESPAÑA · SOBERANÍA POPULAR VERIFICABLE
+                PARTICIPACIÓN CIUDADANA TRANSPARENTE · CONGRESO DE LOS DIPUTADOS
               </div>
               <h2 style="font-size: 1.6rem; color: var(--text-primary); margin-bottom: 0.25rem;">
                 ACTA CÍVICA PARLAMENTARIA Nº 2026/06-VIV
               </h2>
               <div style="font-size: 0.85rem; color: var(--text-secondary);">
-                Escrutinio Criptográfico sobre el Real Decreto-ley 6/2026 de Vivienda y Alquiler
+                Consulta Ciudadana Verificada sobre el Real Decreto-ley de Vivienda
               </div>
             </div>
 
             <div style="text-align: right;">
               <span class="badge-mono" style="font-size: 0.76rem; color: #79D1AB; border-color: var(--vote-yes);">
-                ESTADO: CERRADA Y AUDITADA
+                ESTADO: RESULTADOS VERIFICADOS
               </span>
               <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.4rem;">
                 Fecha: ${currentDate}
@@ -60,18 +60,18 @@ export function renderParliamentaryReportModal(
               <div style="font-size: 1.1rem; font-weight: 700; color: var(--text-primary);">${totalVotes} ${totalVotes === 1 ? 'Voto Válido' : 'Votos Válidos'}</div>
             </div>
             <div>
-              <div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 700;">RED DE ANCLAJE L2</div>
-              <div style="font-size: 0.85rem; font-weight: 600; color: var(--color-primary);">Arbitrum One (ZK-EVM Gasless)</div>
+              <div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 700;">REGISTRO AUDITABLE</div>
+              <div style="font-size: 0.85rem; font-weight: 600; color: var(--color-primary);">Red Descentralizada Inmutable</div>
             </div>
             <div>
-              <div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 700;">CIRCUITO DE PRIVACIDAD</div>
-              <div style="font-size: 0.85rem; font-weight: 600; color: var(--vote-yes);">Semaphore V4 (Groth16 Zero-Leak)</div>
+              <div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 700;">GARANTÍA DE PRIVACIDAD</div>
+              <div style="font-size: 0.85rem; font-weight: 600; color: var(--vote-yes);">100% Anónimo (Cero Fuga)</div>
             </div>
           </div>
 
           <div>
             <div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">
-              Merkle Root Global Sellada:
+              Huella Digital Global de la Urna (Merkle Root):
             </div>
             <div class="font-mono" style="font-size: 0.75rem; color: var(--text-primary); word-break: break-all; font-weight: 600;">
               ${merkleRoot}
@@ -81,7 +81,7 @@ export function renderParliamentaryReportModal(
 
         <!-- Tabla de Resultados por Artículo -->
         <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.6rem; flex-wrap: wrap; gap: 0.3rem;">
-          <h4 style="margin: 0;">1. Desglose del Voto Ciudadano vs. Voto del Congreso</h4>
+          <h4 style="margin: 0;">1. Voluntad Ciudadana vs. Votación en el Congreso</h4>
           <span style="font-size: 0.7rem; color: var(--text-muted);">↔ Desliza la tabla horizontalmente</span>
         </div>
         <div style="overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 2rem; border-radius: 12px; border: 1px solid var(--border-card);">
@@ -138,7 +138,7 @@ export function renderParliamentaryReportModal(
             A la Mesa del Congreso de los Diputados y Grupos Parlamentarios:
           </h5>
           <p style="font-size: 0.84rem; line-height: 1.6; color: var(--text-secondary);">
-            De conformidad con la auditoría cívica realizada mediante el protocolo criptográfico descentralizado de <b>Democracia Viva</b>, se traslada formalmente la voluntad deliberada y directa del cuerpo electoral en relación con el Real Decreto-ley 6/2026. Se insta a los representantes parlamentarios a cotejar la brecha detectada, especialmente en aquellos artículos donde la mayoría ciudadana difiere sustancialmente de la disciplina de voto partidista.
+            A través de la deliberación ciudadana en <b>Democracia Viva</b>, se traslada formalmente el resultado de la votación sobre las medidas del Real Decreto-ley de Vivienda. Este informe ofrece a los representantes públicos datos objetivos, auditables y transparentes sobre el sentir de la ciudadanía para enriquecer el debate parlamentario y buscar consensos equilibrados.
           </p>
         </div>
 
@@ -148,7 +148,7 @@ export function renderParliamentaryReportModal(
             🖨 Imprimir / Guardar PDF
           </button>
           <button class="btn-export-acta" id="btn-download-acta-json" style="width: auto; padding: 0.75rem 1.5rem;">
-            ⬇ Descargar Acta Auditable (.JSON)
+            ⬇ Descargar Acta Oficial (.json)
           </button>
         </div>
       </div>

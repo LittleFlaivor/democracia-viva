@@ -206,17 +206,17 @@ export function renderConsensusEureka(
     calculatedConsensusTitle = 'Consenso Pleno Ciudadano (100%)';
     calculatedConsensusText = 'Los 3 artículos del decreto han obtenido respaldo mayoritario favorable en la urna.';
   } else if (calculatedConsensus >= 66) {
-    calculatedConsensusTitle = 'Mayoría Favorable del Decreto';
-    calculatedConsensusText = `${approvedCount} de los ${totalArticles} artículos del decreto han sido aprobados por el veredicto cívico.`;
+    calculatedConsensusTitle = 'Mayoría Favorable al Decreto';
+    calculatedConsensusText = `${approvedCount} de los ${totalArticles} artículos del decreto han sido respaldados por el voto ciudadano.`;
   } else if (calculatedConsensus > 0) {
-    calculatedConsensusTitle = 'Respaldo Parcial Condicionado';
-    calculatedConsensusText = `${approvedCount} de los ${totalArticles} artículos han sido aprobados, requiriendo revisión y enmienda en los restantes.`;
+    calculatedConsensusTitle = 'Respaldo Parcial con Matices';
+    calculatedConsensusText = `${approvedCount} de los ${totalArticles} artículos han sido aprobados, mientras que la ciudadanía pide revisar los restantes.`;
   } else if (articlesWithVotes === 0) {
     calculatedConsensusTitle = 'Urna Abierta en Blanco';
     calculatedConsensusText = 'La urna de pruebas ha arrancado desde 0 votos. Registra sufragios para computar el primer consenso.';
   } else {
-    calculatedConsensusTitle = 'Rechazo General del Decreto';
-    calculatedConsensusText = 'La ciudadanía ha emitido un mandato de rechazo o enmienda a la totalidad del decreto.';
+    calculatedConsensusTitle = 'Rechazo Mayoritario al Decreto';
+    calculatedConsensusText = 'La ciudadanía considera mayoritariamente que las medidas deben replantearse o modificarse.';
   }
 
   // 1. Calcular Afinidades Políticas Matemáticas para los 12 Partidos
@@ -295,17 +295,17 @@ export function renderConsensusEureka(
         <!-- Badge de Logro Cívico -->
         <div class="eureka-achievement-pill">
           <span class="sparkle-icon">✨</span>
-          <span>DICTAMEN CIUDADANO VERIFICADO · RESULTADOS NACIONALES</span>
+          <span>RESULTADOS OFICIALES · DELIBERACIÓN CÍVICA VERIFICADA</span>
         </div>
 
         <h1 class="font-display eureka-title">
-          ¡El Puente de Consenso Existe!
+          Veredicto Ciudadano y Consenso Cívico
         </h1>
 
         <p class="eureka-lead">
           ${totalAuditedVotes === 0
-            ? 'Frente al ruido y la confrontación partidista, la urna ciudadana está abierta y lista para registrar la deliberación social verificable en tiempo real.'
-            : `Frente al ruido y la confrontación partidista, la deliberación ciudadana revela la posición real de la sociedad civil: un <b>${calculatedConsensus}% de respaldo medio</b> en el paquete normativo.`}
+            ? 'La urna ciudadana está abierta y lista para registrar la deliberación en tiempo real de forma anónima y verificable.'
+            : `Frente al debate político tradicional, la deliberación ciudadana muestra el punto de encuentro de la sociedad: un <b>${calculatedConsensus}% de respaldo medio</b> al conjunto de las medidas.`}
         </p>
 
         <!-- Estadística Impacto Eureka Dinámica -->
@@ -329,21 +329,21 @@ export function renderConsensusEureka(
             <div class="results-header-top-meta">
               <div class="results-header-eyebrow">
                 <span>📊</span>
-                <span>AUDITORÍA DEL VOTO EN VIVO</span>
+                <span>RECUENTO EN VIVO</span>
               </div>
               <div class="census-transparency-pill" title="Recuento auditado de votos verificables en la urna de pruebas">
                 <span class="census-pulse-dot"></span>
                 <span class="census-pill-text font-mono"><b>${totalAuditedVotes.toLocaleString('es-ES')}</b> ${totalAuditedVotes === 1 ? 'voto auditado' : 'votos auditados'}</span>
-                <span class="census-pill-tag">Cómputo en Vivo / Testnet</span>
+                <span class="census-pill-tag">Cómputo en Tiempo Real</span>
               </div>
             </div>
             <h3 class="results-section-title font-display">
-              Radiografía de Voto: Tu Elección frente al Censo
+              ¿Cómo ha votado la ciudadanía? Tu elección frente al total
             </h3>
             <p class="results-section-subtitle">
               ${totalAuditedVotes === 0
-                ? 'Urna de pruebas inicializada desde 0. Escrutinio en tiempo real listo para registrar sufragios.'
-                : `Escrutinio en tiempo real sobre los ${totalAuditedVotes.toLocaleString('es-ES')} ${totalAuditedVotes === 1 ? 'voto registrado' : 'votos registrados'} en la urna criptográfica y tus 3 decisiones:`}
+                ? 'Urna de pruebas abierta desde 0 votos. El escrutinio comenzará con los primeros votos registrados.'
+                : `Resultados en tiempo real sobre los ${totalAuditedVotes.toLocaleString('es-ES')} ${totalAuditedVotes === 1 ? 'voto registrado' : 'votos registrados'} en la urna y el sentido de tus 3 decisiones:`}
             </p>
           </div>
 
@@ -444,7 +444,7 @@ export function renderConsensusEureka(
 
           <!-- Nota al pie de Transparencia Censal -->
           <div class="census-transparency-footnote">
-            <span>ℹ️ <b>Fase de pruebas:</b> cada voto emitido se contabiliza en la urna, aunque lo repita la misma persona, para poder comprobar el escrutinio. El recuento arranca desde 0 y se sella con firmas WebAuthn y árbol de Merkle inmutable.</span>
+            <span>ℹ️ <b>Transparencia de la urna:</b> Cada voto se suma al escrutinio oficial en tiempo real. En esta fase de pruebas se permite votar varias veces para verificar el cómputo. El recuento se sella con firmas digitales (WebAuthn) y un registro inmutable (árbol de Merkle) que asegura la privacidad y la imposibilidad de manipular el resultado.</span>
           </div>
         </div>
 
@@ -458,10 +458,10 @@ export function renderConsensusEureka(
               <span>CONGRESO DE LOS DIPUTADOS</span>
             </div>
             <h3 class="results-section-title font-display">
-              Formaciones con Mayor Sintonía Parlamentaria
+              Afinidad con las Fuerzas Parlamentarias
             </h3>
             <p class="results-section-subtitle">
-              Los 3 grupos del Congreso de los Diputados que más coinciden con tus 3 votos:
+              Los 3 grupos del Congreso de los Diputados que votaron de forma más parecida a ti en estas tres medidas:
             </p>
           </div>
 
@@ -615,7 +615,7 @@ export function renderConsensusEureka(
           </div>
 
           <div class="parties-methodology-note" style="margin-top: 1.25rem;">
-            ℹ️ <b>Metodología parlamentaria oficial:</b> Coincidencia matemática directa sobre el sentido del voto de los 350 diputados del Congreso durante la tramitación del RDL 6/2026 de Vivienda.
+            ℹ️ <b>Metodología objetiva:</b> Comparativa matemática directa y neutral entre tus 3 votos y las votaciones reales registradas por los 350 diputados del Congreso en este decreto.
           </div>
         </div>
 
@@ -627,18 +627,18 @@ export function renderConsensusEureka(
             <div class="zk-shield-badge">🛡️</div>
             <div class="zk-strip-text">
               <div class="zk-strip-heading">
-                <span class="zk-strip-title font-display">Certificado Soberano Cívico</span>
-                <span class="zk-pill-tag">ZK-SNARK</span>
-                <span class="zk-pill-tag tag-verified">Cero Fuga</span>
+                <span class="zk-strip-title font-display">Tu Voto: 100% Anónimo y Verificable</span>
+                <span class="zk-pill-tag">Papeleta Anónima</span>
+                <span class="zk-pill-tag tag-verified">Recibo Verificable</span>
               </div>
               <div class="zk-strip-sub">
-                Titular: <b>${activeCitizen.name}</b> · Decisión sellada anónimamente en el Árbol de Merkle
+                Tu decisión queda sellada de forma segura en la urna. Nadie puede saber qué votaste, pero tú puedes verificar que tu voto cuenta.
               </div>
             </div>
           </div>
 
-          <button class="btn-zk-inspect-compact" id="btn-open-zk-receipt" title="Ver el recibo criptográfico con prueba de inclusión y nullifier">
-            <span>🔍 Recibo Criptográfico</span>
+          <button class="btn-zk-inspect-compact" id="btn-open-zk-receipt" title="Ver el recibo oficial con identificador anónimo y comprobación de urna">
+            <span>🔍 Ver Recibo de Votación</span>
           </button>
         </div>
 
@@ -647,13 +647,13 @@ export function renderConsensusEureka(
              ======================================================== -->
         <div class="eureka-final-actions" style="margin-top: 2.5rem;">
           <button class="btn-secondary" id="btn-eureka-undo" title="Modificar tu último voto o repasar las rondas anteriores">
-            ↶ Modificar Votos
+            ↶ Cambiar Voto
           </button>
           <button class="btn-secondary" id="btn-replay-deck" title="Volver al primer artículo conservando todos los votos ya contabilizados">
             ↺ Votar de Nuevo
           </button>
           <button class="btn-secondary btn-empty-urn" id="btn-empty-urn" title="Vaciar la urna de pruebas y empezar de nuevo desde 0 votos">
-            🗑 Vaciar Urna (0 votos)
+            🗑 Vaciar Urna (Pruebas)
           </button>
           <button class="btn-primary btn-primary-prominent" id="btn-open-acta-final">
             🏛️ Ver Dictamen y Acta Parlamentaria

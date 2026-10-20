@@ -211,10 +211,10 @@ export function renderMonographModal(container: HTMLElement, card: GamifiedCard)
         <!-- Cabecera Sticky Integrada (Glassmorphism) -->
         <div class="monograph-sticky-nav">
           <div class="monograph-badge-row">
-            <span class="badge-mono">📊 DOSSIER CÍVICO BILATERAL</span>
+            <span class="badge-mono">📊 DATOS CLAVE Y CONTEXTO CÍVICO</span>
             <span class="monograph-readtime">⏱️ ${monograph.readTime}</span>
           </div>
-          <button class="modal-close-btn monograph-close-action" id="monograph-close-btn" title="Cerrar dossier">✕</button>
+          <button class="modal-close-btn monograph-close-action" id="monograph-close-btn" title="Cerrar datos clave">✕</button>
         </div>
 
         <!-- Portada del Monográfico -->
@@ -227,11 +227,11 @@ export function renderMonographModal(container: HTMLElement, card: GamifiedCard)
           </p>
         </header>
 
-        <!-- SECCIÓN 1: LAS DOS REALIDADES ENFRENTADAS (DUAL PERSPECTIVE) -->
+        <!-- SECCIÓN 1: DOS REALIDADES COTIDIANAS (DUAL PERSPECTIVE) -->
         <section class="monograph-block">
           <div class="block-header">
             <span class="block-step-num">01</span>
-            <h3 class="block-title">Las Dos Realidades Enfrentadas</h3>
+            <h3 class="block-title">Dos Realidades Cotidianas</h3>
           </div>
 
           <div class="dual-perspectives-grid">
@@ -279,7 +279,7 @@ export function renderMonographModal(container: HTMLElement, card: GamifiedCard)
         <section class="monograph-block">
           <div class="block-header">
             <span class="block-step-num">02</span>
-            <h3 class="block-title">La Evidencia en Datos: ¿A Quién Asfixian los Precios?</h3>
+            <h3 class="block-title">La Evidencia en Datos: Evolución de Precios, Salarios y Costes</h3>
           </div>
           ${renderSvgChart(monograph)}
         </section>
@@ -417,14 +417,14 @@ export function renderMonographModal(container: HTMLElement, card: GamifiedCard)
         <!-- FOOTER: ACCIONES DIRECTAS DE VOTACIÓN IN-SITU -->
         <footer class="monograph-bottom-bar">
           <div class="bottom-prompt">
-            ¿Tienes clara tu posición tras analizar los datos oficiales?
+            ¿Tienes clara tu decisión tras consultar los datos oficiales?
           </div>
           <div class="bottom-actions-row">
             <button class="btn-vote btn-vote-no" id="btn-mono-no" title="Votar en contra">
               ✕ En Contra
             </button>
-            <button class="btn-delegate" id="btn-mono-delegate" title="Delegar en un experto">
-              ↑ Delegar
+            <button class="btn-delegate" id="btn-mono-delegate" title="No sabe / No contesta o delegar">
+              ? NS / NC
             </button>
             <button class="btn-vote btn-vote-yes" id="btn-mono-yes" title="Votar a favor">
               ✓ A Favor

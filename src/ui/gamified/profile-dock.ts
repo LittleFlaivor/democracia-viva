@@ -60,8 +60,8 @@ export function renderProfileDock(
           type="button" 
           class="dock-user-profile hud-pill-capsule interactive" 
           id="btn-dock-identity" 
-          title="Ver estado de identidad cívica y autenticación Passkey"
-          aria-label="Identidad cívica Passkey"
+          title="Ver estado de tu identidad digital y privacidad"
+          aria-label="Identidad y privacidad"
         >
           <span class="dock-user-avatar">
             ${localCred ? `
@@ -77,7 +77,7 @@ export function renderProfileDock(
             `}
           </span>
           <span class="dock-user-name">${localCred ? 'Ciudadano' : 'Acceso'}</span>
-          <span class="dock-user-badge ${localCred ? 'is-verified' : ''}">${localCred ? 'Passkey ✓' : 'Fricción 0'}</span>
+          <span class="dock-user-badge ${localCred ? 'is-verified' : ''}">${localCred ? 'Identificado' : 'Anónimo'}</span>
         </button>
 
         <!-- Conmutador Discreto de Pruebas Ágiles -->
@@ -101,15 +101,15 @@ export function renderProfileDock(
           href="/admin" 
           class="dock-bypass-pill hud-pill-capsule is-sandbox-badge" 
           id="btn-dock-sandbox" 
-          title="Abrir Zero-Trust Command Center y Laboratorio Sandbox (/admin)"
-          aria-label="Admin Sandbox"
+          title="Panel de Administración y Auditoría Cívica (/admin)"
+          aria-label="Panel de Administración"
         >
           <span class="bypass-lightning">
             <svg class="dock-svg-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M10 2l6 3v5c0 4.5-2.5 7.5-6 8-3.5-.5-6-3.5-6-8V5l6-3z" />
             </svg>
           </span>
-          <span class="bypass-label">SANDBOX</span>
+          <span class="bypass-label">ADMIN</span>
         </a>
 
         ${!isInstalled ? `

@@ -21,7 +21,7 @@ export function renderBoeModal(container: HTMLElement, card: GamifiedCard) {
 
         <div style="margin-bottom: 1.25rem;">
           <span class="badge-mono" style="color: var(--accent-brass); border-color: var(--border-accent);">
-            CAPA 3 · MODO AUDITOR BOE & CONGRESO
+            TEXTO LEGAL OFICIAL · BOE Y CONGRESO
           </span>
           <h3 class="font-display" style="font-size: 1.35rem; margin-top: 0.5rem; color: var(--text-primary); line-height: 1.3;">
             ${article.articleNumber}: ${article.title}
@@ -58,7 +58,7 @@ ${article.boeFormalText}
 
         <div style="display: flex; justify-content: flex-end;">
           <button class="btn-vote btn-vote-abstain" id="btn-close-boe-action" style="min-width: 160px; justify-content: center;">
-            Volver a la Carta de Juego
+            Volver a la Votación
           </button>
         </div>
       </div>

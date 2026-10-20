@@ -49,20 +49,20 @@ export const GAMIFIED_DECK: GamifiedCard[] = [
     category: 'Vivienda y Alquiler',
     badge: 'Art. 1 BOE · Contención de Rentas',
     headlineQuestion: '¿Topar por ley las subidas del alquiler al 2.5% anual en ciudades tensionadas?',
-    subtitle: 'Tope legal obligatorio del 2,5% anual a revisiones de contratos en zonas tensionadas (esfuerzo >30% del sueldo o precio >3 puntos sobre IPC) para proteger a 3,5 millones de familias frente a subidas abusivas.',
+    subtitle: 'Fija un límite máximo del 2,5% anual a las subidas del alquiler en zonas con precios disparados, protegiendo a las familias inquilinas frente a incrementos repentinos.',
     metrics: [
       { label: 'Tope Máximo', value: '2.5% anual' },
       { label: 'Protegidos', value: '3.5M hogares' },
       { label: 'Condición', value: '>30% ingresos' }
     ],
-    fullDescription: `Esta disposición introduce un tope legal obligatorio del 2,5% anual a las revisiones y renovaciones de contratos de arrendamiento de vivienda habitual en aquellos municipios declarados oficialmente como zonas de mercado residencial tensionado. Esta declaración se activa cuando las familias destinan de media más del 30% de sus ingresos al pago del alquiler o cuando los precios hayan superado en más de 3 puntos el IPC autonómico en el último lustro.
+    fullDescription: `Esta disposición introduce un límite legal del 2,5% anual a las revisiones y renovaciones de contratos de alquiler en municipios declarados como zonas tensionadas. Esta declaración se aplica cuando las familias destinan de media más del 30% de sus ingresos al alquiler o cuando los precios hayan superado con creces la inflación en los últimos cinco años.
 
-En el plano social, la medida busca frenar la escalada inflacionaria que actualmente expulsa a familias trabajadoras y jóvenes de sus barrios habituales ante subidas repentinas del 20% al 35%, protegiendo el derecho constitucional a una vivienda digna y aportando estabilidad a más de 3,5 millones de hogares inquilinos en toda España.
+Por un lado, la medida protege el derecho a una vivienda digna y aporta estabilidad económica a más de 3,5 millones de hogares inquilinos, evitando incrementos imprevistos que fuercen a familias y jóvenes a marcharse de sus barrios habituales.
 
-No obstante, colectivos de propietarios y economistas alertan de que una contención obligatoria de precios sin estímulos paralelos puede desincentivar la puesta en alquiler de viviendas vacías, provocar un trasvase masivo de inmuebles hacia el mercado turístico o de temporada, y endurecer las exigencias de solvencia o fianzas a los nuevos inquilinos.`,
+Por otro lado, propietarios y economistas advierten de que limitar precios sin incentivos suficientes puede provocar que algunos dueños retiren viviendas del mercado habitual, las destinen al alquiler turístico o temporal, o endurezcan los requisitos y fianzas para nuevos inquilinos.`,
     keyPoints: {
-      pro: 'Frena subidas abusivas y garantiza estabilidad de hogar a familias inquilinas',
-      con: 'Riesgo de que propietarios retiren pisos del mercado tradicional o endurezcan fianzas'
+      pro: 'Evita subidas desproporcionadas y aporta estabilidad económica a las familias inquilinas',
+      con: 'Riesgo de que propietarios retiren viviendas del alquiler tradicional o endurezcan requisitos'
     },
     svgIllustration: `
       <svg viewBox="0 0 400 160" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg" class="card-svg-art" preserveAspectRatio="xMidYMid meet">
@@ -149,15 +149,15 @@ No obstante, colectivos de propietarios y economistas alertan de que una contenc
         avatar: 'LR',
         speaker: 'Lucía Ramos',
         role: 'Inquilina (24 años)',
-        argument: 'Destino el 58% de mi sueldo al alquiler. Si me suben 250€ de golpe al renovar contrato, me expulsan de mi barrio y de mi proyecto de vida.'
+        argument: 'Destino más de la mitad de mi sueldo al alquiler. Si me suben 250€ de golpe al renovar contrato, no podré pagarlo y tendré que marcharme de mi barrio.'
       },
       economicRisk: {
         avatar: 'MO',
         speaker: 'Manuel Osorio',
         role: 'Pequeño Propietario (68 años)',
-        argument: 'Con la inflación y el IBI al alza, si no puedo ajustar la renta al coste real preferiré retirar el piso del mercado tradicional o venderlo.'
+        argument: 'Con la subida del coste de la vida, si no puedo ajustar la renta a los gastos reales del piso preferiré no alquilarlo o ponerlo a la venta.'
       },
-      publicMediationSummary: 'El 82% de la ciudadanía apoya topes razonables al alquiler siempre que se garantice seguridad jurídica y desgravaciones al casero.'
+      publicMediationSummary: 'Existe un amplio consenso en limitar subidas desmedidas siempre que se ofrezca seguridad jurídica y estímulos fiscales a los propietarios particulares.'
     },
     impact: {
       yes: { tenant: 25, landlord: -15, consensus: 8 },
@@ -172,20 +172,20 @@ No obstante, colectivos de propietarios y economistas alertan de que una contenc
     category: 'Incentivos y Fiscalidad',
     badge: 'Art. 2 BOE · Bonificación IRPF',
     headlineQuestion: '¿Bonificar el 70% del IRPF a propietarios que rebajen voluntariamente el alquiler un 10%?',
-    subtitle: 'Bonificación fiscal del 70% en el IRPF a propietarios que rebajen voluntariamente el alquiler un 10% en zonas tensionadas, sumada a un fondo público que avala y cubre impagos.',
+    subtitle: 'Rebaja un 70% los impuestos del alquiler (IRPF) a los propietarios que reduzcan un 10% la renta a sus inquilinos, e incluye un aval público que garantiza el cobro ante impagos.',
     metrics: [
       { label: 'Ahorro Fiscal', value: '-70% IRPF' },
       { label: 'Rebaja Renta', value: '-10% precio' },
       { label: 'Seguridad', value: 'Aval impago' }
     ],
-    fullDescription: `El artículo diseña un sistema de incentivos fiscales positivos orientado a pequeños y medianos arrendadores. Aquellos propietarios que reduzcan voluntariamente al menos un 10% el precio del alquiler respecto al contrato anterior en áreas tensionadas obtendrán una bonificación fiscal extraordinaria del 70% en el rendimiento neto del capital inmobiliario en su declaración del IRPF.
+    fullDescription: `Este artículo establece un sistema de incentivos fiscales positivos dirigido a pequeños y medianos propietarios. Aquellos dueños que rebajen voluntariamente al menos un 10% el precio del alquiler respecto al contrato anterior en zonas tensionadas obtendrán una bonificación fiscal extraordinaria del 70% en el rendimiento del alquiler en su declaración del IRPF.
 
-Como garantía adicional para activar el parque residencial privado, la ley contempla la creación de un Fondo Público de Cobertura que avala y anticipa las rentas mensuales impagadas en caso de demora o insolvencia sobrevenida del inquilino, amortiguando el principal temor de los arrendadores y evitando litigios judiciales prolongados.
+Para aportar tranquilidad a los propietarios, la medida incluye un Fondo Público de Cobertura que avala y adelanta las mensualidades en caso de impago por parte del inquilino, evitando situaciones de conflicto o procesos judiciales largos.
 
-Sus defensores destacan que premiar la moderación de rentas en lugar de aplicar medidas punitivas fomenta la cooperación entre caseros e inquilinos, como ocurre en modelos de éxito europeo. Por contra, los sectores críticos recuerdan que esta bonificación conlleva una merma fiscal anual estimada en más de 800 millones de euros de dinero público, el cual podría invertirse directamente en construir vivienda pública protegida.`,
+Quienes defienden la medida señalan que premiar la moderación de precios fomenta la colaboración entre caseros e inquilinos, siguiendo modelos que funcionan en otros países europeos. Por el contrario, quienes la cuestionan recuerdan que esta rebaja supone un coste anual estimado en 800 millones de euros que el Estado deja de recaudar y que podría destinarse a construir vivienda pública.`,
     keyPoints: {
-      pro: 'Rebaja directa del 10% en el alquiler premiando al casero con un gran ahorro fiscal',
-      con: 'Coste para Hacienda asumido por el conjunto de los contribuyentes públicos'
+      pro: 'Incentiva precios más asequibles premiando al propietario y garantizándole el cobro seguro de su renta',
+      con: 'Supone un coste de fondos públicos que el Estado deja de ingresar para otros fines o vivienda social'
     },
     svgIllustration: `
       <svg viewBox="0 0 400 160" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg" class="card-svg-art" preserveAspectRatio="xMidYMid meet">
@@ -277,20 +277,20 @@ Sus defensores destacan que premiar la moderación de rentas en lugar de aplicar
     category: 'Vivienda Vacía y Fondos',
     badge: 'Art. 3 BOE · Recargo IBI Fondos',
     headlineQuestion: '¿Cobrar un 150% más de IBI a grandes fondos y bancos con pisos vacíos más de 2 años?',
-    subtitle: 'Recargo tributario de hasta el 150% en el IBI a entidades financieras, sociedades y grandes fondos con viviendas desocupadas más de 2 años sin causa, blindando segundas residencias familiares y herencias.',
+    subtitle: 'Permite a los ayuntamientos duplicar con creces el IBI (hasta un +150%) a bancos y fondos con pisos vacíos más de 2 años, protegiendo siempre las segundas residencias de particulares.',
     metrics: [
       { label: 'Recargo IBI', value: '+150% máx' },
       { label: 'Tiempo Vacío', value: '>2 años' },
       { label: 'Destinatario', value: 'Bancos / Fondos' }
     ],
-    fullDescription: `Esta norma faculta a los ayuntamientos a imponer un recargo tributario de hasta el 150% en la cuota líquida del Impuesto sobre Bienes Inmuebles (IBI) sobre aquellas viviendas de uso residencial que permanezcan desocupadas con carácter permanente y sin justificación durante más de dos años ininterrumpidos. La medida se dirige de forma expresa a entidades financieras, sociedades inmobiliarias y fondos de inversión titulares de cuatro o más inmuebles urbanos.
+    fullDescription: `Esta medida faculta a los ayuntamientos a aplicar un recargo de hasta el 150% en el Impuesto sobre Bienes Inmuebles (IBI) a aquellas viviendas residenciales que permanezcan vacías de forma injustificada durante más de dos años seguidos. Se dirige de forma exclusiva a entidades bancarias, inmobiliarias y fondos de inversión titulares de cuatro o más inmuebles.
 
-El propósito fundamental es desalentar el acaparamiento especulativo de activos habitacionales cerrados a cal y canto, forzando a las corporaciones tenedoras a comercializarlos o volcarlos al mercado del alquiler residencial. El precepto blinda de forma rigurosa y exime expresamente de cualquier recargo a segundas residencias vacacionales, traslados laborales temporales o viviendas en litigio judicial o reforma de habitabilidad.
+El objetivo es incentivar que las grandes corporaciones pongan en alquiler o venta los pisos que mantienen desocupados, ampliando la oferta disponible para la ciudadanía. La ley protege de forma explícita y excluye de cualquier recargo a las segundas residencias familiares, traslados temporales de trabajo o viviendas en obras o herencias.
 
-Aunque cuenta con un amplio respaldo ciudadano para desbloquear vivienda ociosa en grandes ciudades, diversos juristas y municipios señalan el reto administrativo que supone acreditar de forma fehaciente la desocupación continuada mediante patrones de consumo de agua o luz, así como el riesgo de recursos contenciosos promovidos por fondos ante los tribunales.`,
+Sus partidarios destacan que ayuda a desbloquear viviendas cerradas en zonas con gran demanda. Por su parte, expertos jurídicos señalan la dificultad técnica para comprobar de forma fiable que un piso está realmente desocupado y el riesgo de recursos judiciales por parte de los fondos.`,
     keyPoints: {
-      pro: 'Moviliza miles de viviendas acaparadas por especulación hacia familias que las necesitan',
-      con: 'Requiere blindaje jurídico estricto para resistir recursos de fondos ante tribunales'
+      pro: 'Presiona a las grandes corporaciones para sacar sus pisos al mercado y aumentar la oferta disponible',
+      con: 'Exige una gestión municipal rigurosa para demostrar la desocupación continuada sin litigios en tribunales'
     },
     svgIllustration: `
       <svg viewBox="0 0 400 160" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg" class="card-svg-art" preserveAspectRatio="xMidYMid meet">
@@ -364,15 +364,15 @@ Aunque cuenta con un amplio respaldo ciudadano para desbloquear vivienda ociosa 
         avatar: 'VD',
         speaker: 'Asociación Vecinal',
         role: 'Colectivo Social',
-        argument: 'Es antisocial mantener bloques enteros cerrados a cal y canto por fondos de inversión esperando que suba el precio, mientras las familias jóvenes no tienen techo.'
+        argument: 'Es antisocial mantener bloques enteros cerrados por fondos de inversión esperando que suba el precio, mientras muchas familias no encuentran piso donde vivir.'
       },
       economicRisk: {
         avatar: 'EM',
         speaker: 'Dra. Elena Miró',
         role: 'Urbanista & Arquitecta',
-        argument: 'Debe regularse con quirúrgica precisión jurídica para evitar recursos ante el Tribunal Constitucional que congelen los inmuebles durante años.'
+        argument: 'Debe regularse con una precisión jurídica absoluta para evitar recursos ante los tribunales que dejen las viviendas bloqueadas durante años.'
       },
-      publicMediationSummary: 'El 89% de la población respalda penalizar la especulación de entidades corporativas sin gravar segundas viviendas de familias.'
+      publicMediationSummary: 'Coincidencia mayoritaria en penalizar la retención especulativa de inmuebles por grandes fondos, respetando siempre las propiedades familiares.'
     },
     impact: {
       yes: { tenant: 30, landlord: 2, consensus: 24 },

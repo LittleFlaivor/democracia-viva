@@ -97,7 +97,7 @@ export const DECREE_VIVIENDA: {
         financialMetric: 'Se estima la movilización de más de 65.000 viviendas actualmente ociosas en toda España.'
       },
       proArguments: [
-        'Combate el acaparamiento y la especulación de suelo por parte de fondos buitre.',
+        'Combate la retención prolongada de inmuebles vacíos por parte de grandes fondos y corporaciones.',
         'Genera recaudación municipal directa destinada a financiar vivienda pública municipal.',
         'Respeta plenamente la segunda vivienda de particulares y se enfoca en corporaciones.'
       ],

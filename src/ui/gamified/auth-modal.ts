@@ -67,14 +67,14 @@ export function promptJustInTimePasskey(
         </div>
 
         <h3 class="font-display" style="font-size: 1.45rem; margin: 16px 0 6px 0; color: var(--text-primary, #0f172a);">
-          ${isNew ? 'Registro Biométrico de Passkey' : 'Firma de Voto Inmutable'}
+          ${isNew ? 'Identificación Digital Segura' : 'Confirmar Voto con tu Dispositivo'}
         </h3>
         
         <p style="font-size: 0.88rem; color: var(--text-secondary, #64748b); margin-bottom: 18px; line-height: 1.45;">
           ${
             isNew
-              ? 'Activa tu credencial ciudadana vinculando tu sensor biométrico (Huella, FaceID o PIN de hardware). Servirá para autorizar tu sesión de votación en este decreto.'
-              : 'Confirma con tu huella, Face ID o PIN para autorizar tu sesión de voto. Esta única confirmación servirá para los 3 artículos del decreto.'
+              ? 'Autoriza tu votación de forma sencilla con la huella, el rostro o el PIN de tu propio móvil u ordenador. No necesitas contraseñas ni correos.'
+              : 'Confirma con tu huella, rostro o PIN para emitir tu voto. Esta única autorización servirá para los 3 artículos del decreto.'
           }
         </p>
 
@@ -89,19 +89,19 @@ export function promptJustInTimePasskey(
           </div>
         </div>
 
-        <!-- Garantías Criptográficas -->
+        <!-- Garantías de Privacidad y Seguridad -->
         <div class="passkey-guarantees" style="text-align: left; margin-bottom: 24px; font-size: 0.8rem; color: var(--text-secondary, #64748b); display: flex; flex-direction: column; gap: 8px;">
           <div style="display: flex; align-items: center; gap: 8px;">
             <span style="color: #10b981; font-size: 0.95rem;">✔</span>
-            <span><strong>Identidad Segura:</strong> Tu biometría nunca sale del hardware de tu dispositivo.</span>
+            <span><strong>Privacidad Total:</strong> Tus datos biométricos nunca salen de tu propio teléfono o PC.</span>
           </div>
           <div style="display: flex; align-items: center; gap: 8px;">
             <span style="color: #3b82f6; font-size: 0.95rem;">✔</span>
-            <span><strong>1 Ciudadano = 1 Voto:</strong> Nulificador SHA-256 anónimo e incoercible.</span>
+            <span><strong>1 Persona = 1 Voto:</strong> Tu papeleta se custodia de forma matemática y 100% anónima.</span>
           </div>
           <div style="display: flex; align-items: center; gap: 8px;">
             <span style="color: #8b5cf6; font-size: 0.95rem;">✔</span>
-            <span><strong>Inmutabilidad Absoluta:</strong> Append-Only en Firestore sin posibilidad de rollback.</span>
+            <span><strong>Voto Inalterable:</strong> Una vez emitido, el registro no puede ser manipulado ni borrado.</span>
           </div>
         </div>
 
@@ -116,7 +116,7 @@ export function promptJustInTimePasskey(
             Cancelar
           </button>
           <button class="btn btn-primary" id="btn-confirm-passkey" style="flex: 2; border-radius: 12px; padding: 12px 18px; font-weight: 600; background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; border: none; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
-            <span>${isNew ? '👆 Registrar Huella / FaceID' : '👆 Firmar con Biometría'}</span>
+            <span>${isNew ? '👆 Activar con Huella / Face ID' : '👆 Confirmar con Huella o PIN'}</span>
           </button>
         </div>
 
@@ -129,7 +129,7 @@ export function promptJustInTimePasskey(
             style="width: 100%; justify-content: center; background: rgba(245, 158, 11, 0.12); border-color: rgba(245, 158, 11, 0.35); color: #b45309; font-weight: 700; font-size: 0.82rem; padding: 9px 14px; cursor: pointer;"
             title="Omitir el paso biométrico y sellar el voto con credencial simulada de prueba"
           >
-            <span>Saltar Verificación (Modo Prueba Alpha)</span>
+            <span>Continuar en Modo Prueba (Sin Biometría)</span>
           </button>
           <label style="display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 0.74rem; color: var(--text-tertiary); cursor: pointer; user-select: none;">
             <input type="checkbox" id="chk-remember-skip" checked />

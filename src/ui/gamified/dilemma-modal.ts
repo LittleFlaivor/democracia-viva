@@ -17,10 +17,10 @@ export function renderDilemmaModal(container: HTMLElement, card: GamifiedCard) {
 
         <div style="margin-bottom: 1.5rem; text-align: center;">
           <span class="badge-mono" style="color: var(--accent-brass); border-color: var(--border-accent);">
-            CAPA 2 · NOVELA GRÁFICA CÍVICA
+            PERSPECTIVAS CÍVICAS · DEBATE EQUILIBRADO
           </span>
           <h2 class="font-display" style="font-size: 1.6rem; margin-top: 0.5rem; color: var(--text-main);">
-            El Dilema: Las Dos Voces de la Calle
+            Dos Puntos de Vista sobre la Medida
           </h2>
           <p style="font-size: 0.88rem; color: var(--color-muted); max-width: 580px; margin: 0.25rem auto 0;">
             ${card.headlineQuestion}
@@ -41,7 +41,7 @@ export function renderDilemmaModal(container: HTMLElement, card: GamifiedCard) {
 
             <div class="comic-bubble-text">
               <span class="bubble-tag" style="background: rgba(74, 157, 124, 0.2); color: #79D1AB;">
-                ✓ LA PROMESA DE LA LEY
+                ✓ ARGUMENTO SOCIAL (A FAVOR)
               </span>
               <p>"${card.dilemma.lawIntent.argument}"</p>
             </div>
@@ -62,7 +62,7 @@ export function renderDilemmaModal(container: HTMLElement, card: GamifiedCard) {
 
             <div class="comic-bubble-text">
               <span class="bubble-tag" style="background: rgba(200, 90, 83, 0.2); color: #E8837D;">
-                ✕ EL RIESGO ECONÓMICO
+                ✕ ARGUMENTO ECONÓMICO (EN CONTRA)
               </span>
               <p>"${card.dilemma.economicRisk.argument}"</p>
             </div>
@@ -72,7 +72,7 @@ export function renderDilemmaModal(container: HTMLElement, card: GamifiedCard) {
         <!-- Banner del Puente de Mediación Social -->
         <div class="mediation-bridge-banner">
           <div style="font-size: 0.76rem; font-weight: 700; color: var(--accent-brass); text-transform: uppercase; margin-bottom: 0.25rem;">
-            💡 Hallazgo de Consenso Ciudadano:
+            💡 Punto de Encuentro Ciudadano:
           </div>
           <p style="font-size: 0.92rem; color: var(--accent-brass-light); line-height: 1.5; font-weight: 500;">
             "${card.dilemma.publicMediationSummary}"
@@ -85,7 +85,7 @@ export function renderDilemmaModal(container: HTMLElement, card: GamifiedCard) {
             ✕ Votar En Contra
           </button>
           <button class="btn-delegate" id="btn-modal-delegate">
-            ↑ Delegar en Experto
+            ? NS / NC (Duda o Delegar)
           </button>
           <button class="btn-vote btn-vote-yes" id="btn-modal-yes">
             ✓ Votar A Favor

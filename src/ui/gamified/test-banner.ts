@@ -21,7 +21,7 @@ export function renderTestBanner(container: HTMLElement): void {
             <span class="test-pill-version">v0.5 Alpha</span>
           </span>
           <p class="test-banner-message">
-            Entorno experimental de validación cívica y biometría Passkeys (WebAuthn). Las votaciones y decretos actuales son simulaciones de prueba.
+            Versión preliminar en fase de pruebas públicas. Las votaciones actuales son simulaciones para evaluar la usabilidad y la seguridad del sistema.
           </p>
         </div>
         <div class="test-banner-right" style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
@@ -33,7 +33,7 @@ export function renderTestBanner(container: HTMLElement): void {
             title="Alternar entre solicitar biometría o saltar verificación para pruebas rápidas"
             style="${bypassActive ? 'background: #059669; color: white; border-color: #047857;' : ''}"
           >
-            <span>${bypassActive ? 'Verificación Omitida (Activo)' : 'Omitir Biometría (Pruebas)'}</span>
+            <span>${bypassActive ? 'Modo Pruebas (Sin Biometría)' : 'Votar sin Biometría (Pruebas)'}</span>
           </button>
 
           <button 
