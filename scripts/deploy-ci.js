@@ -3,40 +3,51 @@ import path from 'node:path';
 import os from 'node:os';
 import { spawnSync } from 'node:child_process';
 
-function logSummary(msg) {
-  console.log(msg);
+function reportNotice(title, msg) {
+  console.log(`[NOTICE] ${title}: ${msg}`);
+  const escaped = msg.replace(/%/g, '%25').replace(/\r/g, '%0D').replace(/\n/g, '%0A');
+  console.log(`::notice title=${title}::${escaped}`);
   const summaryFile = process.env.GITHUB_STEP_SUMMARY;
   if (summaryFile) {
     try {
-      fs.appendFileSync(summaryFile, msg + '\n');
+      fs.appendFileSync(summaryFile, `**${title}**: ${msg}\n\n`);
     } catch (_) {}
   }
 }
 
-logSummary('### Diagnóstico de Despliegue en Firebase Hosting');
+function reportError(title, msg) {
+  console.error(`[ERROR] ${title}: ${msg}`);
+  const escaped = msg.replace(/%/g, '%25').replace(/\r/g, '%0D').replace(/\n/g, '%0A');
+  console.log(`::error title=${title}::${escaped}`);
+  const summaryFile = process.env.GITHUB_STEP_SUMMARY;
+  if (summaryFile) {
+    try {
+      fs.appendFileSync(summaryFile, `❌ **${title}**: ${msg}\n\n`);
+    } catch (_) {}
+  }
+}
+
+reportNotice('DiagnosticoInicio', 'Iniciando fase de despliegue a Firebase Hosting...');
 
 const saRaw = process.env.FIREBASE_SERVICE_ACCOUNT;
 
 if (!saRaw || saRaw.trim() === '') {
-  logSummary('❌ **ERROR CRÍTICO**: El secret `FIREBASE_SERVICE_ACCOUNT_DEMOCRACIA_VIVA_ES` está vacío o no se ha encontrado.');
-  logSummary('Comprueba que el nombre en GitHub Secrets sea exactamente `FIREBASE_SERVICE_ACCOUNT_DEMOCRACIA_VIVA_ES`.');
+  reportError('SecretVacio', 'El secret FIREBASE_SERVICE_ACCOUNT está totalmente vacío en el entorno de GitHub Actions.');
   process.exit(1);
 }
 
-logSummary(`ℹ Longitud del secreto recibido: ${saRaw.length} caracteres.`);
+reportNotice('SecretDetectado', `Longitud recibida: ${saRaw.length} chars. Primeros 20 chars: "${saRaw.slice(0, 20)}..."`);
 
 let sa;
 try {
-  // Manejar posibles comillas extras o encoding
   let cleaned = saRaw.trim();
   if ((cleaned.startsWith("'") && cleaned.endsWith("'")) || (cleaned.startsWith('"') && cleaned.endsWith('"') && !cleaned.startsWith('{\n'))) {
     cleaned = cleaned.slice(1, -1);
   }
   sa = JSON.parse(cleaned);
-  logSummary(`✅ JSON válido. Proyecto detectado: \`${sa.project_id}\` | Email: \`${sa.client_email}\``);
+  reportNotice('JsonValido', `Proyecto: ${sa.project_id} | Client: ${sa.client_email}`);
 } catch (err) {
-  logSummary(`❌ **ERROR**: El secreto no es un JSON válido: ${err.message}`);
-  logSummary(`Primeros 50 caracteres del secreto recibido: \`${saRaw.slice(0, 50)}\``);
+  reportError('JsonInvalido', `No se pudo parsear el JSON: ${err.message}. Comprueba que pegaste todo el JSON.`);
   process.exit(1);
 }
 
@@ -45,19 +56,20 @@ const saPath = path.join(tmpDir, 'firebase-sa-deploy.json');
 
 try {
   fs.writeFileSync(saPath, JSON.stringify(sa, null, 2), 'utf8');
-  logSummary('✅ Archivo temporal de credenciales creado correctamente.');
+  reportNotice('CredencialesCreadas', `Archivo temporal en ${saPath}`);
 
   const env = {
     ...process.env,
     GOOGLE_APPLICATION_CREDENTIALS: saPath
   };
 
-  logSummary('🚀 Ejecutando `firebase deploy --only hosting`...');
-
   const isWindows = process.platform === 'win32';
   const npxCmd = isWindows ? 'npx.cmd' : 'npx';
+  const projectId = sa.project_id || 'democracia-viva-es';
 
-  const deploy = spawnSync(npxCmd, ['--yes', 'firebase-tools', 'deploy', '--only', 'hosting', '--project', sa.project_id || 'democracia-viva-es'], {
+  reportNotice('EjecutandoDeploy', `Lanzando npx firebase-tools deploy --only hosting --project ${projectId}`);
+
+  const deploy = spawnSync(npxCmd, ['--yes', 'firebase-tools', 'deploy', '--only', 'hosting', '--project', projectId], {
     env,
     encoding: 'utf8',
     stdio: 'pipe'
@@ -65,20 +77,20 @@ try {
 
   if (deploy.stdout) {
     console.log(deploy.stdout);
-    logSummary('```text\n' + deploy.stdout + '\n```');
+    reportNotice('DeployStdout', deploy.stdout.slice(-500));
   }
 
   if (deploy.stderr) {
     console.error(deploy.stderr);
     if (deploy.status !== 0) {
-      logSummary('⚠️ **Stderr output**:\n```text\n' + deploy.stderr + '\n```');
+      reportError('DeployStderr', deploy.stderr.slice(-500));
     }
   }
 
   if (deploy.status === 0) {
-    logSummary('🎉 **¡Despliegue completado con éxito en Firebase Hosting!**');
+    reportNotice('ExitoTotal', '¡Despliegue completado con éxito en Firebase Hosting!');
   } else {
-    logSummary(`❌ El comando finalizó con código de error ${deploy.status}.`);
+    reportError('FalloCodigo', `firebase-tools finalizó con exit code ${deploy.status}`);
     process.exit(deploy.status || 1);
   }
 } finally {

@@ -30,7 +30,7 @@ jobs:
 
       - name: Desplegar en Firebase Hosting
         env:
-          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DEMOCRACIA_VIVA_ES }}
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DEMOCRACIA_VIVA_ES || secrets.FIREBASE_SERVICE_ACCOUNT || secrets.FIREBASE_ADMIN_SDK }}
         run: node scripts/deploy-ci.js
 
 
