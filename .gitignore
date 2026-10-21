@@ -30,3 +30,9 @@ Thumbs.db
 firebase-debug.log*
 firestore-debug.log*
 ui-debug.log*
+
+# Service account credentials & secrets
+CLAVE PRIVADA/
+*adminsdk*.json
+*service-account*.json
+
