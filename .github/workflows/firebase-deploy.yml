@@ -32,8 +32,15 @@ jobs:
         env:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DEMOCRACIA_VIVA_ES }}
         run: |
-          echo "$FIREBASE_SERVICE_ACCOUNT" > /tmp/sa.json
+          node -e "const sa = process.env.FIREBASE_SERVICE_ACCOUNT; if (!sa) { console.error('ERROR: Secret FIREBASE_SERVICE_ACCOUNT_DEMOCRACIA_VIVA_ES is missing or empty!'); process.exit(1); } try { JSON.parse(sa); console.log('Service Account JSON is valid.'); } catch (e) { console.error('ERROR: Secret is not valid JSON:', e.message); process.exit(1); } require('fs').writeFileSync('/tmp/sa.json', sa);"
           export GOOGLE_APPLICATION_CREDENTIALS=/tmp/sa.json
-          npx --yes firebase-tools deploy --only hosting --project democracia-viva-es
+          npx --yes firebase-tools deploy --only hosting --project democracia-viva-es 2>&1 | tee /tmp/deploy.log
+          STATUS=${PIPESTATUS[0]}
+          echo "### Resultado del Despliegue en Firebase Hosting" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          tail -n 40 /tmp/deploy.log >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
           rm -f /tmp/sa.json
+          exit $STATUS
+
 
