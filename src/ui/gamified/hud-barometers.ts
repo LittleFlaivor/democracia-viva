@@ -62,12 +62,11 @@ export function renderHudBarometers(container: HTMLElement) {
       <!-- Derecha: Cuenta Atrás hasta Elecciones y Contexto Institucional -->
       <div class="hud-decree-context">
         ${deadlineCfg.enabled ? `
-          <div class="hud-countdown-pill" id="hud-deadline-pill" title="Plazo de votación abierto hasta las ${deadlineCfg.label} (${new Date(deadlineCfg.targetIso).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })})">
+          <div class="hud-countdown-pill" id="hud-deadline-pill" title="Duración de la consulta (abierta hasta el 19 de noviembre de 2026)">
             <svg class="countdown-svg-clock" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <circle cx="12" cy="12" r="10"/>
               <polyline points="12 6 12 12 16 14"/>
             </svg>
-            <span class="countdown-target-label">${deadlineCfg.label}:</span>
             <strong class="countdown-digits" id="hud-countdown-val">${remaining.formattedCompact}</strong>
           </div>
         ` : ''}

@@ -5353,79 +5353,91 @@
 .hud-decree-context {
   display: flex;
   align-items: center;
+  gap: 0.45rem;
+  flex-shrink: 0;
 }
 
 .hud-decree-pill {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: 0.4rem;
   background: var(--bg-surface);
   border: 1px solid var(--border-medium);
-  padding: 0.35rem 0.8rem;
+  padding: 0.28rem 0.65rem;
   border-radius: var(--radius-full);
-  font-size: 0.76rem;
-  font-weight: 700;
+  font-size: 0.72rem;
+  font-weight: 600;
   color: var(--text-secondary);
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .decree-live-dot {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  background: #2563eb;
-  box-shadow: 0 0 6px rgba(37, 99, 235, 0.6);
+  background: #3b82f6;
+  box-shadow: 0 0 6px rgba(59, 130, 246, 0.5);
+  flex-shrink: 0;
 }
 
-/* Píldora de Cuenta Atrás hasta las Elecciones Generales */
+/* Píldora de Duración de la Consulta Cívica (Compacta, Elegante y Responsiva) */
 .hud-countdown-pill {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: 0.35rem;
   background: var(--bg-surface);
-  border: 1px solid rgba(245, 158, 11, 0.35);
-  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--border-medium);
+  padding: 0.28rem 0.65rem;
   border-radius: var(--radius-full);
-  font-size: 0.76rem;
-  font-weight: 700;
-  color: #b45309;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  white-space: nowrap;
+  flex-shrink: 0;
   transition: all 0.2s ease;
 }
 
 [data-theme="dark"] .hud-countdown-pill {
-  border-color: rgba(245, 158, 11, 0.4);
-  color: #fbbf24;
-  background: rgba(245, 158, 11, 0.08);
+  border-color: var(--border-medium);
+  color: var(--text-secondary);
+  background: var(--bg-surface);
 }
 
 .countdown-svg-clock {
-  color: #d97706;
-  flex-shrink: 0;
-  animation: clockTickPulse 2s ease-in-out infinite;
-}
-
-@keyframes clockTickPulse {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.12); opacity: 0.75; }
-}
-
-.countdown-target-label {
-  font-weight: 600;
   color: var(--text-secondary);
+  flex-shrink: 0;
+  opacity: 0.85;
 }
 
 .countdown-digits {
   font-family: var(--font-mono);
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: #b45309;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  white-space: nowrap;
 }
 
 [data-theme="dark"] .countdown-digits {
-  color: #fef3c7;
+  color: var(--text-primary);
 }
+
+@media (max-width: 420px) {
+  .hud-decree-context {
+    gap: 0.3rem;
+  }
+  .hud-decree-pill, .hud-countdown-pill {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.68rem;
+  }
+  .countdown-digits {
+    font-size: 0.7rem;
+  }
+}
+
 
 /* Píldora de cuenta atrás en la Pantalla Eureka de Resultados */
 .deadline-status-pill {

@@ -19,6 +19,13 @@ import {
   toggleConsultationDeadline, 
   calculateTimeRemaining 
 } from '../services/consultation-deadline.ts';
+import { 
+  getActiveThemeProfile, 
+  setActiveThemeProfile, 
+  ELEGANCE_TOKENS, 
+  DesignThemeProfile,
+  initDesignSystem 
+} from '../services/design-system.ts';
 
 // Nuevos módulos canónicos de Arquitectura Cívica
 import { 
@@ -44,7 +51,7 @@ import {
 const esc = (s: unknown) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c] as string));
 const $ = <T extends HTMLElement>(sel: string) => document.querySelector(sel) as T | null;
 
-type AdminTab = 'census' | 'boe' | 'urn' | 'dag' | 'sandbox';
+type AdminTab = 'census' | 'boe' | 'urn' | 'dag' | 'sandbox' | 'design';
 
 interface AdminState {
   activeTab: AdminTab;
@@ -105,7 +112,8 @@ function renderNavbar() {
     { id: 'boe', label: 'BOE Studio & IA', num: '02' },
     { id: 'urn', label: 'Urna & Auditoría', num: '03' },
     { id: 'dag', label: 'Especialistas (DAG)', num: '04' },
-    { id: 'sandbox', label: 'Laboratorio Sandbox', num: '05' }
+    { id: 'sandbox', label: 'Laboratorio Sandbox', num: '05' },
+    { id: 'design', label: 'Sistema de Diseño', num: '06' }
   ];
 
   $('#topbar')!.innerHTML = `
@@ -591,6 +599,285 @@ function renderSandboxView(): string {
   `;
 }
 
+/* ───────────────────────────────────────────────────────────────────
+   MÓDULO 6: SISTEMA DE DISEÑO & ARMONÍA CROMÁTICA (HAUTE ÉLEGANCE)
+   ─────────────────────────────────────────────────────────────────── */
+function renderDesignView(): string {
+  const activeProfile = getActiveThemeProfile();
+  const deadlineCfg = getConsultationDeadlineConfig();
+  const remaining = calculateTimeRemaining(deadlineCfg.targetIso);
+
+  return `
+    <div style="max-width: 1100px; margin: 0 auto;">
+      <!-- Cabecera del Módulo -->
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; flex-wrap: wrap; gap: 14px;">
+        <div>
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+            <h1 style="font-size: 1.6rem; margin: 0; color: var(--text-primary);">
+              Sistema de Diseño & Armonía Cromática
+            </h1>
+            <span class="status-pill ${activeProfile === 'elegance' ? 'good' : 'neutral'}">
+              <i></i> ${activeProfile === 'elegance' ? 'Haute Élegance Activo' : 'Vibrante Cívico Activo'}
+            </span>
+          </div>
+          <p style="margin: 0; font-size: 0.88rem; color: var(--text-secondary); max-width: 780px;">
+            Transición desde la estética lúdica y saturada hacia un minimalismo editorial, institucional y sofisticado.
+            Menos saturación de colores primarios y mayor legitimidad democrática.
+          </p>
+        </div>
+
+        <div style="display: flex; gap: 8px;">
+          <a href="/" target="_blank" class="btn" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            <span>Ver App Pública</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Selector de Perfil Estético Maestro -->
+      <section class="admin-card" style="padding: 22px; margin-bottom: 24px;">
+        <h2 style="font-size: 1.12rem; margin: 0 0 4px; color: var(--text-primary);">
+          1. Selección de Perfil Estético de la Plataforma
+        </h2>
+        <p style="font-size: 0.84rem; color: var(--text-secondary); margin: 0 0 18px;">
+          El perfil seleccionado se guarda de forma persistente y se aplica automáticamente a todos los ciudadanos y administradores.
+        </p>
+
+        <div class="theme-selector-grid">
+          <!-- Opción 1: Haute Élegance -->
+          <div class="theme-option-card ${activeProfile === 'elegance' ? 'selected' : ''}" data-act="set-design-profile" data-profile="elegance">
+            <div class="theme-card-header">
+              <div class="theme-badge-check">
+                <span class="theme-radio-dot"></span>
+                <strong>Haute Élegance</strong>
+                <span class="theme-rec-badge">RECOMENDADO</span>
+              </div>
+              <span class="theme-sub-badge">Minimalismo Suizo & Editorial</span>
+            </div>
+            
+            <p class="theme-card-desc">
+              Paleta noble, reposada y sin estridencias. Sustituye los degradados fosforitos y botones arcade por
+              superficies satinadas, tipografía carbón profunda y acentos semánticos medidos (esmeralda bosque, pizarra topo y borgoña noble).
+            </p>
+
+            <div class="theme-swatch-row">
+              <span class="color-dot" style="background: #0F172A;" title="Carbón Primario #0F172A"></span>
+              <span class="color-dot" style="background: #475569;" title="Pizarra Secundaria #475569"></span>
+              <span class="color-dot" style="background: #F8FAFC; border: 1px solid #CBD5E1;" title="Alabastro Fondo #F8FAFC"></span>
+              <span class="color-dot" style="background: #047857;" title="A Favor: Esmeralda Bosque #047857"></span>
+              <span class="color-dot" style="background: #334155;" title="NS/NC: Pizarra Topo #334155"></span>
+              <span class="color-dot" style="background: #991B1B;" title="En Contra: Borgoña #991B1B"></span>
+            </div>
+
+            <div class="theme-card-footer">
+              ${activeProfile === 'elegance' ? `
+                <span class="theme-applied-label">✓ Perfil Activo en Producción</span>
+              ` : `
+                <button class="btn primary" style="width: 100%;">Activar Haute Élegance</button>
+              `}
+            </div>
+          </div>
+
+          <!-- Opción 2: Vibrante Cívico (Clásico) -->
+          <div class="theme-option-card ${activeProfile === 'classic' ? 'selected' : ''}" data-act="set-design-profile" data-profile="classic">
+            <div class="theme-card-header">
+              <div class="theme-badge-check">
+                <span class="theme-radio-dot"></span>
+                <strong>Vibrante Cívico</strong>
+                <span class="theme-legacy-badge">LEGACY</span>
+              </div>
+              <span class="theme-sub-badge">Alto Contraste Gamificado</span>
+            </div>
+
+            <p class="theme-card-desc">
+              El diseño lúdico original con botoneras arcade de gradientes brillantes (verde menta neón, amarillo ámbar y fucsia),
+              insignias en azul eléctrico y métricas teñidas.
+            </p>
+
+            <div class="theme-swatch-row">
+              <span class="color-dot" style="background: #2563EB;" title="Azul Eléctrico #2563EB"></span>
+              <span class="color-dot" style="background: #10B981;" title="Verde Neón #10B981"></span>
+              <span class="color-dot" style="background: #F59E0B;" title="Ámbar Brillante #F59E0B"></span>
+              <span class="color-dot" style="background: #F43F5E;" title="Frambuesa #F43F5E"></span>
+            </div>
+
+            <div class="theme-card-footer">
+              ${activeProfile === 'classic' ? `
+                <span class="theme-applied-label">✓ Perfil Activo en Producción</span>
+              ` : `
+                <button class="btn" style="width: 100%;">Activar Vibrante Cívico</button>
+              `}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Simulador de Componentes en Vivo (Live Component Preview) -->
+      <section class="admin-card" style="padding: 22px; margin-bottom: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <h2 style="font-size: 1.12rem; margin: 0 0 4px; color: var(--text-primary);">
+              2. Previsualizador en Vivo: Tarjeta y Botonera Cívica
+            </h2>
+            <p style="font-size: 0.84rem; color: var(--text-secondary); margin: 0;">
+              Compara cómo se perciben la cabecera, la tarjeta legislativa y los tres botones de sufragio con la nueva sobriedad.
+            </p>
+          </div>
+          <span class="status-pill good">Modo Dinámico: ${activeProfile === 'elegance' ? 'Haute Élegance' : 'Vibrante'}</span>
+        </div>
+
+        <div class="component-preview-wrapper ${activeProfile === 'elegance' ? 'preview-elegance' : 'preview-classic'}">
+          <!-- Cabecera Compacta con Duración -->
+          <div class="preview-hud-bar">
+            <div class="preview-mission-info">
+              <span class="preview-mission-title">ARTÍCULO 1 DE 3</span>
+              <div class="preview-pips">
+                <span class="preview-pip active"></span>
+                <span class="preview-pip"></span>
+                <span class="preview-pip"></span>
+              </div>
+            </div>
+            <div class="preview-context-right">
+              <div class="preview-countdown-pill" title="Plazo hasta el 19 de noviembre de 2026">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <strong>${remaining.formattedCompact}</strong>
+              </div>
+              <div class="preview-decree-pill">
+                <span class="preview-live-dot"></span>
+                <span>RDL 2/2026</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tarjeta Legislativa -->
+          <div class="preview-voting-card">
+            <div class="preview-card-header">
+              <span class="preview-cat-badge">VIVIENDA Y ALQUILER</span>
+              <span class="preview-boe-pill">Art. 1 BOE</span>
+            </div>
+
+            <h3 class="preview-card-title">
+              ¿Topar por ley las subidas del alquiler al 2.5% anual en ciudades tensionadas?
+            </h3>
+            <p class="preview-card-desc">
+              Fija un límite máximo del 2,5% anual a las subidas del alquiler en zonas con precios disparados, protegiendo a las familias inquilinas frente a incrementos repentinos.
+            </p>
+
+            <!-- Métricas en Tinta Carbón -->
+            <div class="preview-metrics-strip">
+              <div class="preview-metric-col">
+                <span class="preview-metric-val">2.5% anual</span>
+                <span class="preview-metric-label">TOPE MÁXIMO</span>
+              </div>
+              <div class="preview-metric-col">
+                <span class="preview-metric-val">3.5M hogares</span>
+                <span class="preview-metric-label">PROTEGIDOS</span>
+              </div>
+              <div class="preview-metric-col">
+                <span class="preview-metric-val">>30% ingresos</span>
+                <span class="preview-metric-label">CONDICIÓN</span>
+              </div>
+            </div>
+
+            <div class="preview-actions-row">
+              <button class="preview-action-btn">📊 Datos Clave</button>
+              <button class="preview-action-btn">⚖️ 2 Visiones</button>
+              <button class="preview-action-btn">📜 Ley BOE</button>
+            </div>
+          </div>
+
+          <!-- Botonera de Sufragio Cívico -->
+          <div class="preview-voting-dock">
+            <button class="preview-vote-btn btn-yes" title="Aprobar el artículo">
+              <span class="preview-btn-icon">✓</span>
+              <strong class="preview-btn-name">A Favor</strong>
+              <span class="preview-btn-sub">Aprobar</span>
+            </button>
+            <button class="preview-vote-btn btn-nsnc" title="Duda o Delegación">
+              <span class="preview-btn-icon">?</span>
+              <strong class="preview-btn-name">NS / NC</strong>
+              <span class="preview-btn-sub">Duda / Delegar</span>
+            </button>
+            <button class="preview-vote-btn btn-no" title="Rechazar el artículo">
+              <span class="preview-btn-icon">✕</span>
+              <strong class="preview-btn-name">En Contra</strong>
+              <span class="preview-btn-sub">Rechazar</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tabla de Fichas Técnicas de Color (Tokens) -->
+      <section class="admin-card" style="padding: 22px; margin-bottom: 24px;">
+        <h2 style="font-size: 1.12rem; margin: 0 0 4px; color: var(--text-primary);">
+          3. Catálogo Oficial de Fichas de Color (Design Tokens)
+        </h2>
+        <p style="font-size: 0.84rem; color: var(--text-secondary); margin: 0 0 16px;">
+          Valores normalizados y ratios de contraste WCAG validados para garantizar accesibilidad universal AAA.
+        </p>
+
+        <div style="overflow-x: auto;">
+          <table class="data-table" style="width: 100%;">
+            <thead>
+              <tr>
+                <th style="width: 50px;">Muestra</th>
+                <th>Nombre del Token</th>
+                <th>Variable CSS</th>
+                <th>Modo Claro</th>
+                <th>Modo Oscuro</th>
+                <th>Ratio Contraste</th>
+                <th>Función Semántica</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${ELEGANCE_TOKENS.map(t => `
+                <tr>
+                  <td>
+                    <span class="color-token-box" style="background: ${t.lightHex};"></span>
+                  </td>
+                  <td><strong>${t.name}</strong></td>
+                  <td><code class="mono" style="font-size: 0.8rem;">${t.variable}</code></td>
+                  <td><code class="mono">${t.lightHex}</code></td>
+                  <td><code class="mono">${t.darkHex}</code></td>
+                  <td><span class="status-pill good" style="font-size: 0.72rem; padding: 2px 7px;">${t.wcagContrast}</span></td>
+                  <td style="color: var(--text-secondary); font-size: 0.84rem;">${t.role}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Manifiesto de Principios de Diseño -->
+      <section class="admin-card" style="padding: 22px;">
+        <h2 style="font-size: 1.12rem; margin: 0 0 14px; color: var(--text-primary);">
+          4. Principios Rectores de la Arquitectura Visual
+        </h2>
+        <div class="admin-grid g-3" style="gap: 16px;">
+          <div style="background: var(--bg-app); border: 1px solid var(--border-card); border-radius: var(--radius-sm); padding: 14px;">
+            <strong style="color: var(--text-primary); font-size: 0.92rem; display: block; margin-bottom: 4px;">⚖️ Imparcialidad Institucional</strong>
+            <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.45;">
+              La interfaz no induce ni predispone el sentido del voto con saturaciones desmedidas. El rechazo no es un botón de alarma roja destructiva y la aprobación no es un semáforo de premio.
+            </p>
+          </div>
+          <div style="background: var(--bg-app); border: 1px solid var(--border-card); border-radius: var(--radius-sm); padding: 14px;">
+            <strong style="color: var(--text-primary); font-size: 0.92rem; display: block; margin-bottom: 4px;">🎯 Regla 60-30-10</strong>
+            <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.45;">
+              60% lienzo de lectura serena (fondos alabastro/obsidiana), 30% estructura editorial de precisión (textos grafito, divisores sutiles), 10% intención de voto.
+            </p>
+          </div>
+          <div style="background: var(--bg-app); border: 1px solid var(--border-card); border-radius: var(--radius-sm); padding: 14px;">
+            <strong style="color: var(--text-primary); font-size: 0.92rem; display: block; margin-bottom: 4px;">⏱️ Ergonomía y Contención</strong>
+            <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.45;">
+              Los temporizadores y estados no parpadean ni generan ansiedad. Las píldoras de duración se integran con tipografía mono compacta que nunca quiebra el layout.
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
+  `;
+}
+
 function renderMainContent(): string {
   switch (S.activeTab) {
     case 'census': return renderCensusView();
@@ -598,6 +885,7 @@ function renderMainContent(): string {
     case 'urn': return renderUrnView();
     case 'dag': return renderDagView();
     case 'sandbox': return renderSandboxView();
+    case 'design': return renderDesignView();
     default: return renderCensusView();
   }
 }
@@ -616,6 +904,21 @@ function bindEvents() {
 
   // Tema
   $('[data-act="theme"]')?.addEventListener('click', toggleAppTheme);
+
+  // Selección de perfil de sistema de diseño (Haute Élegance vs Vibrante)
+  document.querySelectorAll('[data-act="set-design-profile"]').forEach(card => {
+    card.addEventListener('click', (e) => {
+      const profile = (e.currentTarget as HTMLElement).dataset.profile as DesignThemeProfile;
+      if (profile) {
+        setActiveThemeProfile(profile);
+        S.adminNotice = {
+          type: 'good',
+          text: `Sistema de diseño actualizado a: ${profile === 'elegance' ? 'Haute Élegance (Minimalismo Suizo)' : 'Vibrante Cívico (Legacy)'}. Guardado en configuración persistente.`
+        };
+        paint();
+      }
+    });
+  });
 
   // Cerrar aviso
   $('[data-act="dismiss-notice"]')?.addEventListener('click', () => {
@@ -862,6 +1165,7 @@ function paint() {
 }
 
 async function boot() {
+  initDesignSystem();
   try {
     S.world = await SandboxWorld.create();
     await S.world.createConsultation({

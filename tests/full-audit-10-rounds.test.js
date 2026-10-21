@@ -411,9 +411,9 @@ test('RONDA 8 [2/2]: Función toggleReflectionTimer conmuta el estado en un solo
 /* ───────────────────────────────────────────────────────────────────
    CUENTA ATRÁS Y VIGENCIA: ELECCIONES GENERALES DE ESPAÑA
    ─────────────────────────────────────────────────────────────────── */
-test('CUENTA ATRÁS [1/2]: La fecha objetivo por defecto apunta a las Elecciones Generales', () => {
-  assert.equal(DEFAULT_DEADLINE_ISO, '2027-07-25T20:00:00+02:00', 'Debe apuntar a las Elecciones Generales 2027');
-  assert.ok(DEFAULT_DEADLINE_LABEL.includes('Elecciones Generales'), 'La etiqueta debe ser Elecciones Generales');
+test('CUENTA ATRÁS [1/2]: La fecha objetivo por defecto apunta al 19 de noviembre de 2026', () => {
+  assert.equal(DEFAULT_DEADLINE_ISO, '2026-11-19T23:59:59+01:00', 'Debe apuntar al 19 de noviembre de 2026');
+  assert.ok(DEFAULT_DEADLINE_LABEL === 'Duración', 'La etiqueta debe ser Duración');
 
   const remaining = calculateTimeRemaining(DEFAULT_DEADLINE_ISO);
   assert.equal(remaining.isExpired, false, 'No debe estar expirada');

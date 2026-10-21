@@ -8,8 +8,8 @@
  * El plazo y su visibilidad pueden configurarse en tiempo real desde el Panel de Administración (/admin).
  */
 
-export const DEFAULT_DEADLINE_ISO = '2027-07-25T20:00:00+02:00';
-export const DEFAULT_DEADLINE_LABEL = 'Elecciones Generales';
+export const DEFAULT_DEADLINE_ISO = '2026-11-19T23:59:59+01:00';
+export const DEFAULT_DEADLINE_LABEL = 'Duración';
 export const DEADLINE_STORAGE_KEY = 'DEMOCRACIA_VIVA_CONSULTATION_DEADLINE';
 export const DEADLINE_EVENT = 'DEMOCRACIA_VIVA_DEADLINE_CHANGE';
 
@@ -49,10 +49,11 @@ export function getConsultationDeadlineConfig(): ConsultationDeadlineConfig {
       const raw = window.localStorage.getItem(DEADLINE_STORAGE_KEY);
       if (raw) {
         const parsed = JSON.parse(raw);
+        const isOldDefault = parsed.targetIso === '2027-07-25T20:00:00+02:00';
         return {
           enabled: typeof parsed.enabled === 'boolean' ? parsed.enabled : true,
-          targetIso: parsed.targetIso || DEFAULT_DEADLINE_ISO,
-          label: parsed.label || DEFAULT_DEADLINE_LABEL,
+          targetIso: isOldDefault || !parsed.targetIso ? DEFAULT_DEADLINE_ISO : parsed.targetIso,
+          label: isOldDefault || !parsed.label ? DEFAULT_DEADLINE_LABEL : parsed.label,
         };
       }
     }

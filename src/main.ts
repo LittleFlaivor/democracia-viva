@@ -19,6 +19,7 @@ import { renderCivicFooter } from './ui/gamified/civic-footer.ts';
 import { renderIdentityModal } from './ui/components/identity-modal.ts';
 import { pwaService } from './services/pwa-service.ts';
 import { renderGentlePwaBanner, renderIosInstallModal } from './ui/pwa/pwa-prompt.ts';
+import { initDesignSystem } from './services/design-system.ts';
 
 let activeReceiptNullifier: string | null = null;
 let isParliamentaryReportOpen = false;
@@ -29,6 +30,9 @@ let pwaBannerShown = false;
 function initApp() {
   // Inicializar servicio PWA respetuoso
   pwaService.init();
+
+  // Inicializar sistema de diseño centralizado (Haute Élegance por defecto)
+  initDesignSystem();
 
   // Aplicar tema inicial (Light Editorial por defecto)
   applyTheme(getInitialTheme());
