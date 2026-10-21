@@ -44,11 +44,7 @@ export function renderHudBarometers(container: HTMLElement) {
             <span class="undo-arrow">↶</span>
             <span class="undo-label">Anterior</span>
           </button>
-        ` : `
-          <div class="hud-mission-indicator" aria-hidden="true">
-            <span class="mission-dot"></span>
-          </div>
-        `}
+        ` : ''}
         <div class="hud-mission-info">
           <span class="hud-mission-title">${gameStore.isFinished() ? 'VOTACIÓN COMPLETADA' : `ARTÍCULO ${currentIndex + 1} DE ${totalCards}`}</span>
           <div class="hud-pips-row">
@@ -72,7 +68,6 @@ export function renderHudBarometers(container: HTMLElement) {
         ` : ''}
 
         <span class="hud-decree-pill">
-          <span class="decree-live-dot" aria-hidden="true"></span>
           <span>RDL 2/2026 de Vivienda</span>
         </span>
       </div>

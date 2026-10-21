@@ -1157,20 +1157,24 @@ details.tech-details pre {
 }
 
 .preview-cat-badge {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 0.68rem;
   font-weight: 700;
   color: var(--text-secondary);
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .preview-boe-pill {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 0.68rem;
   font-weight: 600;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   background: var(--bg-app);
   padding: 2px 7px;
   border-radius: 6px;
   border: 1px solid var(--border-subtle);
+  letter-spacing: 0.04em;
 }
 
 .preview-card-title {

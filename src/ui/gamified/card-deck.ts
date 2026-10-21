@@ -101,7 +101,6 @@ export function renderCardDeck(container: HTMLElement) {
           <!-- Contenido Superior de la Carta: Área Temática y Artículo Oficial -->
           <div class="card-header">
             <div class="card-topic-tag">
-              <span class="topic-dot"></span>
               <span class="card-category">${currentCard.category}</span>
             </div>
             <span class="badge-mono" style="font-size: 0.74rem;">${currentCard.badge.split('·')[0].trim()}</span>

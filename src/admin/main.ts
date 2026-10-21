@@ -743,7 +743,6 @@ function renderDesignView(): string {
                 <strong>${remaining.formattedCompact}</strong>
               </div>
               <div class="preview-decree-pill">
-                <span class="preview-live-dot"></span>
                 <span>RDL 2/2026</span>
               </div>
             </div>

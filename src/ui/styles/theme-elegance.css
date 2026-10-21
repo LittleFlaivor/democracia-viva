@@ -82,24 +82,55 @@ html.theme-elegance .game-card .card-metrics-strip .metric-chip-label,
 }
 
 /* ========================================================
-   2. ETIQUETAS DE CABECERA Y BADGES
+   2. ETIQUETAS DE CABECERA, CATEGORÍAS Y BADGES (SANS-SERIF EDITORIAL SUIZO)
    ======================================================== */
+html.theme-elegance .card-category,
+:root:not(.theme-classic) .card-category,
+html.theme-elegance .card-topic-tag,
+:root:not(.theme-classic) .card-topic-tag,
 html.theme-elegance .card-top-tag,
-:root:not(.theme-classic) .card-top-tag {
+:root:not(.theme-classic) .card-top-tag,
+html.theme-elegance .preview-cat-badge,
+:root:not(.theme-classic) .preview-cat-badge {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
   color: var(--text-secondary) !important;
-  font-weight: 600 !important;
-  letter-spacing: 0.06em !important;
 }
 
+html.theme-elegance .badge-mono,
+:root:not(.theme-classic) .badge-mono,
+html.theme-elegance .card-header .badge-mono,
+:root:not(.theme-classic) .card-header .badge-mono,
+html.theme-elegance .preview-boe-pill,
+:root:not(.theme-classic) .preview-boe-pill {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  font-size: 0.72rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.04em !important;
+  color: var(--text-secondary) !important;
+  background: var(--bg-app-alt) !important;
+  border: 1px solid var(--border-card) !important;
+  border-radius: 6px !important;
+  padding: 3px 8px !important;
+}
+
+/* Ocultación de puntos decorativos superfluos (simplificación y máxima limpieza visual) */
+html.theme-elegance .topic-dot,
+:root:not(.theme-classic) .topic-dot,
 html.theme-elegance .card-tag-dot,
 :root:not(.theme-classic) .card-tag-dot,
 html.theme-elegance .decree-live-dot,
 :root:not(.theme-classic) .decree-live-dot,
 html.theme-elegance .mission-dot,
-:root:not(.theme-classic) .mission-dot {
-  background: var(--text-secondary) !important;
-  box-shadow: none !important;
-  opacity: 0.7;
+:root:not(.theme-classic) .mission-dot,
+html.theme-elegance .hud-mission-indicator,
+:root:not(.theme-classic) .hud-mission-indicator,
+html.theme-elegance .preview-live-dot,
+:root:not(.theme-classic) .preview-live-dot {
+  display: none !important;
 }
 
 html.theme-elegance .hud-mission-title,
