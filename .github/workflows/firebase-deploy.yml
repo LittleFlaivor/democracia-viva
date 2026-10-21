@@ -29,9 +29,11 @@ jobs:
         run: npm run build
 
       - name: Desplegar en Firebase Hosting
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_DEMOCRACIA_VIVA_ES }}'
-          channelId: live
-          projectId: democracia-viva-es
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DEMOCRACIA_VIVA_ES }}
+        run: |
+          echo "$FIREBASE_SERVICE_ACCOUNT" > /tmp/sa.json
+          export GOOGLE_APPLICATION_CREDENTIALS=/tmp/sa.json
+          npx --yes firebase-tools deploy --only hosting --project democracia-viva-es
+          rm -f /tmp/sa.json
+
