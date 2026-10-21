@@ -49,7 +49,7 @@ export const GAMIFIED_DECK: GamifiedCard[] = [
     category: 'Vivienda y Alquiler',
     badge: 'Art. 1 BOE · Contención de Rentas',
     headlineQuestion: '¿Topar por ley las subidas del alquiler al 2.5% anual en ciudades tensionadas?',
-    subtitle: 'Fija un límite máximo del 2,5% anual a las subidas del alquiler en zonas con precios disparados, protegiendo a las familias inquilinas frente a incrementos repentinos.',
+    subtitle: 'Fija un límite legal del 2,5% anual a las revisiones de renta en zonas tensionadas donde el esfuerzo supere el 30% del sueldo, protegiendo la estabilidad de más de 3,5 millones de familias inquilinas frente a subidas desmedidas.',
     metrics: [
       { label: 'Tope Máximo', value: '2.5% anual' },
       { label: 'Protegidos', value: '3.5M hogares' },
@@ -172,7 +172,7 @@ Por otro lado, propietarios y economistas advierten de que limitar precios sin i
     category: 'Incentivos y Fiscalidad',
     badge: 'Art. 2 BOE · Bonificación IRPF',
     headlineQuestion: '¿Bonificar el 70% del IRPF a propietarios que rebajen voluntariamente el alquiler un 10%?',
-    subtitle: 'Rebaja un 70% los impuestos del alquiler (IRPF) a los propietarios que reduzcan un 10% la renta a sus inquilinos, e incluye un aval público que garantiza el cobro ante impagos.',
+    subtitle: 'Bonifica el 70% del rendimiento en el IRPF a los propietarios que rebajen voluntariamente al menos un 10% el precio del contrato, e incorpora un fondo público de cobertura que avala y garantiza el cobro puntual ante cualquier impago.',
     metrics: [
       { label: 'Ahorro Fiscal', value: '-70% IRPF' },
       { label: 'Rebaja Renta', value: '-10% precio' },
@@ -277,7 +277,7 @@ Quienes defienden la medida señalan que premiar la moderación de precios fomen
     category: 'Vivienda Vacía y Fondos',
     badge: 'Art. 3 BOE · Recargo IBI Fondos',
     headlineQuestion: '¿Cobrar un 150% más de IBI a grandes fondos y bancos con pisos vacíos más de 2 años?',
-    subtitle: 'Permite a los ayuntamientos duplicar con creces el IBI (hasta un +150%) a bancos y fondos con pisos vacíos más de 2 años, protegiendo siempre las segundas residencias de particulares.',
+    subtitle: 'Faculta a los ayuntamientos a aplicar un recargo de hasta el 150% en el IBI a bancos y fondos de inversión con viviendas vacías de forma injustificada durante más de 2 años, blindando expresamente las segundas residencias de particulares.',
     metrics: [
       { label: 'Recargo IBI', value: '+150% máx' },
       { label: 'Tiempo Vacío', value: '>2 años' },

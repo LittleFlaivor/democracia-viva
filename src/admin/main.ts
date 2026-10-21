@@ -759,7 +759,7 @@ function renderDesignView(): string {
               ¿Topar por ley las subidas del alquiler al 2.5% anual en ciudades tensionadas?
             </h3>
             <p class="preview-card-desc">
-              Fija un límite máximo del 2,5% anual a las subidas del alquiler en zonas con precios disparados, protegiendo a las familias inquilinas frente a incrementos repentinos.
+              Fija un límite legal del 2,5% anual a las revisiones de renta en zonas tensionadas donde el esfuerzo supere el 30% del sueldo, protegiendo la estabilidad de más de 3,5 millones de familias inquilinas frente a subidas desmedidas.
             </p>
 
             <!-- Métricas en Tinta Carbón -->

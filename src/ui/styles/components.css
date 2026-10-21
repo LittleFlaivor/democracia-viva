@@ -1012,9 +1012,9 @@
     gap: clamp(0.2rem, 0.4dvh, 0.35rem) !important;
   }
   .card-question {
-    font-size: clamp(1.06rem, calc(1.7dvh + 0.35rem), 1.30rem) !important;
+    font-size: clamp(1.22rem, calc(2.3dvh + 0.45rem), 1.48rem) !important;
     line-height: 1.25 !important;
-    font-weight: 750 !important;
+    font-weight: 780 !important;
     letter-spacing: -0.025em !important;
     color: var(--text-primary) !important;
     margin: 0 !important;
@@ -1022,8 +1022,8 @@
   .card-subtitle,
   .card-subtitle-executive,
   .card-subtitle-paragraph {
-    font-size: clamp(0.80rem, calc(1.05dvh + 0.22rem), 0.90rem) !important;
-    line-height: 1.42 !important;
+    font-size: clamp(0.92rem, calc(1.25dvh + 0.32rem), 1.02rem) !important;
+    line-height: 1.50 !important;
     color: var(--text-secondary) !important;
     font-weight: 450 !important;
     margin: 0 !important;
@@ -1614,19 +1614,19 @@
 
 .card-question {
   font-family: 'Outfit', sans-serif;
-  font-size: clamp(1.15rem, 1.8vw, 1.45rem);
-  font-weight: 700;
-  line-height: 1.25;
+  font-size: clamp(1.30rem, 2.2vw, 1.62rem);
+  font-weight: 780;
+  line-height: 1.26;
   color: var(--text-primary);
-  margin-bottom: 0.35rem;
-  letter-spacing: -0.02em;
+  margin-bottom: 0.45rem;
+  letter-spacing: -0.025em;
 }
 
 .card-subtitle,
 .card-subtitle-executive {
-  font-size: 0.88rem;
+  font-size: clamp(0.96rem, 1.15vw, 1.06rem);
   color: var(--text-secondary);
-  line-height: 1.48;
+  line-height: 1.56;
 }
 
 .card-text-group {

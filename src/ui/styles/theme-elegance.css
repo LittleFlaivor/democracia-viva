@@ -255,3 +255,42 @@ html.theme-elegance .game-card .card-actions-quick .btn-action-pill:hover,
   color: var(--text-primary) !important;
   transform: translateY(-1px) !important;
 }
+
+/* ========================================================
+   5. TITULAR Y DESCRIPCIÓN EJECUTIVA (JERARQUÍA GENEROSA Y MÁXIMA LEGIBILIDAD)
+   ======================================================== */
+html.theme-elegance .card-question,
+:root:not(.theme-classic) .card-question {
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: clamp(1.30rem, 2.2vw, 1.62rem) !important;
+  font-weight: 780 !important;
+  line-height: 1.26 !important;
+  color: var(--text-primary) !important;
+  letter-spacing: -0.025em !important;
+}
+
+html.theme-elegance .card-subtitle,
+:root:not(.theme-classic) .card-subtitle,
+html.theme-elegance .card-subtitle-executive,
+:root:not(.theme-classic) .card-subtitle-executive {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-size: clamp(0.96rem, 1.15vw, 1.06rem) !important;
+  line-height: 1.56 !important;
+  color: var(--text-secondary) !important;
+  font-weight: 460 !important;
+}
+
+@media (max-width: 767px) {
+  html.theme-elegance .card-question,
+  :root:not(.theme-classic) .card-question {
+    font-size: clamp(1.22rem, calc(2.3dvh + 0.45rem), 1.48rem) !important;
+    line-height: 1.25 !important;
+  }
+  html.theme-elegance .card-subtitle,
+  :root:not(.theme-classic) .card-subtitle,
+  html.theme-elegance .card-subtitle-executive,
+  :root:not(.theme-classic) .card-subtitle-executive {
+    font-size: clamp(0.92rem, calc(1.25dvh + 0.32rem), 1.02rem) !important;
+    line-height: 1.50 !important;
+  }
+}
