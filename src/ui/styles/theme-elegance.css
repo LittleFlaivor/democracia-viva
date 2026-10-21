@@ -17,6 +17,14 @@ html.theme-elegance,
   --vote-ns-from: #475569;
   --vote-ns-to: #334155;
 
+  --vote-delegate: #334155;
+  --vote-delegate-hover: #1E293B;
+  --vote-delegate-bg: rgba(51, 65, 85, 0.08);
+  --vote-delegate-border: rgba(51, 65, 85, 0.25);
+  --vote-delegate-glow: rgba(51, 65, 85, 0.25);
+  --vote-ns-shadow: 0 4px 12px -2px rgba(51, 65, 85, 0.42), 0 1px 3px rgba(51, 65, 85, 0.22);
+  --vote-ns-shadow-hover: 0 6px 18px -2px rgba(51, 65, 85, 0.52), 0 2px 5px rgba(51, 65, 85, 0.28);
+
   --color-primary: #1E293B;
   --color-primary-hover: #0F172A;
   --color-primary-subtle: rgba(15, 23, 42, 0.03);
@@ -33,6 +41,14 @@ html.theme-elegance,
   --vote-no-to: #7F1D1D;
   --vote-ns-from: #334155;
   --vote-ns-to: #1E293B;
+
+  --vote-delegate: #94A3B8;
+  --vote-delegate-hover: #CBD5E1;
+  --vote-delegate-bg: rgba(148, 163, 184, 0.12);
+  --vote-delegate-border: rgba(148, 163, 184, 0.3);
+  --vote-delegate-glow: rgba(148, 163, 184, 0.25);
+  --vote-ns-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.55), 0 1px 3px rgba(15, 23, 42, 0.3);
+  --vote-ns-shadow-hover: 0 6px 18px -2px rgba(15, 23, 42, 0.65), 0 2px 5px rgba(15, 23, 42, 0.35);
 
   --color-primary: #F8FAFC;
   --color-primary-hover: #FFFFFF;
@@ -140,18 +156,38 @@ html.theme-elegance .deck-controls-magnetic .btn-arcade-yes:hover,
   transform: translateY(-2px) scale(1.01) !important;
 }
 
-/* NS / NC · Pizarra carbón refinada (Pausa meditativa) */
+/* NS / NC · Pizarra carbón refinada (Pausa meditativa y delegación) */
+html.theme-elegance .deck-controls-magnetic .btn-arcade-delegate,
+:root:not(.theme-classic) .deck-controls-magnetic .btn-arcade-delegate,
+html.theme-elegance .btn-arcade-delegate,
+:root:not(.theme-classic) .btn-arcade-delegate,
 html.theme-elegance .deck-controls-magnetic .btn-arcade-nsnc,
 :root:not(.theme-classic) .deck-controls-magnetic .btn-arcade-nsnc {
   background: linear-gradient(165deg, #475569 0%, #334155 100%) !important;
   color: #FFFFFF !important;
-  box-shadow: 0 4px 12px -2px rgba(51, 65, 85, 0.35), 0 1px 3px rgba(51, 65, 85, 0.18) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 4px 12px -2px rgba(51, 65, 85, 0.42), 0 1px 3px rgba(51, 65, 85, 0.22) !important;
+  text-shadow: none !important;
 }
 
+html.theme-elegance .deck-controls-magnetic .btn-arcade-delegate:hover,
+:root:not(.theme-classic) .deck-controls-magnetic .btn-arcade-delegate:hover,
+html.theme-elegance .btn-arcade-delegate:hover,
+:root:not(.theme-classic) .btn-arcade-delegate:hover,
 html.theme-elegance .deck-controls-magnetic .btn-arcade-nsnc:hover,
 :root:not(.theme-classic) .deck-controls-magnetic .btn-arcade-nsnc:hover {
-  box-shadow: 0 6px 18px -2px rgba(51, 65, 85, 0.45), 0 2px 5px rgba(51, 65, 85, 0.22) !important;
+  box-shadow: 0 6px 18px -2px rgba(51, 65, 85, 0.52), 0 2px 5px rgba(51, 65, 85, 0.28) !important;
   transform: translateY(-2px) scale(1.01) !important;
+}
+
+html.theme-elegance .deck-controls-magnetic .btn-arcade-delegate:active,
+:root:not(.theme-classic) .deck-controls-magnetic .btn-arcade-delegate:active,
+html.theme-elegance .btn-arcade-delegate:active,
+:root:not(.theme-classic) .btn-arcade-delegate:active,
+html.theme-elegance .deck-controls-magnetic .btn-arcade-nsnc:active,
+:root:not(.theme-classic) .deck-controls-magnetic .btn-arcade-nsnc:active {
+  box-shadow: 0 2px 6px rgba(51, 65, 85, 0.35) !important;
+  transform: translateY(1px) scale(0.98) !important;
 }
 
 /* En Contra · Borgoña profundo solemne */
